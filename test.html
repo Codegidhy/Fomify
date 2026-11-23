@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="id" class="overscroll-none">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Tes skrining awal untuk membantu orang tua mengenali tanda-tanda kebutuhan perkembangan anak."
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      [data-question] {
+        position: absolute;
+        inset-inline: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease,
+          visibility 0s linear 0.7s;
+      }
+      [data-question][data-state="before"] {
+        transform: translateY(-2rem);
+      }
+      [data-question][data-state="after"] {
+        transform: translateY(2rem);
+      }
+      [data-question][data-state="active"] {
+        position: relative;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: none;
+        transition-delay: 0s;
+      }
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(1.5rem);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
+      }
+      [data-question][data-state="active"][data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      @keyframes deco-float {
+        to {
+          transform: translateY(-14px);
+        }
+      }
+      @keyframes deco-drift {
+        from {
+          transform: translateY(-6px);
+        }
+        to {
+          transform: translateY(6px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        [data-question],
+        [data-reveal] {
+          transition: none;
+        }
+      }
+    </style>
+    <title>Tes Skrining — Ruang Bertumbuh</title>
+  </head>
+  <body class="font-sans text-[#20231f] antialiased">
+    <div
+      class="deco fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc]"
+      aria-hidden="true"
+    >
+      <div
+        class="absolute inset-0 bg-[radial-gradient(44rem_28rem_at_92%_6%,#d7ed9b55,transparent_65%),radial-gradient(40rem_30rem_at_4%_94%,#b9d5bd80,transparent_65%)]"
+      ></div>
+      <div
+        class="absolute left-[2%] top-[16%] size-60 [background-image:radial-gradient(#355b4540_1.6px,transparent_1.9px)] [background-size:20px_20px] [mask-image:radial-gradient(circle,#000_25%,transparent_70%)]"
+      ></div>
+      <div
+        class="absolute right-[2%] bottom-[10%] size-60 [background-image:radial-gradient(#355b4540_1.6px,transparent_1.9px)] [background-size:20px_20px] [mask-image:radial-gradient(circle,#000_25%,transparent_70%)]"
+      ></div>
+      <div
+        class="absolute -right-40 top-[28%] size-[28rem] rounded-full border border-[#dfe2d7]"
+      >
+        <div
+          class="absolute inset-9 rounded-full border border-[#e6e7df]"
+        ></div>
+        <div
+          class="absolute inset-[4.5rem] rounded-full border border-[#e6e7df]"
+        ></div>
+      </div>
+      <div
+        class="absolute -left-32 bottom-[12%] size-[20rem] rounded-full border border-[#dfe2d7]"
+      >
+        <div
+          class="absolute inset-8 rounded-full border border-[#e6e7df]"
+        ></div>
+      </div>
+      <span
+        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute right-[9%] top-[22%] size-12 rounded-full bg-[#d7ed9b]"
+      ></span>
+      <span
+        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute left-[7%] top-[46%] size-6 rounded-full bg-[#92ae70]/60 [animation-delay:-2s]"
+      ></span>
+      <span
+        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute bottom-[22%] right-[14%] size-8 rounded-full border-4 border-[#92ae70]/50 [animation-delay:-4s]"
+      ></span>
+      <span
+        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute bottom-[30%] left-[16%] size-4 rounded-full bg-[#d7ed9b] [animation-delay:-1s]"
+      ></span>
+      <svg
+        class="absolute inset-0 size-full"
+        viewBox="0 0 1000 800"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient
+            id="a"
+            gradientUnits="userSpaceOnUse"
+            x1="1020"
+            x2="560"
+          >
+            <stop offset="0" stop-color="#92ae70" />
+            <stop offset=".7" stop-color="#92ae70" stop-opacity=".7" />
+            <stop offset="1" stop-color="#92ae70" stop-opacity="0" />
+          </linearGradient>
+          <linearGradient
+            id="b"
+            gradientUnits="userSpaceOnUse"
+            x1="1020"
+            x2="600"
+          >
+            <stop offset="0" stop-color="#355b45" />
+            <stop offset=".7" stop-color="#355b45" stop-opacity=".6" />
+            <stop offset="1" stop-color="#355b45" stop-opacity="0" />
+          </linearGradient>
+          <linearGradient
+            id="c"
+            gradientUnits="userSpaceOnUse"
+            x1="-20"
+            x2="440"
+          >
+            <stop offset="0" stop-color="#92ae70" />
+            <stop offset=".7" stop-color="#92ae70" stop-opacity=".7" />
+            <stop offset="1" stop-color="#92ae70" stop-opacity="0" />
+          </linearGradient>
+          <linearGradient
+            id="d"
+            gradientUnits="userSpaceOnUse"
+            x1="-20"
+            x2="400"
+          >
+            <stop offset="0" stop-color="#355b45" />
+            <stop offset=".7" stop-color="#355b45" stop-opacity=".6" />
+            <stop offset="1" stop-color="#355b45" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <g
+          class="animate-[deco-drift_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
+          opacity=".8"
+        >
+          <path
+            d="M1020 70C940 20 880 120 800 70S660 20 580 60"
+            stroke="url(#a)"
+            stroke-width="4"
+            fill="none"
+            stroke-linecap="round"
+            vector-effect="non-scaling-stroke"
+          />
+          <path
+            d="M1020 100C940 50 880 150 800 100S675 55 600 90"
+            stroke="url(#b)"
+            stroke-width="2.2"
+            fill="none"
+            stroke-linecap="round"
+            vector-effect="non-scaling-stroke"
+          />
+        </g>
+        <g
+          class="animate-[deco-drift_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none [animation-direction:alternate-reverse] [animation-duration:8s]"
+          opacity=".8"
+        >
+          <path
+            d="M-20 740C60 790 120 690 200 740S340 790 440 750"
+            stroke="url(#c)"
+            stroke-width="4"
+            fill="none"
+            stroke-linecap="round"
+            vector-effect="non-scaling-stroke"
+          />
+          <path
+            d="M-20 710C60 760 120 660 200 710S330 755 400 720"
+            stroke="url(#d)"
+            stroke-width="2.2"
+            fill="none"
+            stroke-linecap="round"
+            vector-effect="non-scaling-stroke"
+          />
+        </g>
+      </svg>
+    </div>
+    <header
+      class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5 sm:px-10 sm:py-6"
+    >
+      <a
+        class="inline-flex items-center gap-2.5 text-[15px] font-bold tracking-[-0.04em] no-underline"
+        href="index.html"
+        ><span
+          class="grid size-8 place-items-center rounded-full bg-[#355b45] text-white"
+          aria-hidden="true"
+          >r.</span
+        ><span>ruang bertumbuh</span></a
+      >
+      <a
+        class="text-xs text-[#656b62] no-underline hover:text-[#355b45]"
+        href="index.html"
+        >← Kembali ke beranda</a
+      >
+    </header>
+
+    <main class="mx-auto my-9 max-w-3xl px-6 pb-12 sm:my-12 sm:px-10">
+      <div
+        class="mb-3.5 text-[11px] font-bold uppercase tracking-[.13em] text-[#355b45]"
+      >
+        Skrining awal untuk orang tua
+      </div>
+      <h1
+        class="m-0 font-serif text-[clamp(2.625rem,7vw,4rem)] font-normal leading-tight tracking-[-.06em]"
+      >
+        Perhatikan perkembangan anak
+      </h1>
+      <p class="mb-8 mt-4 max-w-xl text-sm leading-[1.8] text-[#656b62]">
+        Berdasarkan pengamatan Anda dalam beberapa bulan terakhir, pilih tingkat
+        yang paling sesuai. Tes singkat ini bukan diagnosis dan tidak
+        menggantikan pemeriksaan profesional.
+      </p>
+
+      <div
+        class="mb-3.5 flex justify-between gap-3 text-[10px] text-[#777d72] max-[480px]:text-[9px]"
+        aria-hidden="true"
+      >
+        <span>1 · Tidak terasa</span><span>5 · Sangat terlihat</span>
+      </div>
+
+      <div class="mb-4">
+        <div
+          class="flex justify-between text-[11px] font-semibold text-[#656b62]"
+        >
+          <span id="question-count" aria-live="polite">Pertanyaan 1 dari 5</span
+          ><span>Progres</span>
+        </div>
+        <div
+          class="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e6e9df]"
+          role="progressbar"
+          aria-label="Progres pertanyaan"
+          aria-valuemin="1"
+          aria-valuemax="5"
+          aria-valuenow="1"
+          id="question-progress"
+        >
+          <div
+            id="question-progress-bar"
+            class="h-full rounded-full bg-[#70985d] transition-[width] duration-500"
+            style="width: 20%"
+          ></div>
+        </div>
+      </div>
+
+      <form id="development-form">
+        <fieldset
+          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
+        >
+          <legend
+            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
+          >
+            1. Anak jarang menatap mata saat diajak bicara atau menunjukkan
+            perasaannya.
+          </legend>
+          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q1"
+                type="radio"
+                value="1"
+                required
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >1</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q1"
+                type="radio"
+                value="2"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >2</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q1"
+                type="radio"
+                value="3"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >3</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q1"
+                type="radio"
+                value="4"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >4</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q1"
+                type="radio"
+                value="5"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >5</span
+              ></label
+            >
+          </div>
+        </fieldset>
+        <fieldset
+          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
+        >
+          <legend
+            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
+          >
+            2. Anak tidak atau belum sering merespons ketika dipanggil namanya.
+          </legend>
+          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q2"
+                type="radio"
+                value="1"
+                required
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >1</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q2"
+                type="radio"
+                value="2"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >2</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q2"
+                type="radio"
+                value="3"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >3</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q2"
+                type="radio"
+                value="4"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >4</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q2"
+                type="radio"
+                value="5"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >5</span
+              ></label
+            >
+          </div>
+        </fieldset>
+        <fieldset
+          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
+        >
+          <legend
+            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
+          >
+            3. Anak kesulitan memahami perasaan orang lain atau sulit diajak
+            bermain bersama.
+          </legend>
+          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q3"
+                type="radio"
+                value="1"
+                required
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >1</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q3"
+                type="radio"
+                value="2"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >2</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q3"
+                type="radio"
+                value="3"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >3</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q3"
+                type="radio"
+                value="4"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >4</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q3"
+                type="radio"
+                value="5"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >5</span
+              ></label
+            >
+          </div>
+        </fieldset>
+        <fieldset
+          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
+        >
+          <legend
+            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
+          >
+            4. Anak memiliki gerakan atau ucapan berulang, atau sangat terikat
+            pada rutinitas tertentu.
+          </legend>
+          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q4"
+                type="radio"
+                value="1"
+                required
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >1</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q4"
+                type="radio"
+                value="2"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >2</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q4"
+                type="radio"
+                value="3"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >3</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q4"
+                type="radio"
+                value="4"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >4</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q4"
+                type="radio"
+                value="5"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >5</span
+              ></label
+            >
+          </div>
+        </fieldset>
+        <fieldset
+          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
+        >
+          <legend
+            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
+          >
+            5. Anak sangat sensitif terhadap suara, cahaya, tekstur, atau bau
+            tertentu.
+          </legend>
+          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q5"
+                type="radio"
+                value="1"
+                required
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >1</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q5"
+                type="radio"
+                value="2"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >2</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q5"
+                type="radio"
+                value="3"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >3</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q5"
+                type="radio"
+                value="4"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >4</span
+              ></label
+            >
+            <label class="cursor-pointer"
+              ><input
+                class="peer sr-only"
+                name="q5"
+                type="radio"
+                value="5"
+              /><span
+                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
+                >5</span
+              ></label
+            >
+          </div>
+        </fieldset>
+
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <button
+            id="previous-question"
+            class="inline-flex min-h-11 items-center justify-center rounded-full border border-[#dedfd6] bg-white/70 px-4 text-[12px] font-semibold text-[#656b62] transition hover:border-[#83977c] disabled:cursor-not-allowed disabled:opacity-40"
+            type="button"
+            disabled
+          >
+            ← Sebelumnya
+          </button>
+          <div>
+            <button
+              id="next-question"
+              class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
+              type="button"
+              disabled
+            >
+              Berikutnya <span aria-hidden="true">→</span>
+            </button>
+            <button
+              id="submit-questionnaire"
+              class="hidden min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
+              type="submit"
+              disabled
+            >
+              Lihat hasil skrining <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <section
+        id="result"
+        class="mt-6 rounded-[14px] border border-[#cbd6c3] bg-[#eef2e9] p-5 sm:p-6"
+        aria-live="polite"
+        tabindex="-1"
+        hidden
+      ></section>
+      <p class="mt-6 text-[11px] leading-relaxed text-[#85897f]">
+        Hasil ini bukan diagnosis. Jika ada kekhawatiran, catat pola yang Anda
+        amati dan konsultasikan dengan dokter anak, psikolog perkembangan, atau
+        terapis profesional.
+      </p>
+    </main>
+
+    <script>
+      const form = document.querySelector("#development-form");
+      const result = document.querySelector("#result");
+      const questions = [...form.querySelectorAll("fieldset")];
+      const previousButton = document.querySelector("#previous-question");
+      const nextButton = document.querySelector("#next-question");
+      const submitButton = document.querySelector("#submit-questionnaire");
+      const questionCount = document.querySelector("#question-count");
+      const questionProgress = document.querySelector("#question-progress");
+      const questionProgressBar = document.querySelector(
+        "#question-progress-bar",
+      );
+      const questionStage = document.createElement("div");
+      let currentQuestion = 0;
+
+      questionStage.className = "relative";
+      questions[0].before(questionStage);
+      questions.forEach((q) => {
+        q.dataset.question = "";
+        q.dataset.reveal = "";
+        q.tabIndex = -1;
+        questionStage.append(q);
+      });
+
+      const answered = () =>
+        Boolean(
+          questions[currentQuestion].querySelector(
+            'input[type="radio"]:checked',
+          ),
+        );
+
+      function renderQuestion() {
+        questions.forEach((q, i) => {
+          const cur = i === currentQuestion;
+          q.dataset.state = cur
+            ? "active"
+            : i < currentQuestion
+              ? "before"
+              : "after";
+          q.inert = !cur;
+          q.setAttribute("aria-hidden", String(!cur));
+        });
+        const hasAnswer = answered();
+        const last = currentQuestion === questions.length - 1;
+        previousButton.disabled = currentQuestion === 0;
+        nextButton.disabled = !hasAnswer;
+        nextButton.classList.toggle("hidden", last);
+        nextButton.classList.toggle("inline-flex", !last);
+        submitButton.classList.toggle("hidden", !last);
+        submitButton.classList.toggle("inline-flex", last);
+        submitButton.disabled = !hasAnswer;
+        questionCount.textContent = `Pertanyaan ${currentQuestion + 1} dari ${questions.length}`;
+        questionProgress.setAttribute(
+          "aria-valuemax",
+          String(questions.length),
+        );
+        questionProgress.setAttribute(
+          "aria-valuenow",
+          String(currentQuestion + 1),
+        );
+        questionProgressBar.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+      }
+
+      function goToQuestion(i) {
+        if (i < 0 || i >= questions.length) return;
+        currentQuestion = i;
+        renderQuestion();
+        questions[currentQuestion].focus({ preventScroll: true });
+      }
+
+      form.addEventListener("change", (e) => {
+        if (e.target.matches('input[type="radio"]')) renderQuestion();
+      });
+      previousButton.addEventListener("click", () =>
+        goToQuestion(currentQuestion - 1),
+      );
+      nextButton.addEventListener("click", () => {
+        if (answered()) goToQuestion(currentQuestion + 1);
+      });
+      renderQuestion();
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+        const total = [...new FormData(form).values()].reduce(
+          (s, v) => s + Number(v),
+          0,
+        );
+        let title, message;
+        if (total <= 10) {
+          title = "Belum terlihat tanda yang perlu dikhawatirkan.";
+          message =
+            "Pemantauan rutin tetap penting. Kenali cara anak berkomunikasi dan tumbuh, serta lanjutkan dukungan sesuai kebutuhan.";
+        } else if (total <= 18) {
+          title = "Ada beberapa pola yang perlu diamati.";
+          message =
+            "Catat kapan pola tersebut muncul, dalam situasi apa, dan apakah berpengaruh pada aktivitas sehari-hari. Diskusikan dengan tenaga profesional jika Anda masih merasa khawatir.";
+        } else {
+          title = "Disarankan untuk konsultasi lanjutan.";
+          message =
+            "Beberapa tanda tampak cukup sering. Evaluasi oleh dokter anak atau profesional perkembangan dapat membantu memahami kebutuhan anak dan menentukan dukungan yang tepat.";
+        }
+        result.innerHTML = `<h2 class="m-0 mb-2 font-serif text-2xl font-normal">${title}</h2><p class="m-0 text-[13px] leading-relaxed text-[#4f594d]">${message}</p><p class="mb-0 mt-2 text-[13px] text-[#4f594d]">Skor pengamatan: <strong>${total} dari 25</strong>.</p>`;
+        result.hidden = false;
+        result.focus();
+      });
+    </script>
+  </body>
+</html>

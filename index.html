@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="id" class="overscroll-none">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Kenali tanda-tanda kebutuhan perkembangan anak dan lakukan skrining awal untuk autisme bersama Ruang Bertumbuh."
+    />
+    <title>Ruang Bertumbuh — Memahami Anak dengan Lebih Hangat</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+      .corner-waves {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .wave {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+      }
+      .wave-halo {
+        opacity: 0.1;
+      }
+      #tentang,
+      #asisten-ai {
+        background-image:
+          radial-gradient(60rem 36rem at 88% 8%, #d7ed9b40, transparent 60%),
+          radial-gradient(50rem 32rem at 8% 96%, #b9d5bd66, transparent 60%),
+          linear-gradient(135deg, #fff, #f7faf6 45%, #dcebdc);
+      }
+      @keyframes bob {
+        50% {
+          transform: translateY(-3px);
+        }
+      }
+      @keyframes floaty {
+        50% {
+          transform: translateY(-6px) scale(1.08);
+        }
+      }
+      .fam .kid {
+        animation: bob 2.4s ease-in-out infinite;
+      }
+      .fam .heart {
+        animation: floaty 3s ease-in-out infinite;
+        transform-origin: 162px 44px;
+      }
+      .family-pupil {
+        transition: transform 100ms ease-out;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .fam * {
+          animation: none !important;
+        }
+      }
+      [data-panel] {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease,
+          visibility 0s linear 0.7s;
+      }
+      [data-panel][data-state="before"] {
+        transform: translateY(-2rem);
+      }
+      [data-panel][data-state="after"] {
+        transform: translateY(2rem);
+      }
+      [data-panel][data-state="active"] {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: none;
+        transition-delay: 0s;
+      }
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(1.5rem);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
+      }
+      [data-panel][data-state="active"] [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+        transition-delay: calc(var(--i, 0) * 140ms + 250ms);
+      }
+      [data-dot] {
+        transition:
+          background-color 0.3s ease,
+          transform 0.3s ease;
+      }
+      [data-dot][aria-current="true"] {
+        background-color: #355b45;
+        transform: scale(1.5);
+      }
+      #peeking-robot .open-eye,
+      #peeking-robot .robot-pupil,
+      #peeking-robot .blink-line {
+        transition:
+          opacity 90ms ease,
+          transform 90ms ease;
+      }
+      #peeking-robot .blink-line {
+        opacity: 0;
+      }
+      #peeking-robot[data-blinking="true"] .open-eye,
+      #peeking-robot[data-blinking="true"] .robot-pupil {
+        opacity: 0;
+      }
+      #peeking-robot[data-blinking="true"] .blink-line {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] font-sans text-[#20231f] antialiased"
+  >
+    <header
+      class="absolute inset-x-0 top-0 z-20 mx-auto flex w-full items-center justify-between border-b border-white/40 bg-white/30 px-6 py-5 backdrop-blur-sm sm:px-10 sm:py-6"
+    >
+      <a
+        class="inline-flex items-center gap-2.5 text-[15px] font-bold tracking-[-0.04em] no-underline"
+        href="index.html"
+        aria-label="Ruang Bertumbuh, halaman utama"
+      >
+        <span
+          class="grid size-8 place-items-center rounded-full bg-[#355b45] text-base text-white"
+          aria-hidden="true"
+          >r.</span
+        ><span>ruang bertumbuh</span>
+      </a>
+      <nav aria-label="Navigasi utama">
+        <ul
+          class="m-0 flex list-none items-center gap-3 p-0 text-[11px] font-semibold sm:gap-8 sm:text-[13px]"
+        >
+          <li class="group relative">
+            <a
+              class="inline-flex items-center gap-1.5 py-3 no-underline transition-colors hover:text-[#355b45] focus-visible:text-[#355b45]"
+              href="#tanda-perkembangan"
+              aria-haspopup="true"
+              >Tanda Perkembangan
+              <span class="text-[10px]" aria-hidden="true">⌄</span></a
+            >
+            <div
+              id="tanda-perkembangan"
+              role="note"
+              class="pointer-events-none absolute right-[-5rem] top-full w-[min(18rem,85vw)] translate-y-2 rounded-2xl border border-[#dedfd6] bg-white p-5 opacity-0 shadow-[0_16px_40px_#20231f1a] transition-all duration-200 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100 sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:group-hover:-translate-x-1/2 sm:group-focus-within:-translate-x-1/2"
+            >
+              <strong class="mb-2 block text-[13px]"
+                >Setiap anak tumbuh dengan caranya</strong
+              >
+              <ul
+                class="m-0 list-none space-y-2 p-0 text-xs leading-relaxed text-[#656b62]"
+              >
+                <li class="flex items-start gap-2">
+                  <span
+                    class="mt-1.5 size-2 shrink-0 rounded-full bg-[#92ae70]"
+                  ></span
+                  >Interaksi sosial: respons terhadap nama, tatapan mata, atau
+                  ajakan bermain.
+                </li>
+                <li class="flex items-start gap-2">
+                  <span
+                    class="mt-1.5 size-2 shrink-0 rounded-full bg-[#92ae70]"
+                  ></span
+                  >Komunikasi: kemampuan mengucapkan kata, memahami, atau
+                  mengekspresikan kebutuhan.
+                </li>
+                <li class="flex items-start gap-2">
+                  <span
+                    class="mt-1.5 size-2 shrink-0 rounded-full bg-[#92ae70]"
+                  ></span
+                  >Minat dan perilaku: kebiasaan berulang, sensitivitas
+                  sensorik, atau minat yang sangat kuat.
+                </li>
+                <li class="flex items-start gap-2">
+                  <span
+                    class="mt-1.5 size-2 shrink-0 rounded-full bg-[#92ae70]"
+                  ></span
+                  >Pembelajaran dan kehidupan sehari-hari: penyesuaian pada
+                  rutinitas, permainan, dan aktivitas baru.
+                </li>
+              </ul>
+              <p class="mb-0 mt-3 text-xs text-[#656b62]">
+                Tanda-tanda ini dapat bervariasi dan bukan diagnosis.
+              </p>
+            </div>
+          </li>
+          <li>
+            <a
+              class="inline-flex items-center gap-1.5 py-3 no-underline transition-colors hover:text-[#355b45]"
+              href="AI.html"
+              >Tanya AI</a
+            >
+          </li>
+          <li>
+            <a
+              class="rounded-full bg-[#355b45] px-3 py-2.5 text-white no-underline transition-colors hover:bg-[#294936] sm:px-[17px]"
+              href="test.html"
+              >Tes skrining <span aria-hidden="true">↗</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <nav
+      id="dots"
+      class="fixed right-4 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-3 sm:right-6"
+      aria-label="Pilih bagian"
+    ></nav>
+
+    <main class="relative h-svh overflow-hidden" id="stage">
+      <!-- PANEL 1: HERO -->
+      <section
+        data-panel
+        data-state="active"
+        class="absolute inset-0 isolate overflow-hidden bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc]"
+        aria-labelledby="hero-title"
+      >
+        <video
+          id="bg-video"
+          class="absolute inset-0 z-0 size-full object-cover opacity-80 saturate-75"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-hidden="true"
+        >
+          <source src="fomo-background.mp4" type="video/mp4" />
+        </video>
+        <div
+          class="absolute inset-0 z-0 bg-gradient-to-br from-white/75 via-[#f7faf6]/55 to-[#b9d5bd]/45"
+        ></div>
+        <div class="relative z-10 h-full overflow-y-auto overscroll-contain">
+          <div
+            class="mx-auto grid min-h-full w-full max-w-6xl items-center gap-1 px-6 pb-10 pt-24 sm:px-10 sm:pb-16 sm:pt-28 md:grid-cols-[1.1fr_.9fr] md:gap-12"
+          >
+            <div>
+              <div
+                data-reveal
+                style="--i: 0"
+                class="mb-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.13em] text-[#355b45] before:h-px before:w-5 before:bg-current before:content-['']"
+              >
+                Memahami anak dengan lebih hangat
+              </div>
+              <h1
+                data-reveal
+                style="--i: 1"
+                id="hero-title"
+                class="m-0 max-w-2xl font-serif text-[clamp(3rem,7vw,5.5rem)] font-normal leading-[.99] tracking-[-.065em]"
+              >
+                Setiap anak berhak <em class="text-[#355b45]">bertumbuh.</em>
+              </h1>
+              <p
+                data-reveal
+                style="--i: 2"
+                class="mt-6 max-w-lg text-[15px] leading-[1.8] text-[#656b62]"
+              >
+                Mungkin anak Anda sulit berinteraksi, jarang merespons nama,
+                atau menunjukkan pola perilaku yang berbeda. Mulai dengan
+                mengenali tanda-tandanya dan berdiskusi bersama tenaga
+                profesional.
+              </p>
+              <div
+                data-reveal
+                style="--i: 3"
+                class="mt-8 flex items-center gap-4 sm:gap-5"
+              >
+                <a
+                  class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white no-underline transition-colors hover:bg-[#294936]"
+                  href="test.html"
+                  >Mulai tes skrining <span aria-hidden="true">→</span></a
+                >
+                <a
+                  class="text-xs text-[#656b62] no-underline hover:text-[#355b45]"
+                  href="#tentang"
+                  data-goto="tentang"
+                  >Mengapa tes ini penting?</a
+                >
+              </div>
+            </div>
+            <div
+              data-reveal
+              style="--i: 2"
+              class="relative grid min-h-[16rem] place-items-center md:min-h-[24rem]"
+              aria-hidden="true"
+            >
+              <div
+                class="absolute aspect-square w-[min(100%,390px)] rounded-full border border-[#dfe2d7]"
+              >
+                <div
+                  class="absolute inset-7 rounded-full border border-[#e6e7df]"
+                ></div>
+                <div
+                  class="absolute inset-[3.6rem] rounded-full border border-[#e6e7df]"
+                ></div>
+              </div>
+              <div
+                class="absolute right-[12%] top-8 size-[50px] rounded-full bg-[#d7ed9b]"
+              ></div>
+              <div
+                class="relative z-[1] w-[78%] max-w-[300px] rotate-[-3deg] rounded-[20px] border border-white/70 bg-[#fffefa] p-7 shadow-[0_22px_60px_#293e2a16]"
+              >
+                <div class="flex justify-between text-[11px] text-[#777d72]">
+                  <span>SEBUAH PENGINGAT</span><span>01 / 03</span>
+                </div>
+                <h2
+                  class="my-8 font-serif text-[29px] font-normal leading-tight tracking-[-.04em]"
+                >
+                  Dengar, amati,<br />dan dukung.
+                </h2>
+                <div class="my-2 h-[7px] rounded-full bg-[#edeee7]"></div>
+                <div
+                  class="my-2 h-[7px] w-[65%] rounded-full bg-[#edeee7]"
+                ></div>
+                <div
+                  class="mt-6 flex items-center gap-2 text-[11px] font-bold text-[#355b45]"
+                >
+                  <span class="size-2 rounded-full bg-[#92ae70]"></span
+                  >Perkembangan anak perlu didampingi
+                </div>
+              </div>
+              <div
+                class="absolute bottom-6 right-0 rotate-[3deg] rounded-xl border border-[#dedfd6] bg-white px-4 py-3 text-[11px] leading-snug shadow-[0_10px_30px_#20231f0d] sm:bottom-10"
+              >
+                <strong>Mulai dengan hangat.</strong
+                ><span class="block text-[#656b62]"
+                  >Ada bantuan yang bisa dicari lebih awal.</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: TENTANG + FOOTER -->
+      <section
+        data-panel
+        data-state="after"
+        id="tentang"
+        class="absolute inset-0 flex flex-col justify-between overflow-y-auto overscroll-contain bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] px-6 pb-4 pt-24 sm:px-10 sm:pb-6"
+        aria-labelledby="intro-title"
+      >
+        <svg
+          class="corner-waves"
+          viewBox="0 0 1000 800"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        ></svg>
+        <div
+          class="relative z-10 mx-auto my-auto grid max-w-5xl gap-6 py-6 md:grid-cols-[.8fr_1.2fr] md:gap-[4.375rem]"
+        >
+          <div>
+            <h2
+              data-reveal
+              style="--i: 0"
+              id="intro-title"
+              class="m-0 font-serif text-[clamp(2rem,4vw,3rem)] font-normal leading-tight tracking-[-.05em]"
+            >
+              Ruang untuk memahami, mendukung, dan bertumbuh bersama.
+            </h2>
+            <svg
+              data-reveal
+              style="--i: 2"
+              class="fam mt-6 h-auto w-full max-w-[19rem]"
+              viewBox="0 0 320 220"
+              role="img"
+              aria-label="Ilustrasi orang tua dan anak bergandengan tangan"
+            >
+              <ellipse
+                cx="160"
+                cy="206"
+                rx="125"
+                ry="6"
+                fill="#355b45"
+                opacity=".1"
+              />
+              <circle cx="262" cy="52" r="16" fill="#d7ed9b" />
+              <path
+                class="heart"
+                d="M162 56C140 42 148 28 158 33c3 2 4 5 4 7 0-2 1-5 4-7 10-5 18 9-4 23z"
+                fill="#92ae70"
+                stroke="#355b45"
+                stroke-width="4"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="3"
+              />
+              <!-- parent -->
+              <g>
+                <rect
+                  x="92"
+                  y="176"
+                  width="13"
+                  height="26"
+                  rx="6"
+                  fill="#f2c9a5"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                />
+                <rect
+                  x="117"
+                  y="176"
+                  width="13"
+                  height="26"
+                  rx="6"
+                  fill="#f2c9a5"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                />
+                <ellipse cx="96" cy="203" rx="11" ry="5" fill="#355b45" />
+                <ellipse cx="124" cy="203" rx="11" ry="5" fill="#355b45" />
+                <path
+                  d="M82 104Q110 90 138 104L150 180H70Z"
+                  fill="#92ae70"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M88 112Q70 140 80 164"
+                  fill="none"
+                  stroke="#355b45"
+                  stroke-width="13"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M88 112Q70 140 80 164"
+                  fill="none"
+                  stroke="#f2c9a5"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M136 110Q172 116 186 152"
+                  fill="none"
+                  stroke="#355b45"
+                  stroke-width="13"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M136 110Q172 116 186 152"
+                  fill="none"
+                  stroke="#f2c9a5"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                />
+                <circle
+                  cx="186"
+                  cy="153"
+                  r="7"
+                  fill="#f2c9a5"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                />
+                <circle cx="110" cy="34" r="11" fill="#355b45" />
+                <circle
+                  cx="110"
+                  cy="64"
+                  r="27"
+                  fill="#f2c9a5"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M83 62C80 26 140 26 137 62C128 46 94 46 83 62z"
+                  fill="#355b45"
+                />
+                <circle
+                  class="family-pupil"
+                  data-face="mother"
+                  cx="100"
+                  cy="68"
+                  r="3"
+                  fill="#355b45"
+                />
+                <circle
+                  class="family-pupil"
+                  data-face="mother"
+                  cx="120"
+                  cy="68"
+                  r="3"
+                  fill="#355b45"
+                />
+                <ellipse
+                  cx="92"
+                  cy="77"
+                  rx="5"
+                  ry="3"
+                  fill="#f4a99a"
+                  opacity=".7"
+                />
+                <ellipse
+                  cx="128"
+                  cy="77"
+                  rx="5"
+                  ry="3"
+                  fill="#f4a99a"
+                  opacity=".7"
+                />
+                <path
+                  d="M102 77q8 8 16 0"
+                  fill="none"
+                  stroke="#355b45"
+                  stroke-width="3.5"
+                  stroke-linecap="round"
+                />
+              </g>
+              <!-- child -->
+              <g class="kid">
+                <rect
+                  x="203"
+                  y="178"
+                  width="10"
+                  height="24"
+                  rx="5"
+                  fill="#f2c9a5"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="3.5"
+                />
+                <rect
+                  x="221"
+                  y="178"
+                  width="10"
+                  height="24"
+                  rx="5"
+                  fill="#f2c9a5"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="3.5"
+                />
+                <ellipse cx="207" cy="203" rx="9" ry="4.5" fill="#355b45" />
+                <ellipse cx="226" cy="203" rx="9" ry="4.5" fill="#355b45" />
+                <path
+                  d="M198 134Q217 126 236 134L240 182H194Z"
+                  fill="#d7ed9b"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M199 142Q192 146 187 151"
+                  fill="none"
+                  stroke="#355b45"
+                  stroke-width="12"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M199 142Q192 146 187 151"
+                  fill="none"
+                  stroke="#f2c9a5"
+                  stroke-width="5.5"
+                  stroke-linecap="round"
+                />
+                <g class="hi">
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    values="0 234 140;-24 234 140;18 234 140;0 234 140"
+                    dur="1.4s"
+                    repeatCount="indefinite"
+                    begin="0s"
+                  />
+                  <path
+                    d="M234 140Q252 128 256 108"
+                    fill="none"
+                    stroke="#355b45"
+                    stroke-width="12"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M234 140Q252 128 256 108"
+                    fill="none"
+                    stroke="#f2c9a5"
+                    stroke-width="5.5"
+                    stroke-linecap="round"
+                  />
+                  <circle
+                    cx="256"
+                    cy="106"
+                    r="6.5"
+                    fill="#f2c9a5"
+                    stroke="#355b45"
+                    stroke-width="4"
+                    stroke-linejoin="round"
+                    stroke-linecap="round"
+                    stroke-width="3"
+                  />
+                </g>
+                <circle
+                  cx="217"
+                  cy="108"
+                  r="22"
+                  fill="#f2c9a5"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M195 106C194 84 240 84 239 106C232 96 202 96 195 106z"
+                  fill="#355b45"
+                />
+                <path
+                  d="M214 86q2-10 10-8"
+                  fill="none"
+                  stroke="#355b45"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+                <circle
+                  class="family-pupil"
+                  data-face="child"
+                  cx="208"
+                  cy="112"
+                  r="2.8"
+                  fill="#355b45"
+                />
+                <circle
+                  class="family-pupil"
+                  data-face="child"
+                  cx="226"
+                  cy="112"
+                  r="2.8"
+                  fill="#355b45"
+                />
+                <ellipse
+                  cx="201"
+                  cy="120"
+                  rx="4.5"
+                  ry="2.8"
+                  fill="#f4a99a"
+                  opacity=".7"
+                />
+                <ellipse
+                  cx="233"
+                  cy="120"
+                  rx="4.5"
+                  ry="2.8"
+                  fill="#f4a99a"
+                  opacity=".7"
+                />
+                <path
+                  d="M210 120q7 8 14 0z"
+                  fill="#fff"
+                  stroke="#355b45"
+                  stroke-width="3"
+                  stroke-linejoin="round"
+                />
+              </g>
+            </svg>
+          </div>
+          <div class="text-sm leading-[1.85] text-[#656b62]">
+            <p data-reveal style="--i: 1" class="mb-3.5 mt-0">
+              Setiap anak memiliki cara dan ritme tumbuh yang berbeda. Ruang
+              Bertumbuh hadir sebagai teman awal bagi orang tua untuk memahami
+              kebutuhan perkembangan anak, termasuk mengenali tanda-tanda yang
+              dapat berkaitan dengan spektrum autisme, tanpa memberi label atau
+              membandingkan anak dengan orang lain.
+            </p>
+            <p data-reveal style="--i: 2" class="mb-3.5 mt-0">
+              Pengamatan kecil sehari-hari dapat membantu memberi gambaran yang
+              lebih utuh: bagaimana anak merespons saat diajak berinteraksi,
+              menyampaikan keinginan, bermain, mengikuti rutinitas, atau
+              menghadapi suara dan perubahan. Perhatikan juga hal-hal yang
+              disukai anak serta dukungan yang membuatnya merasa nyaman.
+            </p>
+            <p data-reveal style="--i: 3" class="mb-3.5 mt-0">
+              Pertanyaan singkat di situs ini disusun untuk membantu Anda
+              merefleksikan pengamatan tersebut. Jawablah berdasarkan pengalaman
+              anak sehari-hari, bukan dugaan atau perbandingan. Hasilnya hanya
+              gambaran awal untuk membantu mempertimbangkan apakah Anda ingin
+              berdiskusi lebih lanjut dengan tenaga profesional.
+            </p>
+            <p data-reveal style="--i: 4" class="mb-3.5 mt-0">
+              Jika ada hal yang membuat Anda khawatir, catatan tentang situasi
+              yang diamati dan hal yang membantu anak dapat menjadi awal
+              percakapan dengan dokter anak, psikolog, atau tenaga profesional
+              yang berwenang. Mencari informasi dan dukungan adalah langkah yang
+              wajar.
+            </p>
+            <p
+              data-reveal
+              style="--i: 5"
+              class="m-0 text-[11px] text-[#85897f]"
+            >
+              Tes ini bukan alat diagnosis dan tidak menggantikan penilaian
+              psikolog, dokter anak, atau tenaga profesional yang berwenang.
+            </p>
+          </div>
+        </div>
+        <footer
+          data-reveal
+          style="--i: 4"
+          class="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between gap-4 py-4 text-[11px] text-[#81867b]"
+        >
+          <a
+            class="inline-flex items-center gap-2.5 text-[15px] font-bold tracking-[-0.04em] text-[#20231f] no-underline"
+            href="index.html"
+            ><span
+              class="grid size-8 place-items-center rounded-full bg-[#355b45] text-white"
+              aria-hidden="true"
+              >r.</span
+            ><span>ruang bertumbuh</span></a
+          >
+          <span class="text-right"
+            >Deteksi dini membuka ruang dukungan lebih awal.</span
+          >
+        </footer>
+      </section>
+
+      <!-- PANEL 3: ASISTEN AI -->
+      <section
+        data-panel
+        data-state="after"
+        id="asisten-ai"
+        class="absolute inset-0 overflow-y-auto overflow-x-hidden overscroll-contain bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] px-6 pb-8 pt-24 sm:px-10 sm:pt-28"
+        aria-labelledby="assistant-title"
+      >
+        <svg
+          class="corner-waves"
+          viewBox="0 0 1000 800"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        ></svg>
+        <div
+          class="relative z-10 mx-auto grid min-h-full max-w-6xl items-center gap-8 py-8 md:grid-cols-[1.05fr_.95fr] md:gap-16"
+        >
+          <div>
+            <div
+              data-reveal
+              style="--i: 0"
+              class="mb-5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.13em] text-[#355b45] before:h-px before:w-5 before:bg-current before:content-['']"
+            >
+              Teman bicara untuk orang tua
+            </div>
+            <h2
+              data-reveal
+              style="--i: 1"
+              id="assistant-title"
+              class="m-0 max-w-2xl font-serif text-[clamp(2.6rem,6vw,4.5rem)] font-normal leading-[1.02] tracking-[-.06em]"
+            >
+              Anda tak harus mencari jawaban
+              <em class="text-[#355b45]">sendiri.</em>
+            </h2>
+            <p
+              data-reveal
+              style="--i: 2"
+              class="mt-6 max-w-xl text-[15px] leading-[1.8] text-[#656b62]"
+            >
+              Punya pertanyaan tentang komunikasi, perilaku, atau cara
+              mendampingi anak? Asisten AI Ruang Bertumbuh dapat membantu Anda
+              mencari informasi awal dan memikirkan langkah berikutnya.
+            </p>
+            <p
+              data-reveal
+              style="--i: 3"
+              class="mt-3 max-w-xl text-xs leading-[1.8] text-[#85897f]"
+            >
+              Gunakan sebagai teman mencari informasi, bukan pengganti diagnosis
+              atau saran dokter dan tenaga profesional.
+            </p>
+            <div
+              data-reveal
+              style="--i: 4"
+              class="mt-8 flex flex-wrap items-center gap-4"
+            >
+              <a
+                class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white no-underline transition-colors hover:bg-[#294936]"
+                href="AI.html"
+                >Mulai chat dengan AI <span aria-hidden="true">→</span></a
+              >
+              <span class="text-xs text-[#656b62]"
+                >Ruang aman untuk mulai bertanya.</span
+              >
+            </div>
+          </div>
+          <div
+            data-reveal
+            style="--i: 2"
+            class="relative mx-0 w-[calc(100%-3rem)] max-w-md sm:mx-auto sm:w-full"
+          >
+            <svg
+              id="peeking-robot"
+              class="pointer-events-none absolute left-full top-6 z-0 h-auto w-[120px] -translate-x-1/2 drop-shadow-[0_10px_14px_#20231f22] sm:top-8 sm:w-[190px]"
+              viewBox="0 0 200 260"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="64"
+                y="128"
+                width="104"
+                height="124"
+                rx="34"
+                fill="#e9eee5"
+                stroke="#355b45"
+                stroke-width="5"
+              />
+              <path
+                d="M110 134l22 24 22-24"
+                fill="#d7ed9b"
+                stroke="#355b45"
+                stroke-width="4"
+                stroke-linejoin="round"
+              />
+              <rect
+                x="92"
+                y="166"
+                width="36"
+                height="13"
+                rx="6.5"
+                fill="#d7ed9b"
+                stroke="#355b45"
+                stroke-width="4"
+              />
+              <rect
+                x="92"
+                y="183"
+                width="36"
+                height="13"
+                rx="6.5"
+                fill="#d7ed9b"
+                stroke="#355b45"
+                stroke-width="4"
+              />
+              <rect
+                x="92"
+                y="200"
+                width="30"
+                height="13"
+                rx="6.5"
+                fill="#d7ed9b"
+                stroke="#355b45"
+                stroke-width="4"
+              />
+              <path
+                d="M142 26V10"
+                stroke="#355b45"
+                stroke-width="5"
+                stroke-linecap="round"
+              />
+              <circle
+                cx="142"
+                cy="8"
+                r="7"
+                fill="#92ae70"
+                stroke="#355b45"
+                stroke-width="4"
+              />
+              <rect
+                x="58"
+                y="26"
+                width="112"
+                height="104"
+                rx="42"
+                fill="#d7ed9b"
+                stroke="#355b45"
+                stroke-width="5"
+              />
+              <g class="open-eye">
+                <circle
+                  class="robot-pupil"
+                  cx="124"
+                  cy="76"
+                  r="6"
+                  fill="#355b45"
+                />
+              </g>
+              <g class="open-eye">
+                <circle
+                  class="robot-pupil"
+                  cx="152"
+                  cy="76"
+                  r="6"
+                  fill="#355b45"
+                />
+              </g>
+              <path
+                class="blink-line"
+                d="M116 79c5 4 9 4 14 0"
+                stroke="#355b45"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <path
+                class="blink-line"
+                d="M145 79c5 4 9 4 14 0"
+                stroke="#355b45"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <path
+                d="M128 100c8 6 16 6 24 0"
+                stroke="#355b45"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+            </svg>
+            <div
+              class="relative z-10 rounded-[22px] border border-[#dedfd6] bg-[#fffefa] p-5 shadow-[0_22px_60px_#293e2a12] sm:p-7"
+            >
+              <div class="mb-6 flex items-center gap-3">
+                <span
+                  class="grid size-10 shrink-0 place-items-center rounded-full bg-[#355b45] text-sm font-bold text-white"
+                  aria-label="Profil Asisten Ruang"
+                  >AR.</span
+                >
+                <div>
+                  <strong class="block text-[13px]"
+                    >Asisten Ruang Bertumbuh</strong
+                  ><span class="text-[11px] text-[#81867b]"
+                    >Contoh percakapan</span
+                  >
+                </div>
+              </div>
+              <div class="space-y-3">
+                <div
+                  class="ml-auto max-w-[88%] rounded-2xl rounded-br-md bg-[#355b45] px-4 py-3 text-xs leading-relaxed text-white"
+                >
+                  Bagaimana saya bisa mendukung komunikasi anak?
+                </div>
+                <div
+                  class="max-w-[92%] rounded-2xl rounded-bl-md border border-[#e5e8df] bg-[#f4f6ef] px-4 py-3 text-xs leading-relaxed text-[#343a32]"
+                >
+                  Setiap anak berbeda. Anda bisa mulai dengan mengamati cara
+                  anak menyampaikan kebutuhan dan membicarakan pengamatan itu
+                  dengan tenaga profesional.
+                </div>
+              </div>
+              <div
+                class="mt-6 flex items-center gap-2 border-t border-[#e8e9e2] pt-4 text-[11px] text-[#81867b]"
+              >
+                <span class="size-2 rounded-full bg-[#92ae70]"></span>Informasi
+                awal, dengan empati dan tanpa menghakimi.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (() => {
+        const $ = (s, r = document) => r.querySelector(s);
+        const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        const panels = $$("[data-panel]");
+        const stage = $("#stage");
+        const dotsNav = $("#dots");
+        const video = $("#bg-video");
+        const robot = $("#peeking-robot");
+        const familyArt = $(".fam");
+        const fine = !matchMedia("(pointer: coarse)").matches;
+        const reduceMotion = matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        let current = 0,
+          locked = false;
+
+        const NS = "http://www.w3.org/2000/svg";
+        const COLORS = { l: "#d7ed9b", g: "#92ae70", d: "#355b45" };
+        const mk = (dir, x0, x1, ys) =>
+          [
+            {
+              k: "g",
+              w: 3,
+              o: 0.75,
+              amp: 10,
+              len: 240,
+              speed: 0.8,
+              delay: 0,
+              y0: ys[0],
+              y1: ys[1],
+              halo: 1,
+            },
+            {
+              k: "d",
+              w: 1.8,
+              o: 0.6,
+              amp: 8,
+              len: 210,
+              speed: 1.05,
+              delay: 150,
+              y0: ys[2],
+              y1: ys[3],
+            },
+          ].map((w, i) => ({ ...w, dir, x0, x1: x1 + i * 30 * dir }));
+        // Garis panjang menyusuri tepi atas & bawah layar agar tidak menimpa konten.
+        // atas: masuk dari kanan ke kiri | bawah: masuk dari kiri ke kanan
+        const WAVES = [
+          ...mk(-1, 1020, 60, [32, 22, 56, 46]),
+          ...mk(1, -20, 940, [768, 778, 790, 784]),
+        ];
+        const ENTER_MS = 2400,
+          STEP = 8,
+          TAU = Math.PI * 2;
+        const easeOut = (t) => 1 - (1 - t) ** 4;
+        const el = (name, attrs, parent) => {
+          const n = document.createElementNS(NS, name);
+          for (const k in attrs) n.setAttribute(k, attrs[k]);
+          parent && parent.appendChild(n);
+          return n;
+        };
+
+        const sets = panels.map((panel, pi) => {
+          const svg = $(".corner-waves", panel);
+          if (!svg) return null;
+          const defs = el("defs", {}, svg);
+          const items = WAVES.map((w, i) => {
+            const id = `wg${pi}-${i}`;
+            const gr = el(
+              "linearGradient",
+              {
+                id,
+                gradientUnits: "userSpaceOnUse",
+                x1: w.x0,
+                x2: w.x1,
+                y1: 0,
+                y2: 0,
+              },
+              defs,
+            );
+            [
+              [0, 1],
+              [0.7, 0.8],
+              [1, 0],
+            ].forEach(([o, op]) =>
+              el(
+                "stop",
+                { offset: o, "stop-color": COLORS[w.k], "stop-opacity": op },
+                gr,
+              ),
+            );
+            const base = { class: "wave", stroke: `url(#${id})` };
+            const halo =
+              w.halo &&
+              el(
+                "path",
+                { ...base, class: "wave wave-halo", "stroke-width": w.w * 2.6 },
+                svg,
+              );
+            const line = el(
+              "path",
+              { ...base, "stroke-width": w.w, opacity: w.o },
+              svg,
+            );
+            return {
+              ...w,
+              line,
+              halo,
+              span: w.x1 - w.x0,
+              slope: (w.y1 - w.y0) / (w.x1 - w.x0),
+            };
+          });
+          return { items, start: 0 };
+        });
+
+        function drawWave(w, now, start) {
+          const t = reduceMotion
+            ? 1
+            : Math.min(1, Math.max(0, (now - start - w.delay) / ENTER_MS));
+          if (t === 0) {
+            w.line.removeAttribute("d");
+            w.halo && w.halo.removeAttribute("d");
+            return;
+          }
+          const reach = w.span * easeOut(t);
+          const n = Math.max(2, Math.ceil(Math.abs(reach) / STEP));
+          const sec = reduceMotion ? 0 : now / 1000;
+          const phase = sec * w.speed * w.dir * TAU;
+          const drift = sec * 0.5 * TAU; // amplitudo "bernapas" agar gelombang terasa organik
+          const k = TAU / w.len;
+          const pts = new Array(n + 1);
+          for (let i = 0; i <= n; i++) {
+            const dx = (reach * i) / n;
+            const x = w.x0 + dx;
+            const amp = w.amp * (0.8 + 0.2 * Math.sin(x * k * 0.37 + drift));
+            const y = w.y0 + w.slope * dx + amp * Math.sin(x * k - phase);
+            pts[i] = (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+          }
+          const d = pts.join("");
+          w.line.setAttribute("d", d);
+          w.halo && w.halo.setAttribute("d", d);
+        }
+
+        let raf = 0;
+        function frame(now) {
+          const set = sets[current];
+          if (!set) {
+            raf = 0;
+            return;
+          } // panel tanpa gelombang: hentikan loop
+          for (const w of set.items) drawWave(w, now, set.start);
+          // setelah animasi masuk selesai dan reduced-motion aktif, cukup gambar sekali
+          raf = reduceMotion ? 0 : requestAnimationFrame(frame);
+        }
+        function startWaves() {
+          const set = sets[current];
+          if (!set) return;
+          set.start = performance.now();
+          if (!raf) raf = requestAnimationFrame(frame);
+        }
+
+        /* ---------- Mata ilustrasi keluarga ---------- */
+        if (familyArt && fine) {
+          const familyPanel = $("#tentang");
+          const faces = [
+            {
+              pupils: $$('[data-face="mother"]', familyArt),
+              x: 110,
+              y: 68,
+            },
+            {
+              pupils: $$('[data-face="child"]', familyArt),
+              x: 217,
+              y: 112,
+            },
+          ];
+          let pointerX = 0,
+            pointerY = 0,
+            tick = 0;
+          const moveEyes = () => {
+            tick = 0;
+            const bounds = familyArt.getBoundingClientRect();
+            const scale = bounds.width / 320;
+            faces.forEach(({ pupils, x, y }) => {
+              const dx = pointerX - (bounds.left + x * scale);
+              const dy = pointerY - (bounds.top + y * scale);
+              const distance = Math.max(1, Math.hypot(dx, dy));
+              const offsetX = (dx / distance) * 1.5;
+              const offsetY = (dy / distance) * 1.2;
+              pupils.forEach((pupil) => {
+                pupil.style.transform = `translate(${offsetX}px,${offsetY}px)`;
+              });
+            });
+          };
+          familyPanel.addEventListener(
+            "mousemove",
+            (event) => {
+              pointerX = event.clientX;
+              pointerY = event.clientY;
+              tick ||= requestAnimationFrame(moveEyes);
+            },
+            { passive: true },
+          );
+          familyPanel.addEventListener("mouseleave", () => {
+            faces.forEach(({ pupils }) =>
+              pupils.forEach(
+                (pupil) => (pupil.style.transform = "translate(0,0)"),
+              ),
+            );
+          });
+        }
+
+        /* ---------- Mata robot ---------- */
+        if (robot) {
+          const pupils = $$(".robot-pupil", robot);
+          const panel = $("#asisten-ai");
+          let rx = 0,
+            ry = 0,
+            tick = 0;
+          const move = () => {
+            tick = 0;
+            pupils.forEach(
+              (p) => (p.style.transform = `translate(${rx}px,${ry}px)`),
+            );
+          };
+          if (fine) {
+            panel.addEventListener(
+              "mousemove",
+              (e) => {
+                const b = robot.getBoundingClientRect();
+                const dx = e.clientX - (b.left + b.width * 0.69);
+                const dy = e.clientY - (b.top + b.height * 0.29);
+                const d = Math.max(1, Math.hypot(dx, dy));
+                rx = (dx / d) * 3;
+                ry = (dy / d) * 2.5;
+                tick ||= requestAnimationFrame(move);
+              },
+              { passive: true },
+            );
+            panel.addEventListener("mouseleave", () => {
+              rx = ry = 0;
+              move();
+            });
+          }
+          const blink = () => {
+            if (current !== 2 || robot.dataset.blinking === "true") return;
+            robot.dataset.blinking = "true";
+            setTimeout(() => (robot.dataset.blinking = "false"), 140);
+          };
+          setInterval(blink, fine ? 5200 : 4200);
+        }
+
+        /* ---------- Video ---------- */
+        if (video) {
+          video.muted = true;
+          video.addEventListener(
+            "loadeddata",
+            () => current === 0 && video.play().catch(() => {}),
+          );
+          video.addEventListener("error", () =>
+            console.error(
+              "Video gagal dimuat. Periksa nama/path file dan pastikan MP4 H.264.",
+            ),
+          );
+        }
+
+        /* ---------- Dots ---------- */
+        const dots = panels.map((_, i) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.dataset.dot = "";
+          b.setAttribute("aria-label", "Bagian " + (i + 1));
+          b.className = "size-2.5 cursor-pointer rounded-full bg-[#355b45]/25";
+          b.addEventListener("click", () => goTo(i));
+          dotsNav.appendChild(b);
+          return b;
+        });
+
+        /* ---------- Tampilkan satu panel ---------- */
+        function render() {
+          panels.forEach((panel, i) => {
+            panel.dataset.state =
+              i === current ? "active" : i < current ? "before" : "after";
+            panel.inert = i !== current;
+            panel.setAttribute("aria-hidden", String(i !== current));
+            if (i === current) panel.scrollTop = 0;
+          });
+          dots.forEach((d, i) =>
+            d.setAttribute("aria-current", String(i === current)),
+          );
+          if (video) {
+            if (current === 0) video.play().catch(() => {});
+            else setTimeout(() => current !== 0 && video.pause(), 700);
+          }
+          startWaves();
+        }
+
+        function goTo(i) {
+          i = Math.max(0, Math.min(panels.length - 1, i));
+          if (i === current || locked) return;
+          locked = true;
+          current = i;
+          render();
+          setTimeout(() => (locked = false), 1000);
+        }
+
+        /* ---------- Scroll internal bila masih bisa ---------- */
+        function scrollerOf(target) {
+          for (
+            let el = target instanceof Element ? target : null;
+            el && el !== stage;
+            el = el.parentElement
+          ) {
+            const oy = getComputedStyle(el).overflowY;
+            if (
+              (oy === "auto" || oy === "scroll") &&
+              el.scrollHeight > el.clientHeight + 1
+            )
+              return el;
+          }
+          return null;
+        }
+        const canScroll = (el, dir) =>
+          el &&
+          (dir > 0
+            ? el.scrollTop + el.clientHeight < el.scrollHeight - 1
+            : el.scrollTop > 0);
+
+        addEventListener(
+          "wheel",
+          (e) => {
+            if (Math.abs(e.deltaY) < 4) return;
+            const dir = e.deltaY > 0 ? 1 : -1;
+            if (canScroll(scrollerOf(e.target), dir)) return;
+            e.preventDefault();
+            goTo(current + dir);
+          },
+          { passive: false },
+        );
+
+        let touchY = 0,
+          touchEl = null,
+          touchTop = 0;
+        addEventListener(
+          "touchstart",
+          (e) => {
+            touchY = e.touches[0].clientY;
+            touchEl = scrollerOf(e.target);
+            touchTop = touchEl ? touchEl.scrollTop : 0;
+          },
+          { passive: true },
+        );
+        addEventListener(
+          "touchend",
+          (e) => {
+            const dy = touchY - e.changedTouches[0].clientY;
+            if (Math.abs(dy) < 50) return;
+            if (touchEl && touchEl.scrollTop !== touchTop) return;
+            const dir = dy > 0 ? 1 : -1;
+            if (canScroll(touchEl, dir)) return;
+            goTo(current + dir);
+          },
+          { passive: true },
+        );
+
+        /* ---------- Keyboard ---------- */
+        addEventListener("keydown", (e) => {
+          const tag = e.target.tagName;
+          if (tag === "INPUT" || tag === "TEXTAREA") return;
+          const k = e.key;
+          if (k === "ArrowDown" || k === "PageDown") {
+            e.preventDefault();
+            goTo(current + 1);
+          } else if (k === "ArrowUp" || k === "PageUp") {
+            e.preventDefault();
+            goTo(current - 1);
+          } else if (k === " " && tag !== "A" && tag !== "BUTTON") {
+            e.preventDefault();
+            goTo(current + (e.shiftKey ? -1 : 1));
+          } else if (k === "Home") goTo(0);
+          else if (k === "End") goTo(panels.length - 1);
+        });
+
+        /* ---------- Link dalam halaman ---------- */
+        $$("[data-goto]").forEach((link) =>
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            goTo(panels.findIndex((p) => p.id === link.dataset.goto));
+          }),
+        );
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

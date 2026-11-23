@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="id" class="overscroll-none">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Teman bicara untuk orang tua yang ingin memahami tumbuh kembang anak."
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Tanya AI — Ruang Bertumbuh</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+
+      body {
+        min-height: 100vh;
+      }
+
+      #messages {
+        scrollbar-color: #cbd6c3 transparent;
+        scrollbar-width: thin;
+        min-height: 0;
+      }
+
+      .message-copy {
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      .message-pop {
+        animation: message-pop 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      .typing-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 9999px;
+        background: #789069;
+        animation: typing-bounce 1s infinite ease-in-out;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 120ms;
+      }
+
+      .typing-dot:nth-child(3) {
+        animation-delay: 240ms;
+      }
+
+      #welcome-robot .welcome-open-eye,
+      #welcome-robot .welcome-pupil,
+      #welcome-robot .welcome-blink-line {
+        transition:
+          opacity 90ms ease,
+          transform 90ms ease;
+      }
+
+      #welcome-robot .welcome-blink-line {
+        opacity: 0;
+      }
+
+      #welcome-robot[data-blinking="true"] .welcome-open-eye,
+      #welcome-robot[data-blinking="true"] .welcome-pupil {
+        opacity: 0;
+      }
+
+      #welcome-robot[data-blinking="true"] .welcome-blink-line {
+        opacity: 1;
+      }
+
+      #welcome-robot {
+        position: relative;
+        z-index: 20;
+        transition:
+          width 700ms cubic-bezier(0.22, 1, 0.36, 1),
+          height 700ms cubic-bezier(0.22, 1, 0.36, 1),
+          margin 700ms cubic-bezier(0.22, 1, 0.36, 1),
+          transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      #welcome-robot.robot-bottom-left {
+        position: absolute;
+        left: 12px;
+        bottom: 12px;
+        width: 56px;
+        height: 56px;
+        margin: 0;
+        pointer-events: none;
+      }
+
+      #welcome-robot.robot-reply-avatar {
+        width: 44px;
+        height: 44px;
+        margin: 0 6px 2px 0;
+        flex: none;
+        pointer-events: none;
+      }
+
+      #welcome-robot .welcome-mouth-thinking,
+      #welcome-robot .welcome-mouth-speaking {
+        opacity: 0;
+        transition: opacity 120ms ease;
+      }
+
+      #welcome-robot[data-mood="thinking"] .welcome-mouth-neutral,
+      #welcome-robot[data-mood="speaking"] .welcome-mouth-neutral {
+        opacity: 0;
+      }
+
+      #welcome-robot[data-mood="thinking"] .welcome-mouth-thinking {
+        opacity: 1;
+        transform-origin: center;
+        transform-box: fill-box;
+        animation: thinking-mouth 800ms ease-in-out infinite;
+      }
+
+      #welcome-robot[data-mood="thinking"] {
+        animation: thinking-bob 900ms ease-in-out infinite;
+      }
+
+      #welcome-robot[data-mood="speaking"] .welcome-mouth-speaking {
+        opacity: 1;
+        transform-origin: center;
+        transform-box: fill-box;
+        animation: speaking-mouth 260ms ease-in-out infinite alternate;
+      }
+
+      @keyframes speaking-mouth {
+        from {
+          transform: scaleY(0.45);
+        }
+        to {
+          transform: scaleY(1.15);
+        }
+      }
+
+      @keyframes thinking-mouth {
+        50% {
+          transform: scale(0.72);
+          opacity: 0.65;
+        }
+      }
+
+      @keyframes thinking-bob {
+        50% {
+          transform: translateY(-3px) rotate(1deg);
+        }
+      }
+
+      @keyframes message-pop {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes typing-bounce {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.45;
+        }
+        30% {
+          transform: translateY(-5px);
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .message-pop,
+        .typing-dot {
+          animation: none;
+        }
+      }
+
+      .streaming-cursor::after {
+        content: "";
+        display: inline-block;
+        width: 2px;
+        height: 1em;
+        margin-left: 3px;
+        vertical-align: -2px;
+        background: #355b45;
+        animation: cursor-blink 700ms steps(1) infinite;
+      }
+
+      @keyframes cursor-blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      textarea {
+        height: 2.75rem;
+        max-height: 9rem;
+        overflow-y: auto;
+      }
+
+      body {
+        position: relative;
+        isolation: isolate;
+        overflow-x: hidden;
+      }
+
+      .aurora-wave {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .aurora-line {
+        transform-origin: center;
+        animation: aurora-drift 12s ease-in-out infinite alternate;
+      }
+
+      .aurora-line-secondary {
+        animation-duration: 16s;
+        animation-direction: alternate-reverse;
+      }
+
+      @keyframes aurora-drift {
+        0% {
+          transform: translate3d(-3%, -1%, 0) scaleY(0.96);
+        }
+        50% {
+          transform: translate3d(2%, 2%, 0) scaleY(1.05);
+        }
+        100% {
+          transform: translate3d(5%, -1%, 0) scaleY(0.98);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .aurora-line {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="font-sans text-[#20231f] antialiased"
+    style="
+      background:
+        radial-gradient(
+          circle at 12% 18%,
+          rgba(146, 174, 112, 0.32),
+          transparent 30rem
+        ),
+        radial-gradient(
+          circle at 88% 82%,
+          rgba(198, 219, 158, 0.26),
+          transparent 28rem
+        ),
+        linear-gradient(135deg, #f7f8ef 0%, #edf3e7 52%, #e4eddf 100%);
+    "
+  >
+    <svg
+      class="aurora-wave"
+      viewBox="0 0 1440 900"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <path
+        class="aurora-line"
+        d="M-120 650C120 430 300 760 560 520C820 280 1040 560 1560 260"
+        fill="none"
+        stroke="#92ae70"
+        stroke-opacity=".38"
+        stroke-width="90"
+        stroke-linecap="round"
+      />
+      <path
+        class="aurora-line aurora-line-secondary"
+        d="M-180 740C120 560 330 820 680 590C960 405 1160 620 1580 410"
+        fill="none"
+        stroke="#d7ed9b"
+        stroke-opacity=".32"
+        stroke-width="54"
+        stroke-linecap="round"
+      />
+      <path
+        class="aurora-line"
+        d="M-80 520C220 300 420 610 700 390C980 170 1180 360 1520 150"
+        fill="none"
+        stroke="#355b45"
+        stroke-opacity=".12"
+        stroke-width="22"
+        stroke-linecap="round"
+      />
+    </svg>
+    <header
+      class="relative z-10 border-b border-[#dedfd6] bg-white/70 px-5 py-4 sm:px-10 sm:py-5"
+    >
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-2">
+        <a
+          class="inline-flex items-center gap-2.5 text-[15px] font-bold tracking-[-0.04em] no-underline"
+          href="index.html"
+          aria-label="Ruang Bertumbuh, halaman utama"
+        >
+          <span
+            class="grid size-8 place-items-center rounded-full bg-[#355b45] text-base text-white"
+            aria-hidden="true"
+            >r.</span
+          >
+          <span>ruang bertumbuh</span>
+        </a>
+        <nav
+          class="flex items-center gap-3 text-xs font-semibold sm:gap-7 sm:text-[13px]"
+          aria-label="Navigasi utama"
+        >
+          <a
+            class="text-[#656b62] no-underline hover:text-[#355b45]"
+            href="index.html"
+            >Beranda</a
+          >
+          <a
+            class="text-[#656b62] no-underline hover:text-[#355b45]"
+            href="test.html"
+            >Tes skrining</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main
+      class="relative z-10 mx-auto grid max-w-6xl gap-6 px-5 py-7 sm:px-10 sm:py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.7fr)] lg:gap-10"
+    >
+      <aside class="lg:pt-5">
+        <div
+          class="mb-3.5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.13em] text-[#355b45] before:h-px before:w-5 before:bg-current before:content-['']"
+        >
+          Teman bicara orang tua
+        </div>
+        <h1
+          class="m-0 max-w-lg font-serif text-[clamp(2.4rem,5vw,4rem)] font-normal leading-[1.02] tracking-[-.06em]"
+        >
+          Bertanya, memahami, <em class="text-[#355b45]">bertumbuh.</em>
+        </h1>
+        <p class="mt-5 max-w-lg text-sm leading-[1.85] text-[#656b62]">
+          Sampaikan pertanyaan tentang tumbuh kembang, komunikasi, perilaku,
+          atau cara mendukung anak. Mulai dari hal kecil yang sedang Anda
+          pikirkan.
+        </p>
+
+        <section
+          class="mt-7 rounded-2xl border border-[#dedfd6] bg-[#fffefa] p-5"
+        >
+          <h2 class="m-0 font-serif text-xl font-normal">Perlu diingat</h2>
+          <ul
+            class="mb-0 mt-3 space-y-2.5 pl-4 text-xs leading-relaxed text-[#656b62]"
+          >
+            <li>
+              AI dapat keliru; gunakan jawaban sebagai informasi awal, bukan
+              diagnosis.
+            </li>
+            <li>
+              Hindari membagikan nama lengkap, alamat, atau informasi pribadi
+              anak.
+            </li>
+            <li>
+              Untuk kekhawatiran khusus, konsultasikan dengan tenaga
+              profesional.
+            </li>
+          </ul>
+        </section>
+
+        <p class="mb-0 mt-4 text-[11px] leading-relaxed text-[#85897f]">
+          Riwayat chat disimpan di browser ini dan dikirim ke layanan AI saat
+          Anda bertanya agar percakapan tetap memiliki konteks. Hindari mengirim
+          informasi yang dapat mengidentifikasi anak.
+        </p>
+      </aside>
+
+      <section
+        class="flex h-[74vh] min-h-[480px] flex-col overflow-hidden rounded-[22px] border border-[#dedfd6] bg-[#fffefa] shadow-[0_18px_55px_#20231f0d] lg:h-[750px] lg:min-h-0"
+        aria-label="Chat dengan asisten AI"
+      >
+        <div
+          class="flex items-center justify-between gap-4 border-b border-[#e8e9e2] px-5 py-4 sm:px-6"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="grid size-10 shrink-0 place-items-center rounded-full bg-[#355b45] text-sm font-bold text-white"
+              aria-label="Profil Asisten Ruang"
+              >AR.</span
+            >
+            <div>
+              <h2 class="m-0 text-sm font-bold">Asisten Ruang Bertumbuh</h2>
+              <p class="m-0 mt-1 text-[11px] text-[#81867b]">
+                Siap mendengarkan pertanyaan Anda
+              </p>
+            </div>
+          </div>
+          <button
+            id="clear-chat"
+            class="rounded-full border border-[#dedfd6] px-3 py-2 text-[11px] font-semibold text-[#656b62] transition hover:border-[#355b45] hover:text-[#355b45] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c987]"
+            type="button"
+          >
+            Hapus chat
+          </button>
+        </div>
+
+        <div id="chat-stage" class="relative min-h-0 flex-1">
+          <div
+            id="messages"
+            class="absolute inset-0 space-y-4 overflow-y-auto overscroll-contain px-4 py-5 pb-20 sm:px-6"
+            role="log"
+            aria-live="polite"
+            aria-relevant="additions text"
+            aria-label="Riwayat percakapan"
+          ></div>
+        </div>
+
+        <div
+          id="suggestions"
+          class="flex flex-wrap gap-2 px-4 pb-4 sm:px-6"
+          aria-label="Contoh pertanyaan"
+        >
+          <button
+            class="suggestion rounded-full border border-[#dedfd6] px-3 py-2 text-left text-[11px] text-[#656b62] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] hover:text-[#355b45]"
+            type="button"
+          >
+            Bagaimana mendukung komunikasi anak?
+          </button>
+          <button
+            class="suggestion rounded-full border border-[#dedfd6] px-3 py-2 text-left text-[11px] text-[#656b62] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] hover:text-[#355b45]"
+            type="button"
+          >
+            Kapan sebaiknya berkonsultasi?
+          </button>
+        </div>
+
+        <form
+          id="chat-form"
+          class="border-t border-[#e8e9e2] p-4 sm:px-6 sm:py-5"
+        >
+          <label class="sr-only" for="message-input"
+            >Tulis pertanyaan Anda</label
+          >
+          <div
+            class="flex items-end gap-3 rounded-2xl border border-[#dedfd6] bg-white p-2 pl-4 focus-within:border-[#92ae70] focus-within:ring-2 focus-within:ring-[#92ae70]/20"
+          >
+            <textarea
+              id="message-input"
+              class="max-h-36 min-h-11 flex-1 resize-none border-0 bg-transparent py-3 text-sm leading-relaxed outline-none placeholder:text-[#9a9e95]"
+              placeholder="Ceritakan apa yang ingin Anda tanyakan..."
+              rows="1"
+              maxlength="4000"
+              required
+            ></textarea>
+            <button
+              id="send-button"
+              class="mb-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[#355b45] text-white transition hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
+              type="submit"
+              aria-label="Kirim pesan"
+            >
+              <span aria-hidden="true">↑</span>
+            </button>
+          </div>
+          <div
+            class="mt-2 flex min-h-4 flex-wrap items-center justify-between gap-3"
+          >
+            <p
+              id="chat-status"
+              class="m-0 text-[11px] text-[#81867b]"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <button
+              id="retry-button"
+              class="rounded-full border border-[#dedfd6] px-3 py-1.5 text-[11px] font-semibold text-[#355b45] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c987]"
+              type="button"
+              hidden
+            >
+              Coba kirim lagi
+            </button>
+            <span class="shrink-0 text-[10px] text-[#9a9e95]"
+              >Enter untuk kirim · Shift+Enter untuk baris baru</span
+            >
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const SUPABASE_URL = "https://jsjadaytjlkhrzrtusih.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_g0SJUi9tJOcW6Ggzk2cT0w_lRZW-Zu5";
+      const STORAGE_KEY = "ruang-bertumbuh-chat-v1";
+      const SYSTEM_GUIDANCE =
+        "Anda adalah asisten yang ramah dan empatik untuk orang tua. Jawab selalu dalam Bahasa Indonesia yang jelas, ringkas (maksimal 2-3 paragraf pendek), dan tidak menghakimi. Berikan informasi umum tentang tumbuh kembang dan dukungan anak, jangan mendiagnosis atau memastikan anak memiliki kondisi tertentu. Jelaskan bahwa tanda perkembangan bukan diagnosis dan anjurkan konsultasi tenaga profesional bila relevan. Jangan meminta data pribadi sensitif.";
+
+      const chatLog = document.querySelector("#messages");
+      const chatStage = document.querySelector("#chat-stage");
+      const chatForm = document.querySelector("#chat-form");
+      const input = document.querySelector("#message-input");
+      const sendButton = document.querySelector("#send-button");
+      const retryButton = document.querySelector("#retry-button");
+      const status = document.querySelector("#chat-status");
+      const suggestions = document.querySelector("#suggestions");
+      const clearButton = document.querySelector("#clear-chat");
+      const supabaseClient = window.supabase
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
+      let messages = [];
+      let isSending = false;
+      let storageAvailable = true;
+      let failedMessage = null;
+      let retryHistory = null;
+      let typingIndicator = null;
+      let welcomeRobotInterval = null;
+
+      function resizeInput() {
+        input.style.height = "2.75rem";
+        input.style.height = `${Math.min(Math.max(input.scrollHeight, 44), 144)}px`;
+      }
+
+      function setupWelcomeRobot() {
+        const robot = document.querySelector("#welcome-robot");
+        if (!robot) return;
+
+        if (!document.documentElement.dataset.welcomeRobotTracking) {
+          document.documentElement.dataset.welcomeRobotTracking = "true";
+          document.addEventListener("mousemove", (event) => {
+            if (window.matchMedia("(pointer: coarse)").matches) return;
+            const activeRobot = document.querySelector("#welcome-robot");
+            if (!activeRobot) return;
+            const activePupils = [
+              ...activeRobot.querySelectorAll(".welcome-pupil"),
+            ];
+            const bounds = activeRobot.getBoundingClientRect();
+            const dx = event.clientX - (bounds.left + bounds.width / 2);
+            const dy = event.clientY - (bounds.top + bounds.height / 2);
+            const distance = Math.max(1, Math.hypot(dx, dy));
+            const offsetX = (dx / distance) * 2.5;
+            const offsetY = (dy / distance) * 2;
+            activePupils.forEach((pupil) => {
+              pupil.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+          });
+        }
+
+        const blink = () => {
+          if (robot.dataset.blinking === "true") return;
+          robot.dataset.blinking = "true";
+          setTimeout(() => {
+            robot.dataset.blinking = "false";
+          }, 140);
+        };
+
+        if (welcomeRobotInterval) clearInterval(welcomeRobotInterval);
+        welcomeRobotInterval = setInterval(blink, 5200);
+      }
+
+      function setRobotMood(mood) {
+        const robot = document.querySelector("#welcome-robot");
+        if (robot) robot.dataset.mood = mood;
+      }
+
+      function createReplyRobot() {
+        let robot = document.querySelector("#welcome-robot");
+        if (!robot) {
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML =
+            '<svg id="welcome-robot" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Asisten Ruang"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg>';
+          robot = wrapper.firstElementChild;
+          setupWelcomeRobot();
+        }
+        robot.classList.remove("mx-auto", "mb-4", "robot-bottom-left");
+        robot.classList.add("robot-reply-avatar");
+        return robot;
+      }
+
+      function showTypingIndicator() {
+        hideTypingIndicator();
+        typingIndicator = document.createElement("article");
+        typingIndicator.className = "message-pop flex items-end justify-start";
+        typingIndicator.setAttribute("aria-label", "Asisten sedang berpikir");
+
+        typingIndicator.appendChild(createReplyRobot());
+        setRobotMood("thinking");
+
+        const bubble = document.createElement("div");
+        bubble.className =
+          "flex items-center gap-1.5 rounded-2xl rounded-bl-md border border-[#e5e8df] bg-[#f4f6ef] px-4 py-3";
+
+        for (let index = 0; index < 3; index += 1) {
+          const dot = document.createElement("span");
+          dot.className = "typing-dot";
+          bubble.appendChild(dot);
+        }
+
+        typingIndicator.appendChild(bubble);
+        chatLog.appendChild(typingIndicator);
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+
+      function hideTypingIndicator() {
+        if (typingIndicator) {
+          typingIndicator.remove();
+          typingIndicator = null;
+        }
+        setRobotMood("neutral");
+      }
+
+      function setStatus(message, isError) {
+        status.textContent = message;
+        status.className = isError
+          ? "m-0 text-[11px] text-red-700"
+          : "m-0 text-[11px] text-[#81867b]";
+      }
+
+      function persistMessages() {
+        if (!storageAvailable) return;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+        } catch (error) {
+          storageAvailable = false;
+          console.error("Riwayat chat gagal disimpan:", error);
+          setStatus(
+            "Penyimpanan lokal tidak tersedia. Chat ini hanya tersimpan sementara.",
+            true,
+          );
+        }
+      }
+
+      function createMessageElement(message, withRobot = false) {
+        const isUser = message.role === "user";
+        const row = document.createElement("article");
+        row.className = `message-pop flex items-end ${
+          isUser ? "justify-end" : "justify-start"
+        }`;
+        row.setAttribute(
+          "aria-label",
+          isUser ? "Pesan Anda" : "Jawaban asisten",
+        );
+
+        const bubble = document.createElement("div");
+        bubble.className = isUser
+          ? "max-w-[88%] rounded-2xl rounded-br-md bg-[#355b45] px-4 py-3 text-sm leading-relaxed text-white sm:max-w-[80%]"
+          : "max-w-[92%] rounded-2xl rounded-bl-md border border-[#e5e8df] bg-[#f4f6ef] px-4 py-3 text-sm leading-relaxed text-[#343a32] sm:max-w-[85%]";
+
+        const label = document.createElement("div");
+        label.className = isUser
+          ? "mb-1 text-[10px] font-bold text-white/75"
+          : "mb-1 text-[10px] font-bold text-[#55724e]";
+        label.textContent = isUser ? "Anda" : "Ruang Bertumbuh";
+
+        const copy = document.createElement("div");
+        copy.className = "message-copy";
+        copy.textContent = message.content;
+        bubble.append(label, copy);
+        if (!isUser && withRobot) {
+          row.appendChild(createReplyRobot());
+        }
+        row.appendChild(bubble);
+        return row;
+      }
+
+      function renderMessages() {
+        chatLog.replaceChildren();
+        if (messages.length === 0) {
+          const welcome = document.createElement("div");
+          welcome.className = "mx-auto my-8 max-w-md text-center";
+          welcome.innerHTML =
+            '<svg id="welcome-robot" class="mx-auto mb-4 h-16 w-16" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Asisten Ruang"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg><h3 class="m-0 font-serif text-2xl font-normal">Halo, saya siap membantu.</h3><p class="mb-0 mt-2 text-sm leading-relaxed text-[#656b62]">Apa yang sedang Anda amati atau ingin pahami tentang anak?</p>';
+          chatLog.appendChild(welcome);
+          setupWelcomeRobot();
+        } else {
+          let lastAssistantIndex = -1;
+          messages.forEach((message, index) => {
+            if (message.role === "assistant") lastAssistantIndex = index;
+          });
+          messages.forEach((message, index) =>
+            chatLog.appendChild(
+              createMessageElement(
+                message,
+                message.role === "assistant" && index === lastAssistantIndex,
+              ),
+            ),
+          );
+        }
+        chatLog.scrollTop = chatLog.scrollHeight;
+        suggestions.hidden = messages.length > 0;
+      }
+
+      function addMessage(message) {
+        if (messages.length === 0) {
+          const existingRobot = document.querySelector("#welcome-robot");
+          if (existingRobot) {
+            const welcomeContainer = existingRobot.parentElement;
+            welcomeContainer?.remove();
+          } else {
+            chatLog.replaceChildren();
+          }
+        }
+        messages.push(message);
+        chatLog.appendChild(createMessageElement(message));
+        chatLog.scrollTop = chatLog.scrollHeight;
+        suggestions.hidden = true;
+        persistMessages();
+      }
+
+      async function streamMessage(message) {
+        if (messages.length === 0) chatLog.replaceChildren();
+
+        const storedMessage = { ...message, content: "" };
+        messages.push(storedMessage);
+        suggestions.hidden = true;
+
+        const row = createMessageElement(storedMessage, true);
+        setRobotMood("speaking");
+        chatLog.appendChild(row);
+
+        const copy = row.querySelector(".message-copy");
+        const fullText = message.content;
+        const characters = Array.from(fullText);
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          copy.textContent = fullText;
+          storedMessage.content = fullText;
+        } else {
+          copy.classList.add("streaming-cursor");
+          let index = 0;
+
+          await new Promise((resolve) => {
+            const reveal = () => {
+              index = Math.min(index + 2, characters.length);
+              storedMessage.content = characters.slice(0, index).join("");
+              copy.textContent = storedMessage.content;
+              chatLog.scrollTop = chatLog.scrollHeight;
+
+              if (index >= characters.length) {
+                copy.classList.remove("streaming-cursor");
+                resolve();
+                return;
+              }
+              setTimeout(reveal, 18);
+            };
+            reveal();
+          });
+        }
+
+        persistMessages();
+        setRobotMood("neutral");
+      }
+
+      function loadMessages() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved !== null) {
+            const parsed = JSON.parse(saved);
+            if (
+              !Array.isArray(parsed) ||
+              parsed.some(
+                (message) =>
+                  !message ||
+                  !["user", "assistant"].includes(message.role) ||
+                  typeof message.content !== "string",
+              )
+            ) {
+              throw new Error("Format riwayat chat tidak sesuai.");
+            }
+            messages = parsed;
+          }
+        } catch (error) {
+          storageAvailable = false;
+          console.error("Riwayat chat tidak dapat dibaca:", error);
+          setStatus(
+            "Riwayat chat tidak dapat dibaca. Percakapan baru tidak akan disimpan.",
+            true,
+          );
+        }
+        renderMessages();
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage && lastMessage.role === "user") {
+          failedMessage = lastMessage;
+          retryHistory = messages.slice(-10);
+          retryButton.hidden = false;
+          setStatus(
+            "Pesan terakhir belum mendapat jawaban. Anda bisa mencoba ulang.",
+            true,
+          );
+        }
+      }
+
+      function makePrompt(history) {
+        const transcript = history
+          .map(
+            (message) =>
+              `${message.role === "user" ? "Orang tua" : "Asisten"}: ${message.content}`,
+          )
+          .join("\n");
+        return `${SYSTEM_GUIDANCE}\n\nRiwayat percakapan:\n${transcript}`;
+      }
+
+      async function sendMessage(content, retry = false) {
+        if (isSending) return;
+        if (!supabaseClient) {
+          setStatus(
+            "Layanan chat belum siap. Periksa koneksi dan pemuatan pustaka Supabase.",
+            true,
+          );
+          return;
+        }
+
+        isSending = true;
+        sendButton.disabled = true;
+        input.disabled = true;
+        retryButton.hidden = true;
+        setStatus("Sedang menyiapkan jawaban...");
+        if (!retry) {
+          failedMessage = {
+            role: "user",
+            content,
+            createdAt: new Date().toISOString(),
+          };
+          addMessage(failedMessage);
+          retryHistory = messages.slice(-10);
+        }
+        const requestHistory = retryHistory;
+        showTypingIndicator();
+
+        try {
+          const { data, error } = await supabaseClient.functions.invoke(
+            "smooth-function",
+            {
+              body: {
+                prompt: makePrompt(requestHistory),
+                messages: requestHistory,
+              },
+            },
+          );
+          if (error) throw error;
+          if (!data || typeof data.reply !== "string" || !data.reply.trim()) {
+            throw new Error(
+              "Layanan tidak mengembalikan jawaban yang dapat dibaca.",
+            );
+          }
+
+          hideTypingIndicator();
+          await streamMessage({
+            role: "assistant",
+            content: data.reply.trim(),
+            createdAt: new Date().toISOString(),
+          });
+          failedMessage = null;
+          retryHistory = null;
+          setStatus(
+            storageAvailable
+              ? "Percakapan tersimpan di browser ini."
+              : "Percakapan tersedia selama halaman ini terbuka.",
+          );
+        } catch (error) {
+          hideTypingIndicator();
+          console.error("Permintaan ke asisten gagal:", error);
+          setStatus(
+            "Maaf, jawaban belum berhasil dimuat. Anda bisa mencoba ulang pesan ini.",
+            true,
+          );
+          retryButton.hidden = false;
+        } finally {
+          hideTypingIndicator();
+          isSending = false;
+          sendButton.disabled = false;
+          input.disabled = false;
+          input.focus();
+        }
+      }
+
+      chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const content = input.value.trim();
+        if (!content || isSending) return;
+        input.value = "";
+        resizeInput();
+        sendMessage(content);
+      });
+
+      retryButton.addEventListener("click", () => {
+        if (!failedMessage || !retryHistory) return;
+        sendMessage(failedMessage.content, true);
+      });
+
+      input.addEventListener("input", resizeInput);
+
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          chatForm.requestSubmit();
+        }
+      });
+
+      suggestions.addEventListener("click", (event) => {
+        const button = event.target.closest(".suggestion");
+        if (!button) return;
+        input.value = button.textContent.trim();
+        chatForm.requestSubmit();
+      });
+
+      clearButton.addEventListener("click", () => {
+        if (isSending) return;
+        if (!window.confirm("Hapus seluruh riwayat percakapan di browser ini?"))
+          return;
+        messages = [];
+        failedMessage = null;
+        retryHistory = null;
+        retryButton.hidden = true;
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          storageAvailable = true;
+          setStatus("Riwayat percakapan telah dihapus.");
+        } catch (error) {
+          storageAvailable = false;
+          console.error("Riwayat chat gagal dihapus:", error);
+          setStatus(
+            "Riwayat tidak dapat dihapus dari penyimpanan browser.",
+            true,
+          );
+        }
+        renderMessages();
+      });
+
+      if (!supabaseClient) {
+        setStatus(
+          "Pustaka Supabase gagal dimuat. Periksa koneksi internet.",
+          true,
+        );
+      }
+      loadMessages();
+    </script>
+  </body>
+</html>
