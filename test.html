@@ -12,18 +12,19 @@
       [data-question] {
         position: absolute;
         inset-inline: 0;
+        opacity: 0;
         visibility: hidden;
         pointer-events: none;
         transition:
-          opacity 0.7s ease,
-          transform 0.7s ease,
-          visibility 0s linear 0.7s;
+          opacity 0.65s ease,
+          transform 0.65s ease,
+          visibility 0s linear 0.65s;
       }
       [data-question][data-state="before"] {
-        transform: translateY(-2rem);
+        transform: translateY(-1.75rem);
       }
       [data-question][data-state="after"] {
-        transform: translateY(2rem);
+        transform: translateY(1.75rem);
       }
       [data-question][data-state="active"] {
         position: relative;
@@ -32,20 +33,6 @@
         pointer-events: auto;
         transform: none;
         transition-delay: 0s;
-      }
-      [data-reveal] {
-        opacity: 0;
-        transform: translateY(1.5rem);
-        transition:
-          opacity 0.5s ease,
-          transform 0.5s ease;
-      }
-      [data-question][data-state="active"][data-reveal] {
-        opacity: 1;
-        transform: none;
-        transition:
-          opacity 0.7s ease,
-          transform 0.7s ease;
       }
       @keyframes deco-float {
         to {
@@ -61,8 +48,7 @@
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        [data-question],
-        [data-reveal] {
+        [data-question] {
           transition: none;
         }
       }
@@ -203,6 +189,7 @@
         </g>
       </svg>
     </div>
+
     <header
       class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5 sm:px-10 sm:py-6"
     >
@@ -234,450 +221,402 @@
         Perhatikan perkembangan anak
       </h1>
       <p class="mb-8 mt-4 max-w-xl text-sm leading-[1.8] text-[#656b62]">
-        Berdasarkan pengamatan Anda dalam beberapa bulan terakhir, pilih tingkat
-        yang paling sesuai. Tes singkat ini bukan diagnosis dan tidak
-        menggantikan pemeriksaan profesional.
+        Jawablah pertanyaan berikut berdasarkan kebiasaan anak sehari-hari dalam
+        beberapa bulan terakhir. Tes ini membantu memetakan area perkembangan
+        anak dan bukan pengganti diagnosis klinis.
       </p>
 
-      <div
-        class="mb-3.5 flex justify-between gap-3 text-[10px] text-[#777d72] max-[480px]:text-[9px]"
-        aria-hidden="true"
-      >
-        <span>1 · Tidak terasa</span><span>5 · Sangat terlihat</span>
-      </div>
-
-      <div class="mb-4">
-        <div
-          class="flex justify-between text-[11px] font-semibold text-[#656b62]"
-        >
-          <span id="question-count" aria-live="polite">Pertanyaan 1 dari 5</span
-          ><span>Progres</span>
-        </div>
-        <div
-          class="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e6e9df]"
-          role="progressbar"
-          aria-label="Progres pertanyaan"
-          aria-valuemin="1"
-          aria-valuemax="5"
-          aria-valuenow="1"
-          id="question-progress"
-        >
+      <div id="quiz-wrapper">
+        <div class="mb-4">
           <div
-            id="question-progress-bar"
-            class="h-full rounded-full bg-[#70985d] transition-[width] duration-500"
-            style="width: 20%"
-          ></div>
+            class="flex items-center justify-between text-[11px] font-semibold text-[#656b62]"
+          >
+            <span id="question-count" aria-live="polite"
+              >Pertanyaan 1 dari 12</span
+            >
+            <span
+              id="question-category"
+              class="rounded-full bg-[#e9eee5] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#355b45]"
+              >Interaksi Sosial</span
+            >
+          </div>
+          <div
+            class="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e6e9df]"
+            role="progressbar"
+            aria-label="Progres pertanyaan"
+            aria-valuemin="1"
+            aria-valuemax="12"
+            aria-valuenow="1"
+            id="question-progress"
+          >
+            <div
+              id="question-progress-bar"
+              class="h-full rounded-full bg-[#70985d] transition-[width] duration-500"
+              style="width: 8.33%"
+            ></div>
+          </div>
         </div>
-      </div>
 
-      <form id="development-form">
-        <fieldset
-          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
-        >
-          <legend
-            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
-          >
-            1. Anak jarang menatap mata saat diajak bicara atau menunjukkan
-            perasaannya.
-          </legend>
-          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q1"
-                type="radio"
-                value="1"
-                required
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >1</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q1"
-                type="radio"
-                value="2"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >2</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q1"
-                type="radio"
-                value="3"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >3</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q1"
-                type="radio"
-                value="4"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >4</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q1"
-                type="radio"
-                value="5"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >5</span
-              ></label
-            >
-          </div>
-        </fieldset>
-        <fieldset
-          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
-        >
-          <legend
-            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
-          >
-            2. Anak tidak atau belum sering merespons ketika dipanggil namanya.
-          </legend>
-          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q2"
-                type="radio"
-                value="1"
-                required
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >1</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q2"
-                type="radio"
-                value="2"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >2</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q2"
-                type="radio"
-                value="3"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >3</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q2"
-                type="radio"
-                value="4"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >4</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q2"
-                type="radio"
-                value="5"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >5</span
-              ></label
-            >
-          </div>
-        </fieldset>
-        <fieldset
-          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
-        >
-          <legend
-            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
-          >
-            3. Anak kesulitan memahami perasaan orang lain atau sulit diajak
-            bermain bersama.
-          </legend>
-          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q3"
-                type="radio"
-                value="1"
-                required
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >1</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q3"
-                type="radio"
-                value="2"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >2</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q3"
-                type="radio"
-                value="3"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >3</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q3"
-                type="radio"
-                value="4"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >4</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q3"
-                type="radio"
-                value="5"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >5</span
-              ></label
-            >
-          </div>
-        </fieldset>
-        <fieldset
-          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
-        >
-          <legend
-            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
-          >
-            4. Anak memiliki gerakan atau ucapan berulang, atau sangat terikat
-            pada rutinitas tertentu.
-          </legend>
-          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q4"
-                type="radio"
-                value="1"
-                required
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >1</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q4"
-                type="radio"
-                value="2"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >2</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q4"
-                type="radio"
-                value="3"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >3</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q4"
-                type="radio"
-                value="4"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >4</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q4"
-                type="radio"
-                value="5"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >5</span
-              ></label
-            >
-          </div>
-        </fieldset>
-        <fieldset
-          class="mb-3 min-w-0 rounded-[14px] border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
-        >
-          <legend
-            class="w-full translate-y-3 bg-[#fffefa] px-[0.4rem] text-sm font-semibold leading-relaxed"
-          >
-            5. Anak sangat sensitif terhadap suara, cahaya, tekstur, atau bau
-            tertentu.
-          </legend>
-          <div class="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q5"
-                type="radio"
-                value="1"
-                required
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >1</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q5"
-                type="radio"
-                value="2"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >2</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q5"
-                type="radio"
-                value="3"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >3</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q5"
-                type="radio"
-                value="4"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >4</span
-              ></label
-            >
-            <label class="cursor-pointer"
-              ><input
-                class="peer sr-only"
-                name="q5"
-                type="radio"
-                value="5"
-              /><span
-                class="grid min-h-[43px] place-items-center rounded-lg border border-[#dedfd6] text-xs text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]"
-                >5</span
-              ></label
-            >
-          </div>
-        </fieldset>
+        <form id="development-form">
+          <div id="question-stage" class="relative"></div>
 
-        <div class="mt-4 flex items-center justify-between gap-3">
-          <button
-            id="previous-question"
-            class="inline-flex min-h-11 items-center justify-center rounded-full border border-[#dedfd6] bg-white/70 px-4 text-[12px] font-semibold text-[#656b62] transition hover:border-[#83977c] disabled:cursor-not-allowed disabled:opacity-40"
-            type="button"
-            disabled
-          >
-            ← Sebelumnya
-          </button>
-          <div>
+          <div class="mt-5 flex items-center justify-between gap-3">
             <button
-              id="next-question"
-              class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
+              id="previous-question"
+              class="inline-flex min-h-11 items-center justify-center rounded-full border border-[#dedfd6] bg-white/80 px-4 text-[12px] font-semibold text-[#656b62] transition hover:border-[#83977c] disabled:cursor-not-allowed disabled:opacity-40"
               type="button"
               disabled
             >
-              Berikutnya <span aria-hidden="true">→</span>
+              ← Sebelumnya
             </button>
-            <button
-              id="submit-questionnaire"
-              class="hidden min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
-              type="submit"
-              disabled
-            >
-              Lihat hasil skrining <span aria-hidden="true">→</span>
-            </button>
+            <div>
+              <button
+                id="next-question"
+                class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
+                type="button"
+                disabled
+              >
+                Berikutnya <span aria-hidden="true">→</span>
+              </button>
+              <button
+                id="submit-questionnaire"
+                class="hidden min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
+                type="submit"
+                disabled
+              >
+                Lihat hasil skrining <span aria-hidden="true">→</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
 
       <section
         id="result"
-        class="mt-6 rounded-[14px] border border-[#cbd6c3] bg-[#eef2e9] p-5 sm:p-6"
+        class="mt-6 rounded-[18px] border border-[#cbd6c3] bg-[#fffefa] p-6 shadow-[0_18px_50px_#293e2a12] sm:p-8"
         aria-live="polite"
         tabindex="-1"
         hidden
       ></section>
+
       <p class="mt-6 text-[11px] leading-relaxed text-[#85897f]">
-        Hasil ini bukan diagnosis. Jika ada kekhawatiran, catat pola yang Anda
-        amati dan konsultasikan dengan dokter anak, psikolog perkembangan, atau
-        terapis profesional.
+        Hasil ini merupakan gambaran skrining awal untuk membantu orang tua
+        berkomunikasi dengan tenaga profesional, bukan diagnosis medis resmi.
       </p>
     </main>
 
     <script>
+      const QUESTIONS = [
+        {
+          id: "q1",
+          domain: "sosial",
+          domainLabel: "Interaksi Sosial",
+          type: "scale",
+          prompt:
+            "1. Anak menghindari atau jarang mempertahankan kontak mata saat diajak berbicara, disuapi, atau bermain bersama.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q2",
+          domain: "sosial",
+          domainLabel: "Interaksi Sosial",
+          type: "choice",
+          prompt:
+            "2. Ketika Anda menunjuk mainan atau benda menarik di seberang ruangan dan berkata, “Lihat itu!”, apa yang biasanya dilakukan anak?",
+          options: [
+            {
+              value: 1,
+              tag: "Respons A",
+              text: "Mengikuti arah tunjukan tangan Anda, melihat benda tersebut, lalu menoleh kembali ke arah Anda.",
+            },
+            {
+              value: 5,
+              tag: "Respons B",
+              text: "Tetap fokus pada aktivitasnya sendiri, hanya melihat tangan Anda, atau tampak tidak merespons arah tunjukan.",
+            },
+          ],
+        },
+        {
+          id: "q3",
+          domain: "sosial",
+          domainLabel: "Interaksi Sosial",
+          type: "boolean",
+          prompt:
+            "3. Saat namanya dipanggil dari jarak beberapa langkah (ketika tidak sedang memakai headphone atau menonton layar), apakah anak sering kali tampak tidak menoleh seolah tidak mendengar?",
+          yesValue: 5,
+          noValue: 1,
+          yesHint: "Ya, sering tidak menoleh saat dipanggil",
+          noHint: "Tidak, anak umumnya menoleh atau merespons",
+        },
+        {
+          id: "q4",
+          domain: "komunikasi",
+          domainLabel: "Komunikasi & Bahasa",
+          type: "choice",
+          prompt:
+            "4. Saat anak menginginkan mainan atau makanan yang berada di luar jangkauannya, bagaimana cara ia biasanya menyampaikannya?",
+          options: [
+            {
+              value: 1,
+              tag: "Respons A",
+              text: "Menunjuk benda tersebut, mengeluarkan suara atau kata, dan menatap Anda untuk meminta bantuan.",
+            },
+            {
+              value: 5,
+              tag: "Respons B",
+              text: "Menarik atau menuntun tangan Anda langsung ke arah benda tanpa menatap mata atau berusaha mengucapkan kata.",
+            },
+          ],
+        },
+        {
+          id: "q5",
+          domain: "komunikasi",
+          domainLabel: "Komunikasi & Bahasa",
+          type: "scale",
+          prompt:
+            "5. Anak kesulitan memahami instruksi sederhana dua langkah (misalnya: “Ambil bola lalu berikan ke Ibu”) atau belum menggunakan kata/gestur untuk berbagi cerita.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q6",
+          domain: "komunikasi",
+          domainLabel: "Komunikasi & Bahasa",
+          type: "boolean",
+          prompt:
+            "6. Apakah anak sering mengulang-ulang kata atau potongan kalimat persis seperti yang baru didengarnya (dari orang lain atau tontonan) tanpa konteks percakapan yang jelas?",
+          yesValue: 5,
+          noValue: 1,
+          yesHint: "Ya, sering membeo atau mengulang frasa yang sama",
+          noHint: "Tidak, ucapan digunakan sesuai konteks",
+        },
+        {
+          id: "q7",
+          domain: "perilaku",
+          domainLabel: "Perilaku & Fleksibilitas",
+          type: "choice",
+          prompt:
+            "7. Ketika jadwal harian berubah tiba-tiba atau rute jalan pulang berbeda dari biasanya, bagaimana reaksi anak?",
+          options: [
+            {
+              value: 1,
+              tag: "Respons A",
+              text: "Mungkin bertanya atau bingung sebentar, namun dapat beradaptasi dengan penjelasan singkat.",
+            },
+            {
+              value: 5,
+              tag: "Respons B",
+              text: "Mengalami tantrum intens, cemas berlebihan, atau sangat sulit ditenangkan karena rutinitasnya berubah.",
+            },
+          ],
+        },
+        {
+          id: "q8",
+          domain: "perilaku",
+          domainLabel: "Perilaku & Fleksibilitas",
+          type: "scale",
+          prompt:
+            "8. Anak menunjukkan gerakan tubuh berulang (seperti mengepakkan tangan, berputar-putar, atau berjalan berjinjit) maupun kebiasaan menyusun benda secara berbaris kaku.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q9",
+          domain: "perilaku",
+          domainLabel: "Perilaku & Fleksibilitas",
+          type: "boolean",
+          prompt:
+            "9. Saat bermain dengan mobil-mobilan atau boneka, apakah anak lebih sering memutar rodanya atau mengamati satu bagian kecil saja daripada memainkannya secara pura-pura (imajinatif)?",
+          yesValue: 5,
+          noValue: 1,
+          yesHint: "Ya, terpaku pada bagian kecil atau gerakan berulang",
+          noHint: "Tidak, anak bermain sesuai fungsi atau imajinatif",
+        },
+        {
+          id: "q10",
+          domain: "sensorik",
+          domainLabel: "Pemrosesan Sensorik",
+          type: "scale",
+          prompt:
+            "10. Anak bereaksi sangat kuat (menutup telinga, menangis, atau panik) terhadap suara sehari-hari seperti blender, pengering rambut, sirine, atau keramaian.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q11",
+          domain: "sensorik",
+          domainLabel: "Pemrosesan Sensorik",
+          type: "choice",
+          prompt:
+            "11. Bagaimana respons anak terhadap tekstur pakaian tertentu, label baju, atau makanan dengan tekstur baru?",
+          options: [
+            {
+              value: 1,
+              tag: "Respons A",
+              text: "Dapat menerima sebagian besar pakaian dan mau mencoba makanan baru secara bertahap.",
+            },
+            {
+              value: 5,
+              tag: "Respons B",
+              text: "Menolak keras tekstur tertentu hingga sangat terganggu dan hanya mau makan jenis makanan yang sangat terbatas.",
+            },
+          ],
+        },
+        {
+          id: "q12",
+          domain: "sensorik",
+          domainLabel: "Pemrosesan Sensorik",
+          type: "boolean",
+          prompt:
+            "12. Apakah anak tampak kurang peka terhadap rasa sakit atau suhu (misalnya tetap diam saat terjatuh cukup keras) atau justru sangat menghindar saat disentuh ringan?",
+          yesValue: 5,
+          noValue: 1,
+          yesHint: "Ya, terlihat respons sensorik yang sangat ekstrem",
+          noHint: "Tidak, respons terhadap sentuhan dan rasa sakit wajar",
+        },
+      ];
+
+      const DOMAIN_META = {
+        sosial: {
+          name: "Interaksi Sosial",
+          diagnosisHint: "hambatan timbal balik sosial dan kontak mata",
+        },
+        komunikasi: {
+          name: "Komunikasi & Bahasa",
+          diagnosisHint: "keterlambatan bicara atau komunikasi fungsional",
+        },
+        perilaku: {
+          name: "Perilaku & Fleksibilitas",
+          diagnosisHint: "pola perilaku repetitif dan kekakuan rutinitas",
+        },
+        sensorik: {
+          name: "Pemrosesan Sensorik",
+          diagnosisHint: "sensitivitas integrasi sensorik (hipo/hipersensitif)",
+        },
+      };
+
+      const quizWrapper = document.querySelector("#quiz-wrapper");
       const form = document.querySelector("#development-form");
+      const questionStage = document.querySelector("#question-stage");
       const result = document.querySelector("#result");
-      const questions = [...form.querySelectorAll("fieldset")];
       const previousButton = document.querySelector("#previous-question");
       const nextButton = document.querySelector("#next-question");
       const submitButton = document.querySelector("#submit-questionnaire");
       const questionCount = document.querySelector("#question-count");
+      const questionCategory = document.querySelector("#question-category");
       const questionProgress = document.querySelector("#question-progress");
       const questionProgressBar = document.querySelector(
         "#question-progress-bar",
       );
-      const questionStage = document.createElement("div");
+
       let currentQuestion = 0;
 
-      questionStage.className = "relative";
-      questions[0].before(questionStage);
-      questions.forEach((q) => {
-        q.dataset.question = "";
-        q.dataset.reveal = "";
-        q.tabIndex = -1;
-        questionStage.append(q);
-      });
+      function renderAnswerControl(q) {
+        if (q.type === "scale") {
+          const buttons = [1, 2, 3, 4, 5]
+            .map(
+              (num) => `
+              <label class="cursor-pointer">
+                <input
+                  class="peer sr-only"
+                  name="${q.id}"
+                  type="radio"
+                  value="${num}"
+                  ${num === 1 ? "required" : ""}
+                />
+                <span class="grid min-h-[46px] place-items-center rounded-xl border border-[#dedfd6] text-xs font-medium text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]">
+                  ${num}
+                </span>
+              </label>`,
+            )
+            .join("");
+
+          return `
+            <div class="mt-4 flex justify-between text-[11px] text-[#777d72]">
+              <span>${q.minLabel}</span>
+              <span>${q.maxLabel}</span>
+            </div>
+            <div class="mt-2 grid grid-cols-5 gap-1.5 sm:gap-2">${buttons}</div>
+          `;
+        }
+
+        if (q.type === "boolean") {
+          return `
+            <div class="mt-4 grid gap-2.5 sm:grid-cols-2">
+              <label class="cursor-pointer">
+                <input
+                  class="peer sr-only"
+                  name="${q.id}"
+                  type="radio"
+                  value="${q.yesValue}"
+                  required
+                />
+                <span class="flex min-h-[54px] flex-col justify-center rounded-xl border border-[#dedfd6] px-4 py-3 text-left transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5]">
+                  <span class="text-xs font-bold text-[#20231f]">Ya</span>
+                  <span class="mt-0.5 text-[11px] text-[#656b62]">${q.yesHint}</span>
+                </span>
+              </label>
+              <label class="cursor-pointer">
+                <input
+                  class="peer sr-only"
+                  name="${q.id}"
+                  type="radio"
+                  value="${q.noValue}"
+                />
+                <span class="flex min-h-[54px] flex-col justify-center rounded-xl border border-[#dedfd6] px-4 py-3 text-left transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5]">
+                  <span class="text-xs font-bold text-[#20231f]">Tidak</span>
+                  <span class="mt-0.5 text-[11px] text-[#656b62]">${q.noHint}</span>
+                </span>
+              </label>
+            </div>
+          `;
+        }
+
+        // Tipe: Pemilihan antar 2 opsi aksi
+        return `
+          <div class="mt-4 grid gap-2.5">
+            ${q.options
+              .map(
+                (opt, idx) => `
+              <label class="cursor-pointer">
+                <input
+                  class="peer sr-only"
+                  name="${q.id}"
+                  type="radio"
+                  value="${opt.value}"
+                  ${idx === 0 ? "required" : ""}
+                />
+                <span class="flex items-start gap-3 rounded-xl border border-[#dedfd6] p-3.5 text-left transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5]">
+                  <span class="mt-0.5 shrink-0 rounded-md bg-[#f2f4ed] px-2 py-0.5 text-[10px] font-bold text-[#355b45]">
+                    ${opt.tag}
+                  </span>
+                  <span class="text-xs leading-relaxed text-[#343a32]">${opt.text}</span>
+                </span>
+              </label>`,
+              )
+              .join("")}
+          </div>
+        `;
+      }
+
+      // Render semua fieldset soal ke dalam stage
+      questionStage.innerHTML = QUESTIONS.map(
+        (q) => `
+        <fieldset
+          data-question
+          tabindex="-1"
+          class="min-w-0 rounded-[16px] border border-[#dedfd6] bg-[#fffefa] p-5 shadow-[0_12px_32px_#293e2a0a] sm:p-6"
+        >
+          <legend class="float-left w-full text-sm font-semibold leading-relaxed text-[#20231f]">
+            ${q.prompt}
+          </legend>
+          <div class="clear-both"></div>
+          ${renderAnswerControl(q)}
+        </fieldset>`,
+      ).join("");
+
+      const questions = [...questionStage.querySelectorAll("fieldset")];
 
       const answered = () =>
         Boolean(
@@ -697,6 +636,7 @@
           q.inert = !cur;
           q.setAttribute("aria-hidden", String(!cur));
         });
+
         const hasAnswer = answered();
         const last = currentQuestion === questions.length - 1;
         previousButton.disabled = currentQuestion === 0;
@@ -706,7 +646,9 @@
         submitButton.classList.toggle("hidden", !last);
         submitButton.classList.toggle("inline-flex", last);
         submitButton.disabled = !hasAnswer;
+
         questionCount.textContent = `Pertanyaan ${currentQuestion + 1} dari ${questions.length}`;
+        questionCategory.textContent = QUESTIONS[currentQuestion].domainLabel;
         questionProgress.setAttribute(
           "aria-valuemax",
           String(questions.length),
@@ -734,32 +676,165 @@
       nextButton.addEventListener("click", () => {
         if (answered()) goToQuestion(currentQuestion + 1);
       });
+
       renderQuestion();
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         if (!form.reportValidity()) return;
-        const total = [...new FormData(form).values()].reduce(
-          (s, v) => s + Number(v),
-          0,
-        );
-        let title, message;
-        if (total <= 10) {
-          title = "Belum terlihat tanda yang perlu dikhawatirkan.";
-          message =
-            "Pemantauan rutin tetap penting. Kenali cara anak berkomunikasi dan tumbuh, serta lanjutkan dukungan sesuai kebutuhan.";
-        } else if (total <= 18) {
-          title = "Ada beberapa pola yang perlu diamati.";
-          message =
-            "Catat kapan pola tersebut muncul, dalam situasi apa, dan apakah berpengaruh pada aktivitas sehari-hari. Diskusikan dengan tenaga profesional jika Anda masih merasa khawatir.";
+
+        const formData = new FormData(form);
+        const domainScores = {
+          sosial: 0,
+          komunikasi: 0,
+          perilaku: 0,
+          sensorik: 0,
+        };
+        let total = 0;
+
+        QUESTIONS.forEach((q) => {
+          const val = Number(formData.get(q.id) || 0);
+          total += val;
+          domainScores[q.domain] += val;
+        });
+
+        const maxTotal = QUESTIONS.length * 5; // 60 poin
+        const sortedDomains = Object.entries(domainScores)
+          .sort((a, b) => b[1] - a[1])
+          .filter(([, score]) => score >= 9);
+
+        const topDomainNotes = sortedDomains.length
+          ? sortedDomains
+              .map(([key]) => DOMAIN_META[key].diagnosisHint)
+              .join(", ")
+          : "variasi perkembangan umum";
+
+        let levelBadge, title, diagnosisText, actions;
+
+        if (total <= 23) {
+          levelBadge = "Indikasi Rendah";
+          title = "Perkembangan anak tampak sesuai tahapan umumnya.";
+          diagnosisText =
+            "Berdasarkan jawaban Anda, belum terlihat pola kuat yang mengarah pada Gangguan Spektrum Autisme (ASD) maupun hambatan perkembangan signifikan. Perbedaan kecil dalam kebiasaan bermain atau merespons masih berada dalam batas wajar tumbuh kembang.";
+          actions = [
+            "Lanjutkan stimulasi interaksi dua arah di rumah melalui bermain bersama, membacakan buku, dan percakapan rutin.",
+            "Pantau pencapaian tumbuh kembang (milestone) sesuai usia anak secara berkala.",
+            "Jika di kemudian hari muncul perubahan perilaku atau kekhawatiran baru, catat dan diskusikan saat kontrol rutin ke posyandu atau dokter anak.",
+          ];
+        } else if (total <= 41) {
+          levelBadge = "Indikasi Sedang · Perlu Observasi";
+          title = "Ditemukan beberapa tanda awal yang perlu diperhatikan.";
+          diagnosisText = `Pola jawaban menunjukkan kecenderungan pada aspek <strong>${topDomainNotes}</strong>. Kondisi ini dapat berkaitan dengan keterlambatan bicara (speech delay), tantangan pemrosesan sensorik, atau ciri awal spektrum autisme ringan yang memerlukan observasi lebih terarah.`;
+          actions = [
+            "Buat catatan harian sederhana selama 2 minggu berisi situasi pemicu perilaku, cara anak berkomunikasi, dan hal yang membuatnya nyaman.",
+            "Kurangi paparan layar (gadget/TV) satu arah dan perbanyak aktivitas tatap muka yang memancing kontak mata serta giliran bicara.",
+            "Jadwalkan konsultasi dengan <strong>Dokter Spesialis Anak</strong> atau <strong>Psikolog Anak</strong> untuk pemeriksaan perkembangan lebih mendalam.",
+          ];
         } else {
-          title = "Disarankan untuk konsultasi lanjutan.";
-          message =
-            "Beberapa tanda tampak cukup sering. Evaluasi oleh dokter anak atau profesional perkembangan dapat membantu memahami kebutuhan anak dan menentukan dukungan yang tepat.";
+          levelBadge = "Indikasi Tinggi · Disarankan Evaluasi Klinis";
+          title =
+            "Terdapat pola kuat yang mengarah pada kebutuhan dukungan khusus.";
+          diagnosisText = `Akumulasi skor menunjukkan tanda yang konsisten pada area <strong>${topDomainNotes}</strong>. Secara skrining awal, profil ini sering berkaitan dengan <strong>Gangguan Spektrum Autisme (ASD)</strong>, hambatan komunikasi sosial, atau gangguan integrasi sensorik. Evaluasi klinis diperlukan untuk memastikan diagnosis yang akurat.`;
+          actions = [
+            "Segera buat janji temu dengan <strong>Dokter Spesialis Anak Konsultan Tumbuh Kembang (Sp.A(K))</strong> atau <strong>Psikolog Klinis Anak</strong> dengan membawa ringkasan hasil skrining ini.",
+            "Tanyakan rencana intervensi dini yang sesuai dengan profil anak (seperti Terapi Wicara, Terapi Okupasi, atau Terapi Perilaku).",
+            "Bangun rutinitas harian yang terstruktur dan tenang di rumah, serta gunakan bantuan visual sederhana agar anak merasa lebih aman dan dipahami.",
+          ];
         }
-        result.innerHTML = `<h2 class="m-0 mb-2 font-serif text-2xl font-normal">${title}</h2><p class="m-0 text-[13px] leading-relaxed text-[#4f594d]">${message}</p><p class="mb-0 mt-2 text-[13px] text-[#4f594d]">Skor pengamatan: <strong>${total} dari 25</strong>.</p>`;
+
+        const domainBreakdownHTML = Object.entries(domainScores)
+          .map(([key, score]) => {
+            const pct = Math.round((score / 15) * 100);
+            return `
+              <div>
+                <div class="flex justify-between text-[11px] font-medium text-[#4f594d]">
+                  <span>${DOMAIN_META[key].name}</span>
+                  <span>${score} / 15</span>
+                </div>
+                <div class="mt-1 h-1.5 overflow-hidden rounded-full bg-[#e6e9df]">
+                  <div class="h-full rounded-full bg-[#355b45]" style="width: ${pct}%"></div>
+                </div>
+              </div>`;
+          })
+          .join("");
+
+        result.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="inline-flex items-center rounded-full bg-[#e9eee5] px-3 py-1 text-[11px] font-bold text-[#355b45]">
+              ${levelBadge}
+            </span>
+            <span class="text-xs font-semibold text-[#656b62]">
+              Total Skor: <strong class="text-[#20231f]">${total} / ${maxTotal}</strong>
+            </span>
+          </div>
+
+          <h2 class="mb-2 mt-3 font-serif text-2xl font-normal leading-snug text-[#20231f]">
+            ${title}
+          </h2>
+
+          <div class="mt-4 rounded-xl border border-[#e5e8df] bg-[#f4f6ef] p-4">
+            <strong class="block text-xs font-bold uppercase tracking-wider text-[#355b45]">
+              Kemungkinan Indikasi Awal
+            </strong>
+            <p class="mb-0 mt-1.5 text-xs leading-relaxed text-[#343a32]">
+              ${diagnosisText}
+            </p>
+          </div>
+
+          <div class="mt-4">
+            <strong class="block text-xs font-bold uppercase tracking-wider text-[#355b45]">
+              Rincian Per Aspek Pengamatan
+            </strong>
+            <div class="mt-2.5 grid gap-3 sm:grid-cols-2">
+              ${domainBreakdownHTML}
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <strong class="block text-xs font-bold uppercase tracking-wider text-[#355b45]">
+              Tindakan Lanjutan untuk Orang Tua
+            </strong>
+            <ul class="mb-0 mt-2 list-none space-y-2 p-0 text-xs leading-relaxed text-[#4f594d]">
+              ${actions
+                .map(
+                  (item) => `
+                <li class="flex items-start gap-2.5">
+                  <span class="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#70985d]"></span>
+                  <span>${item}</span>
+                </li>`,
+                )
+                .join("")}
+            </ul>
+          </div>
+
+          <div class="mt-6 flex flex-wrap items-center gap-3 border-t border-[#e8e9e2] pt-4">
+            <a
+              href="AI.html"
+              class="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#355b45] px-4 text-xs font-bold text-white no-underline transition-colors hover:bg-[#294936]"
+            >
+              Diskusikan hasil dengan Asisten AI <span aria-hidden="true">→</span>
+            </a>
+            <button
+              type="button"
+              id="retake-test"
+              class="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full border border-[#dedfd6] bg-white px-4 text-xs font-semibold text-[#656b62] transition hover:border-[#83977c] hover:text-[#20231f]"
+            >
+              Ulangi tes
+            </button>
+          </div>
+        `;
+
+        quizWrapper.hidden = true;
         result.hidden = false;
         result.focus();
+
+        document.querySelector("#retake-test").addEventListener("click", () => {
+          form.reset();
+          currentQuestion = 0;
+          result.hidden = true;
+          quizWrapper.hidden = false;
+          renderQuestion();
+        });
       });
     </script>
   </body>
