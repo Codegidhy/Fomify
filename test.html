@@ -8,7 +8,17 @@
       content="Tes skrining awal untuk membantu orang tua mengenali tanda-tanda kebutuhan perkembangan anak."
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      .brand-mark,
+      .brand-name {
+        font-family: "Space Grotesk", sans-serif;
+      }
       [data-question] {
         position: absolute;
         inset-inline: 0;
@@ -53,7 +63,7 @@
         }
       }
     </style>
-    <title>Tes Skrining — Ruang Bertumbuh</title>
+    <title>Tes Skrining — Fomify</title>
   </head>
   <body class="font-sans text-[#20231f] antialiased">
     <div
@@ -197,16 +207,26 @@
         class="inline-flex items-center gap-2.5 text-[15px] font-bold tracking-[-0.04em] no-underline"
         href="index.html"
         ><span
-          class="grid size-8 place-items-center rounded-full bg-[#355b45] text-white"
+          class="brand-mark grid size-8 place-items-center rounded-full bg-[#355b45] text-white"
           aria-hidden="true"
-          >r.</span
-        ><span>ruang bertumbuh</span></a
+          >FY</span
+        ><span class="brand-name">Fomify</span></a
       >
-      <a
-        class="text-xs text-[#656b62] no-underline hover:text-[#355b45]"
-        href="index.html"
-        >← Kembali ke beranda</a
+      <nav
+        class="flex items-center gap-4 text-xs font-semibold"
+        aria-label="Navigasi utama"
       >
+        <a
+          class="text-[#656b62] no-underline hover:text-[#355b45]"
+          href="forum.html"
+          >Forum</a
+        >
+        <a
+          class="text-xs text-[#656b62] no-underline hover:text-[#355b45]"
+          href="index.html"
+          >← Kembali ke beranda</a
+        >
+      </nav>
     </header>
 
     <main class="mx-auto my-9 max-w-3xl px-6 pb-12 sm:my-12 sm:px-10">
@@ -232,7 +252,7 @@
             class="flex items-center justify-between text-[11px] font-semibold text-[#656b62]"
           >
             <span id="question-count" aria-live="polite"
-              >Pertanyaan 1 dari 12</span
+              >Pertanyaan 1 dari 25</span
             >
             <span
               id="question-category"
@@ -245,14 +265,14 @@
             role="progressbar"
             aria-label="Progres pertanyaan"
             aria-valuemin="1"
-            aria-valuemax="12"
+            aria-valuemax="25"
             aria-valuenow="1"
             id="question-progress"
           >
             <div
               id="question-progress-bar"
               class="h-full rounded-full bg-[#70985d] transition-[width] duration-500"
-              style="width: 8.33%"
+              style="width: 4%"
             ></div>
           </div>
         </div>
@@ -474,6 +494,136 @@
           noValue: 1,
           yesHint: "Ya, terlihat respons sensorik yang sangat ekstrem",
           noHint: "Tidak, respons terhadap sentuhan dan rasa sakit wajar",
+        },
+        {
+          id: "q13",
+          domain: "sosial",
+          domainLabel: "Interaksi Sosial",
+          type: "scale",
+          prompt:
+            "13. Anak jarang menunjukkan atau membawa sesuatu kepada Anda hanya untuk berbagi minat atau kegembiraan, bukan sekadar meminta bantuan.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q14",
+          domain: "sosial",
+          domainLabel: "Interaksi Sosial",
+          type: "scale",
+          prompt:
+            "14. Dalam permainan bersama, anak kesulitan bergiliran sederhana (misalnya menggelindingkan bola atau menyusun balok bergantian), meskipun Anda memberi contoh.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q15",
+          domain: "sosial",
+          domainLabel: "Interaksi Sosial",
+          type: "scale",
+          prompt:
+            "15. Saat Anda mengajak berinteraksi melalui ekspresi, gestur, atau permainan, anak jarang menanggapi dengan caranya sendiri (misalnya tersenyum, meniru, bersuara, atau mendekat).",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q16",
+          domain: "sosial",
+          domainLabel: "Interaksi Sosial",
+          type: "scale",
+          prompt:
+            "16. Saat merasa tidak nyaman atau sedih, anak kesulitan memberi isyarat kepada Anda bahwa ia membutuhkan bantuan atau kenyamanan, dengan cara komunikasi yang biasa digunakannya.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q17",
+          domain: "komunikasi",
+          domainLabel: "Komunikasi & Bahasa",
+          type: "scale",
+          prompt:
+            "17. Jika Anda belum memahami maksudnya, anak kesulitan mencoba cara lain untuk menyampaikan keinginan (misalnya gestur, menunjuk, gambar, kata, atau alat komunikasi).",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q18",
+          domain: "komunikasi",
+          domainLabel: "Komunikasi & Bahasa",
+          type: "scale",
+          prompt:
+            "18. Anak kesulitan menyampaikan pilihan, penolakan, atau permintaan jeda kepada Anda dengan cara komunikasi yang biasa digunakannya.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q19",
+          domain: "komunikasi",
+          domainLabel: "Komunikasi & Bahasa",
+          type: "scale",
+          prompt:
+            "19. Dalam kegiatan bersama, anak kesulitan bergantian berkomunikasi (memberi isyarat, bersuara, atau berbicara lalu memberi Anda kesempatan merespons).",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q20",
+          domain: "perilaku",
+          domainLabel: "Perilaku & Fleksibilitas",
+          type: "scale",
+          prompt:
+            "20. Saat bermain bersama, anak sulit menerima variasi kecil yang Anda tambahkan pada permainan yang biasanya ia pilih.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q21",
+          domain: "perilaku",
+          domainLabel: "Perilaku & Fleksibilitas",
+          type: "scale",
+          prompt:
+            "21. Saat kecewa atau frustrasi, anak kesulitan kembali tenang dengan dukungan yang biasanya membantu.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q22",
+          domain: "perilaku",
+          domainLabel: "Perilaku & Fleksibilitas",
+          type: "scale",
+          prompt:
+            "22. Ketika Anda memberi tahu bahwa aktivitas akan berakhir, anak tetap sangat kesulitan beralih ke kegiatan berikutnya meskipun sudah diberi waktu atau pengingat.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q23",
+          domain: "sensorik",
+          domainLabel: "Pemrosesan Sensorik",
+          type: "scale",
+          prompt:
+            "23. Rutinitas bersama seperti mandi, berpakaian, menyikat gigi, atau potong rambut sering terhenti karena anak sangat terganggu oleh sensasi tertentu.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q24",
+          domain: "sensorik",
+          domainLabel: "Pemrosesan Sensorik",
+          type: "scale",
+          prompt:
+            "24. Di tempat ramai atau bising, anak sulit mengikuti aktivitas bersama karena tampak kewalahan oleh suara, cahaya, atau keramaian.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
+        },
+        {
+          id: "q25",
+          domain: "sensorik",
+          domainLabel: "Pemrosesan Sensorik",
+          type: "scale",
+          prompt:
+            "25. Setelah terganggu oleh suara, sentuhan, atau tekstur, anak membutuhkan waktu lama untuk kembali nyaman meskipun Anda menawarkan dukungan.",
+          minLabel: "1 · Tidak terlihat",
+          maxLabel: "5 · Sangat terlihat",
         },
       ];
 
@@ -698,10 +848,21 @@
           domainScores[q.domain] += val;
         });
 
-        const maxTotal = QUESTIONS.length * 5; // 60 poin
+        const maxTotal = QUESTIONS.length * 5;
+        const averageScore = total / QUESTIONS.length;
+        const domainQuestionCounts = Object.fromEntries(
+          Object.keys(domainScores).map((domain) => [
+            domain,
+            QUESTIONS.filter((q) => q.domain === domain).length,
+          ]),
+        );
         const sortedDomains = Object.entries(domainScores)
+          .map(([domain, score]) => [
+            domain,
+            score / domainQuestionCounts[domain],
+          ])
           .sort((a, b) => b[1] - a[1])
-          .filter(([, score]) => score >= 9);
+          .filter(([, average]) => average >= 3);
 
         const topDomainNotes = sortedDomains.length
           ? sortedDomains
@@ -711,7 +872,7 @@
 
         let levelBadge, title, diagnosisText, actions;
 
-        if (total <= 23) {
+        if (averageScore <= 23 / 12) {
           levelBadge = "Indikasi Rendah";
           title = "Perkembangan anak tampak sesuai tahapan umumnya.";
           diagnosisText =
@@ -721,7 +882,7 @@
             "Pantau pencapaian tumbuh kembang (milestone) sesuai usia anak secara berkala.",
             "Jika di kemudian hari muncul perubahan perilaku atau kekhawatiran baru, catat dan diskusikan saat kontrol rutin ke posyandu atau dokter anak.",
           ];
-        } else if (total <= 41) {
+        } else if (averageScore <= 41 / 12) {
           levelBadge = "Indikasi Sedang · Perlu Observasi";
           title = "Ditemukan beberapa tanda awal yang perlu diperhatikan.";
           diagnosisText = `Pola jawaban menunjukkan kecenderungan pada aspek <strong>${topDomainNotes}</strong>. Kondisi ini dapat berkaitan dengan keterlambatan bicara (speech delay), tantangan pemrosesan sensorik, atau ciri awal spektrum autisme ringan yang memerlukan observasi lebih terarah.`;
@@ -744,12 +905,13 @@
 
         const domainBreakdownHTML = Object.entries(domainScores)
           .map(([key, score]) => {
-            const pct = Math.round((score / 15) * 100);
+            const maxScore = domainQuestionCounts[key] * 5;
+            const pct = Math.round((score / maxScore) * 100);
             return `
               <div>
                 <div class="flex justify-between text-[11px] font-medium text-[#4f594d]">
                   <span>${DOMAIN_META[key].name}</span>
-                  <span>${score} / 15</span>
+                  <span>${score} / ${maxScore}</span>
                 </div>
                 <div class="mt-1 h-1.5 overflow-hidden rounded-full bg-[#e6e9df]">
                   <div class="h-full rounded-full bg-[#355b45]" style="width: ${pct}%"></div>

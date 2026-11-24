@@ -1,0 +1,1681 @@
+<!doctype html>
+<html lang="id" class="overscroll-none">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Forum anonim untuk orang tua berbagi pengalaman dan saling mendukung bersama Fomify."
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Forum Orang Tua — Fomify</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+
+      html,
+      body {
+        min-height: 100dvh;
+        max-width: 100vw;
+        overflow-x: hidden;
+        overscroll-behavior-x: none;
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      }
+
+      body {
+        position: relative;
+        isolation: isolate;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .font-serif {
+        font-family: "Newsreader", Georgia, serif;
+      }
+
+      .brand-mark,
+      .brand-name {
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      .message-copy {
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      /* Pola titik organik halus agar background tidak polos */
+      .bg-organic-dots {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image: radial-gradient(
+          rgba(53, 91, 69, 0.11) 1px,
+          transparent 1px
+        );
+        background-size: 24px 24px;
+        mask-image: radial-gradient(
+          ellipse 85% 75% at 50% 35%,
+          #000 45%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse 85% 75% at 50% 35%,
+          #000 45%,
+          transparent 100%
+        );
+      }
+
+      /* Latar belakang ombak sinus tenang */
+      .aurora-wave {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        width: 100vw;
+        height: 100dvh;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .aurora-line {
+        animation: calm-sine-wave var(--wave-dur, 26s) linear infinite;
+        will-change: transform;
+      }
+
+      .aurora-line-reverse {
+        animation-direction: reverse;
+      }
+
+      @keyframes calm-sine-wave {
+        0% {
+          transform: translate3d(0, 0, 0);
+        }
+        100% {
+          transform: translate3d(var(--wave-shift, -480px), 0, 0);
+        }
+      }
+
+      /* Sembunyikan scrollbar horizontal pada chip filter mobile */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      #composer-wrapper::backdrop {
+        background: rgb(26 32 25 / 45%);
+        backdrop-filter: blur(8px);
+      }
+
+      /* Animasi masuk kartu diskusi */
+      .card-pop {
+        animation: card-pop 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      @keyframes card-pop {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Animasi maskot kelinci */
+      .mini-bunny {
+        cursor: pointer;
+        outline: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        animation: mini-bunny-hop 2.4s ease-in-out infinite;
+      }
+      .mini-bunny:focus-visible {
+        outline: 2px solid #92ae70;
+        outline-offset: 4px;
+      }
+      .mini-bunny:focus:not(:focus-visible),
+      .mini-bunny:active {
+        outline: none;
+      }
+      .mini-bunny-head {
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        animation: mini-bunny-tilt 4.8s ease-in-out infinite;
+      }
+      .mini-bunny-pupil {
+        transition: transform 90ms ease-out;
+      }
+      .mini-bunny-cheek {
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        animation: mini-bunny-blush 2.4s ease-in-out infinite;
+      }
+      @keyframes mini-bunny-hop {
+        0%,
+        100% {
+          transform: translateY(0) scale(1.03, 0.97);
+        }
+        45%,
+        55% {
+          transform: translateY(-8px) scale(0.98, 1.03);
+        }
+      }
+      @keyframes mini-bunny-tilt {
+        0%,
+        100% {
+          transform: rotate(-2deg);
+        }
+        50% {
+          transform: rotate(2deg);
+        }
+      }
+      @keyframes mini-bunny-blush {
+        0%,
+        100% {
+          opacity: 0.85;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.08);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mini-bunny,
+        .mini-bunny-head,
+        .mini-bunny-cheek {
+          animation: none;
+        }
+      }
+
+      dialog::backdrop {
+        background: rgb(26 32 25 / 50%);
+        backdrop-filter: blur(4px);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="text-[#20231f] antialiased"
+    style="
+      background:
+        radial-gradient(
+          circle at 6% 8%,
+          rgba(146, 174, 112, 0.34),
+          transparent 34rem
+        ),
+        radial-gradient(
+          circle at 92% 18%,
+          rgba(238, 208, 162, 0.28),
+          transparent 28rem
+        ),
+        radial-gradient(
+          circle at 86% 88%,
+          rgba(215, 237, 155, 0.38),
+          transparent 32rem
+        ),
+        linear-gradient(145deg, #fcfdf9 0%, #f1f6eb 50%, #e4eee0 100%);
+    "
+  >
+    <!-- Tekstur Titik & Gelombang Sinus Latar Belakang -->
+    <div class="bg-organic-dots" aria-hidden="true"></div>
+    <svg
+      id="calm-wave-svg"
+      class="aurora-wave"
+      viewBox="0 0 1440 900"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    ></svg>
+
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-30 border-b border-[#dce3d4]/80 bg-white/80 px-4 py-2.5 backdrop-blur-lg sm:px-8 sm:py-3.5"
+    >
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-2">
+        <a
+          class="inline-flex shrink-0 items-center gap-2 text-sm font-bold tracking-[-0.04em] no-underline sm:gap-2.5 sm:text-[15px]"
+          href="index.html"
+          aria-label="Fomify, halaman utama"
+        >
+          <span
+            class="brand-mark grid size-8 place-items-center rounded-full bg-[#355b45] text-xs text-white shadow-[0_4px_12px_#355b4533] sm:size-9 sm:text-sm"
+            aria-hidden="true"
+            >FY</span
+          ><span class="brand-name text-[#20231f]">Fomify</span>
+        </a>
+        <nav
+          class="flex items-center gap-1 text-[11px] font-semibold sm:gap-4 sm:text-xs"
+          aria-label="Navigasi utama"
+        >
+          <a
+            class="rounded-full px-2.5 py-2 text-[#5a6157] no-underline transition hover:bg-[#f1f5ea] hover:text-[#355b45]"
+            href="index.html"
+            >Beranda</a
+          >
+          <a
+            class="rounded-full px-2.5 py-2 text-[#5a6157] no-underline transition hover:bg-[#f1f5ea] hover:text-[#355b45]"
+            href="AI.html"
+            >Tanya AI</a
+          >
+          <a
+            class="rounded-full bg-[#355b45] px-3.5 py-2 text-white no-underline shadow-[0_4px_12px_#355b4529] transition hover:bg-[#294936] sm:px-4"
+            href="test.html"
+            >Tes skrining</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main
+      class="relative z-10 mx-auto w-full max-w-6xl flex-1 px-3.5 pb-28 pt-5 sm:px-8 sm:pb-16 sm:pt-10"
+    >
+      <!-- Hero Banner yang Lebih Hangat & Berdimensi -->
+      <section
+        class="relative mb-5 overflow-hidden rounded-[26px] border border-[#d6e0cd] bg-gradient-to-br from-white/95 via-[#fbfdf8]/92 to-[#f1f7ea]/90 p-5 shadow-[0_20px_50px_-12px_rgba(32,35,31,0.08)] backdrop-blur-md sm:mb-8 sm:p-8"
+      >
+        <!-- Dekorasi sudut organik -->
+        <div
+          class="pointer-events-none absolute -right-14 -top-14 size-52 rounded-full bg-[#d7ed9b]/45 blur-2xl sm:size-72"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="pointer-events-none absolute -bottom-16 left-1/3 size-44 rounded-full bg-[#eed0a2]/30 blur-2xl"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="relative z-10 flex flex-col justify-between gap-5 md:flex-row md:items-center"
+        >
+          <div class="max-w-2xl">
+            <div
+              class="mb-2.5 inline-flex items-center gap-2 rounded-full border border-[#d5e0ca] bg-[#f2f7ec] px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em] text-[#355b45] shadow-2xs sm:text-[11px]"
+            >
+              <span
+                class="size-1.5 animate-pulse rounded-full bg-[#6e9b47]"
+              ></span>
+              Ruang Aman Komunitas Orang Tua
+            </div>
+            <h1
+              class="m-0 font-serif text-[clamp(1.85rem,6.5vw,3.65rem)] font-normal leading-[1.06] tracking-[-.04em] text-[#1d221c]"
+            >
+              Berbagi cerita, <em class="text-[#355b45]">saling menguatkan.</em>
+            </h1>
+            <p
+              class="mb-0 mt-2.5 text-[13px] leading-[1.7] text-[#555d52] sm:mt-4 sm:text-sm sm:leading-[1.8]"
+            >
+              Tidak perlu akun atau nama asli. Ceritakan pengalaman sehari-hari
+              mendampingi tumbuh kembang anak, bertukar tips praktis, dan
+              temukan dukungan dari sesama orang tua.
+            </p>
+          </div>
+
+          <!-- Kartu Mini Pengingat + Maskot Kelinci -->
+          <div
+            class="flex items-center gap-4 rounded-2xl border border-[#dce6d3] bg-gradient-to-br from-[#f8fbf4] to-[#eef5e6] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_8px_20px_-6px_rgba(53,91,69,0.08)] sm:max-w-md sm:gap-5 sm:p-5"
+          >
+            <svg
+              id="forum-bunny"
+              class="mini-bunny size-16 shrink-0 drop-shadow-[0_6px_12px_#20231f14] sm:size-22"
+              viewBox="270 40 500 880"
+              role="button"
+              tabindex="0"
+              aria-label="Maskot kelinci Fomify"
+            >
+              <defs>
+                <clipPath id="forum-eye-left-clip">
+                  <circle cx="435" cy="525" r="60" />
+                </clipPath>
+                <clipPath id="forum-eye-right-clip">
+                  <circle cx="595" cy="525" r="60" />
+                </clipPath>
+              </defs>
+              <ellipse
+                cx="513"
+                cy="810"
+                rx="124"
+                ry="112"
+                fill="#9EB096"
+                stroke="#6B7E7A"
+                stroke-width="18"
+              />
+              <g class="mini-bunny-head">
+                <circle
+                  cx="517"
+                  cy="540"
+                  r="225"
+                  fill="#F9EFE0"
+                  stroke="#74839B"
+                  stroke-width="18"
+                />
+                <g transform="rotate(-11 428 205)">
+                  <g>
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      values="-4 428 368; 12 428 368; -4 428 368"
+                      keyTimes="0; 0.5; 1"
+                      calcMode="spline"
+                      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                      dur="2.4s"
+                      repeatCount="indefinite"
+                    />
+                    <ellipse
+                      cx="428"
+                      cy="205"
+                      rx="66"
+                      ry="180"
+                      fill="#F9EFE0"
+                      stroke="#74839B"
+                      stroke-width="18"
+                    />
+                    <ellipse
+                      cx="428"
+                      cy="210"
+                      rx="26"
+                      ry="108"
+                      fill="#D2AA92"
+                    />
+                  </g>
+                </g>
+                <g transform="rotate(11 572 205)">
+                  <g>
+                    <animateTransform
+                      attributeName="transform"
+                      type="rotate"
+                      values="4 572 368; -12 572 368; 4 572 368"
+                      keyTimes="0; 0.5; 1"
+                      calcMode="spline"
+                      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                      dur="2.4s"
+                      repeatCount="indefinite"
+                    />
+                    <ellipse
+                      cx="572"
+                      cy="205"
+                      rx="66"
+                      ry="180"
+                      fill="#F9EFE0"
+                      stroke="#74839B"
+                      stroke-width="18"
+                    />
+                    <ellipse
+                      cx="572"
+                      cy="210"
+                      rx="26"
+                      ry="108"
+                      fill="#D2AA92"
+                    />
+                  </g>
+                </g>
+                <ellipse
+                  cx="513"
+                  cy="735"
+                  rx="172"
+                  ry="58"
+                  fill="#EED0A2"
+                  stroke="#BA8880"
+                  stroke-width="12"
+                />
+                <circle
+                  cx="435"
+                  cy="525"
+                  r="62"
+                  fill="#EEF5EC"
+                  stroke="#74839B"
+                  stroke-width="8"
+                />
+                <g clip-path="url(#forum-eye-left-clip)">
+                  <g class="mini-bunny-pupil">
+                    <circle cx="435" cy="525" r="52" fill="#333333" />
+                    <circle cx="443" cy="510" r="10" fill="#EEF3EC" />
+                  </g>
+                </g>
+                <circle
+                  cx="595"
+                  cy="525"
+                  r="62"
+                  fill="#EEF5EC"
+                  stroke="#74839B"
+                  stroke-width="8"
+                />
+                <g clip-path="url(#forum-eye-right-clip)">
+                  <g class="mini-bunny-pupil">
+                    <circle cx="595" cy="525" r="52" fill="#333333" />
+                    <circle cx="603" cy="510" r="10" fill="#EEF3EC" />
+                  </g>
+                </g>
+                <ellipse cx="515" cy="596" rx="30" ry="18" fill="#D5AA92" />
+                <ellipse
+                  class="mini-bunny-cheek"
+                  cx="402"
+                  cy="605"
+                  rx="52"
+                  ry="28"
+                  fill="#D5AA92"
+                  opacity="0.8"
+                />
+                <ellipse
+                  class="mini-bunny-cheek"
+                  cx="635"
+                  cy="605"
+                  rx="52"
+                  ry="28"
+                  fill="#D5AA92"
+                  opacity="0.8"
+                />
+              </g>
+            </svg>
+            <div class="text-xs leading-relaxed text-[#4a5448] sm:text-[13px]">
+              <strong class="mb-0.5 block text-[13px] text-[#355b45] sm:text-sm"
+                >Jaga privasi bersama</strong
+              >
+              Gunakan nama samaran & hindari menuliskan nama lengkap, alamat,
+              atau sekolah anak.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Layout utama: feed diskusi penuh -->
+      <div class="grid items-start gap-6 lg:grid-cols-1 lg:gap-8">
+        <!-- Dialog / Bottom Sheet Mobile untuk membuat diskusi -->
+        <dialog
+          id="composer-wrapper"
+          class="mb-0 mt-auto max-h-[92dvh] w-full max-w-none overflow-y-auto rounded-t-[28px] border border-[#dce3d4] bg-[#fffefa] p-5 pb-8 text-[#20231f] shadow-[0_-12px_40px_rgba(32,35,31,0.2)] sm:m-auto sm:max-h-[90dvh] sm:w-[min(92vw,44rem)] sm:rounded-[28px] sm:p-8 sm:shadow-[0_24px_70px_rgba(32,35,31,0.25)]"
+          aria-labelledby="composer-title"
+        >
+          <!-- Handle indikator geser untuk tampilan mobile -->
+          <div
+            class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-[#dce2d5] sm:hidden"
+            aria-hidden="true"
+          ></div>
+
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <span
+                class="grid size-9 place-items-center rounded-xl bg-[#e7f0dc] text-sm font-bold text-[#355b45]"
+                aria-hidden="true"
+                >✎</span
+              >
+              <h2
+                id="composer-title"
+                class="m-0 font-serif text-2xl font-normal tracking-[-.03em]"
+              >
+                Mulai diskusi
+              </h2>
+            </div>
+            <button
+              id="close-composer"
+              data-close-composer
+              type="button"
+              class="grid size-10 shrink-0 place-items-center rounded-full border border-[#dedfd6] bg-white text-sm text-[#656b62] transition hover:bg-[#f4f6ef] hover:text-[#20231f]"
+              aria-label="Tutup form diskusi"
+            >
+              ✕
+            </button>
+          </div>
+          <p class="mb-4 mt-1.5 text-xs leading-relaxed text-[#656b62]">
+            Bagikan cerita atau pertanyaan Anda kepada komunitas. Diskusi dan
+            balasannya akan dihapus otomatis setelah 7 hari.
+          </p>
+
+          <form id="post-form" class="space-y-4">
+            <div>
+              <div class="mb-1.5 flex items-center justify-between">
+                <label
+                  class="text-xs font-semibold text-[#4f594d]"
+                  for="display-name"
+                  >Nama samaran</label
+                >
+                <button
+                  id="randomize-name"
+                  type="button"
+                  class="rounded-full bg-[#f1f6ea] px-2.5 py-1 text-[11px] font-semibold text-[#355b45] transition hover:bg-[#e4eed8]"
+                >
+                  ↻ Acak nama
+                </button>
+              </div>
+              <input
+                id="display-name"
+                class="min-h-11 w-full rounded-xl border border-[#d7ddd0] bg-[#fcfdf9] px-3.5 text-base outline-none transition focus:border-[#92ae70] focus:bg-white focus:ring-3 focus:ring-[#92ae70]/20 sm:text-sm"
+                type="text"
+                maxlength="32"
+                autocomplete="nickname"
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                class="mb-1.5 block text-xs font-semibold text-[#4f594d]"
+                for="post-title"
+                >Judul diskusi</label
+              >
+              <input
+                id="post-title"
+                class="min-h-11 w-full rounded-xl border border-[#d7ddd0] bg-[#fcfdf9] px-3.5 text-base outline-none transition focus:border-[#92ae70] focus:bg-white focus:ring-3 focus:ring-[#92ae70]/20 sm:text-sm"
+                type="text"
+                maxlength="100"
+                placeholder="Contoh: Cara menghadapi perubahan rutinitas"
+                required
+              />
+            </div>
+
+            <div>
+              <div class="mb-1.5 flex items-center justify-between">
+                <label
+                  class="text-xs font-semibold text-[#4f594d]"
+                  for="post-body"
+                  >Cerita atau pertanyaan</label
+                >
+                <span
+                  id="char-counter"
+                  class="text-[11px] font-medium text-[#85897f]"
+                  >0 / 1.200</span
+                >
+              </div>
+              <textarea
+                id="post-body"
+                class="min-h-32 w-full resize-y rounded-xl border border-[#d7ddd0] bg-[#fcfdf9] px-3.5 py-3 text-base leading-relaxed outline-none transition focus:border-[#92ae70] focus:bg-white focus:ring-3 focus:ring-[#92ae70]/20 sm:text-sm"
+                maxlength="1200"
+                placeholder="Ceritakan secukupnya tanpa informasi pribadi..."
+                required
+              ></textarea>
+            </div>
+
+            <button
+              id="post-submit"
+              class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#355b45] px-5 text-xs font-bold text-white shadow-[0_10px_24px_#355b4538] transition hover:bg-[#294936] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
+              type="submit"
+            >
+              Publikasikan diskusi <span aria-hidden="true">→</span>
+            </button>
+          </form>
+
+          <p
+            id="form-status"
+            class="mb-0 mt-3 min-h-4 text-[11px] leading-relaxed text-[#81867b]"
+            role="status"
+            aria-live="polite"
+          ></p>
+          <p
+            class="mb-0 mt-3 border-t border-[#e8e9e2] pt-3 text-[11px] leading-relaxed text-[#85897f]"
+          >
+            Saling menghargai sesama orang tua. Forum ini bukan pengganti
+            diagnosis atau saran medis profesional.
+          </p>
+        </dialog>
+
+        <!-- Kolom Feed Diskusi -->
+        <section aria-labelledby="feed-title" class="min-w-0">
+          <!-- Bar Kontrol Feed (Judul + Pencarian + Filter + Muat Ulang) -->
+          <div
+            class="mb-4 rounded-[22px] border border-[#d9e1d1] bg-white/90 p-3.5 shadow-[0_10px_30px_-8px_rgba(32,35,31,0.06)] backdrop-blur-md sm:p-5"
+          >
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <h2
+                  id="feed-title"
+                  class="m-0 font-serif text-xl font-normal tracking-[-.025em] text-[#1f241e] sm:text-2xl"
+                >
+                  Diskusi komunitas
+                </h2>
+                <p
+                  id="forum-status"
+                  class="mb-0 mt-0.5 text-[11px] leading-relaxed text-[#656b62]"
+                  role="status"
+                  aria-live="polite"
+                >
+                  Menghubungkan ke forum...
+                </p>
+              </div>
+              <div class="flex shrink-0 items-center gap-2">
+                <button
+                  id="open-desktop-composer"
+                  data-open-composer
+                  aria-controls="composer-wrapper"
+                  aria-expanded="false"
+                  class="hidden min-h-10 items-center gap-1.5 rounded-full bg-[#355b45] px-4 text-xs font-bold text-white shadow-[0_6px_16px_#355b452e] transition hover:bg-[#294936] lg:inline-flex"
+                  type="button"
+                >
+                  <span aria-hidden="true">+</span> Buat diskusi
+                </button>
+                <button
+                  id="refresh-feed"
+                  class="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-[#d6dfd0] bg-[#f6faf1] px-3.5 text-[11px] font-semibold text-[#355b45] transition hover:border-[#92ae70] hover:bg-[#eaf2e0] active:scale-95 disabled:opacity-50"
+                  type="button"
+                  aria-label="Muat ulang daftar diskusi"
+                >
+                  <span aria-hidden="true">↻</span>
+                  <span>Muat ulang</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Bar Kembali (Muncul saat satu diskusi dibuka) -->
+            <div id="detail-back-bar" class="mt-3 hidden">
+              <button
+                id="back-to-list"
+                type="button"
+                class="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#c6d3bc] bg-[#f2f7ec] px-4 text-xs font-bold text-[#355b45] transition hover:bg-[#e5f0d9] active:scale-[0.99] sm:w-auto sm:rounded-full"
+              >
+                <span aria-hidden="true">←</span> Kembali ke semua diskusi
+              </button>
+            </div>
+
+            <!-- Pencarian & Filter Responsif -->
+            <div
+              id="feed-filter-controls"
+              class="mt-3.5 flex flex-col gap-2.5 sm:flex-row sm:items-center"
+            >
+              <div class="relative flex-1">
+                <input
+                  id="search-input"
+                  type="search"
+                  placeholder="Cari topik atau kata kunci..."
+                  aria-label="Cari diskusi"
+                  class="min-h-11 w-full rounded-xl border border-[#dce2d5] bg-[#fcfdf9] pl-9 pr-3 text-base outline-none transition focus:border-[#92ae70] focus:bg-white focus:ring-3 focus:ring-[#92ae70]/20 sm:min-h-10 sm:text-xs"
+                />
+                <span
+                  class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#7f877b]"
+                  aria-hidden="true"
+                  >⌕</span
+                >
+              </div>
+              <div
+                class="no-scrollbar flex snap-x items-center gap-2 overflow-x-auto py-0.5"
+                role="group"
+                aria-label="Filter diskusi"
+              >
+                <button
+                  type="button"
+                  data-filter="all"
+                  class="filter-chip min-h-9 shrink-0 snap-start rounded-full bg-[#355b45] px-3.5 text-[11px] font-semibold text-white shadow-2xs transition"
+                >
+                  Semua
+                </button>
+                <button
+                  type="button"
+                  data-filter="answered"
+                  class="filter-chip min-h-9 shrink-0 snap-start rounded-full border border-[#dce2d5] bg-white px-3.5 text-[11px] font-semibold text-[#5e655b] transition hover:border-[#92ae70]"
+                >
+                  Ada balasan
+                </button>
+                <button
+                  type="button"
+                  data-filter="unanswered"
+                  class="filter-chip min-h-9 shrink-0 snap-start rounded-full border border-[#dce2d5] bg-white px-3.5 text-[11px] font-semibold text-[#5e655b] transition hover:border-[#92ae70]"
+                >
+                  Butuh tanggapan
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daftar Kartu Diskusi -->
+          <div
+            id="forum-feed"
+            class="space-y-3.5 sm:space-y-4"
+            aria-live="polite"
+          ></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Bottom Action Bar khusus Mobile (Nyaman & Tidak Menutupi Konten) -->
+    <div
+      class="fixed inset-x-0 bottom-0 z-30 border-t border-[#dce3d4]/90 bg-white/90 px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] backdrop-blur-lg lg:hidden"
+    >
+      <div class="mx-auto flex max-w-lg items-center gap-2.5">
+        <button
+          id="open-mobile-composer"
+          data-open-composer
+          type="button"
+          class="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-[#355b45] px-5 text-xs font-bold text-white shadow-[0_8px_20px_#355b453b] transition active:scale-[0.98]"
+          aria-controls="composer-wrapper"
+          aria-expanded="false"
+        >
+          <span class="text-base leading-none" aria-hidden="true">+</span>
+          <span>Buat diskusi baru</span>
+        </button>
+        <button
+          id="scroll-top-mobile"
+          type="button"
+          aria-label="Kembali ke atas halaman"
+          class="grid size-11 shrink-0 place-items-center rounded-full border border-[#d6dfd0] bg-[#f6faf1] text-sm font-bold text-[#355b45] transition active:scale-95"
+        >
+          ↑
+        </button>
+      </div>
+    </div>
+
+    <!-- Dialog Laporan Konten -->
+    <dialog
+      id="report-dialog"
+      class="m-auto w-[min(92vw,28rem)] rounded-2xl border border-[#dedfd6] bg-[#fffefa] p-0 text-[#20231f] shadow-[0_24px_70px_#20231f33]"
+      aria-labelledby="report-title"
+    >
+      <form id="report-form" class="p-5 sm:p-6">
+        <h2 id="report-title" class="m-0 font-serif text-xl font-normal">
+          Laporkan konten
+        </h2>
+        <p class="mb-3 mt-2 text-xs leading-relaxed text-[#656b62]">
+          Laporan akan ditinjau oleh pengelola forum secara rahasia.
+        </p>
+        <label
+          class="mb-1.5 block text-[11px] font-semibold text-[#4f594d]"
+          for="report-reason"
+          >Alasan laporan</label
+        >
+        <textarea
+          id="report-reason"
+          class="min-h-24 w-full rounded-xl border border-[#dedfd6] bg-white px-3 py-2.5 text-base outline-none focus:border-[#92ae70] focus:ring-2 focus:ring-[#92ae70]/20 sm:text-sm"
+          maxlength="300"
+          placeholder="Contoh: Mengandung informasi pribadi anak atau kata tidak pantas..."
+          required
+        ></textarea>
+        <div class="mt-4 flex justify-end gap-2">
+          <button
+            id="cancel-report"
+            class="min-h-10 rounded-full border border-[#dedfd6] px-4 text-xs font-semibold text-[#656b62]"
+            type="button"
+          >
+            Batal
+          </button>
+          <button
+            id="submit-report"
+            class="min-h-10 rounded-full bg-[#355b45] px-4 text-xs font-bold text-white disabled:opacity-50"
+            type="submit"
+          >
+            Kirim laporan
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <footer
+      class="relative z-10 border-t border-[#dedfd6]/80 bg-white/70 px-4 py-5 pb-24 text-center text-[11px] leading-relaxed text-[#7c8277] sm:px-8 lg:pb-5"
+    >
+      Jika Anda khawatir tentang kondisi anak, bicarakan dengan tenaga
+      profesional yang berwenang.
+    </footer>
+
+    <script>
+      const SUPABASE_URL = "https://jsjadaytjlkhrzrtusih.supabase.co";
+      const SUPABASE_ANON_KEY =
+        "sb_publishable_g0SJUi9tJOcW6Ggzk2cT0w_lRZW-Zu5";
+      const client =
+        window.supabase &&
+        window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // Generator ombak sinus tenang (seamless horizontal wave)
+      (function initCalmSineWaves() {
+        const svg = document.querySelector("#calm-wave-svg");
+        if (!svg) return;
+        const NS = "http://www.w3.org/2000/svg";
+
+        const waves = [
+          {
+            baseY: 200,
+            amp: 26,
+            wavelength: 480,
+            stroke: "#eed0a2",
+            opacity: 0.24,
+            width: 44,
+            dur: "34s",
+            reverse: false,
+          },
+          {
+            baseY: 530,
+            amp: 38,
+            wavelength: 720,
+            stroke: "#92ae70",
+            opacity: 0.26,
+            width: 88,
+            dur: "28s",
+            reverse: false,
+          },
+          {
+            baseY: 640,
+            amp: 30,
+            wavelength: 480,
+            stroke: "#d7ed9b",
+            opacity: 0.34,
+            width: 56,
+            dur: "22s",
+            reverse: true,
+          },
+        ];
+
+        waves.forEach((w) => {
+          const totalWidth = 1440 + w.wavelength * 2;
+          const step = 16;
+          const points = [];
+          for (let x = -w.wavelength; x <= totalWidth; x += step) {
+            const theta = (x / w.wavelength) * Math.PI * 2;
+            const y = w.baseY + Math.sin(theta) * w.amp;
+            points.push(`${points.length ? "L" : "M"}${x} ${y.toFixed(2)}`);
+          }
+
+          const path = document.createElementNS(NS, "path");
+          path.setAttribute("d", points.join(" "));
+          path.setAttribute("fill", "none");
+          path.setAttribute("stroke", w.stroke);
+          path.setAttribute("stroke-opacity", String(w.opacity));
+          path.setAttribute("stroke-width", String(w.width));
+          path.setAttribute("stroke-linecap", "round");
+          path.setAttribute(
+            "class",
+            w.reverse ? "aurora-line aurora-line-reverse" : "aurora-line",
+          );
+          path.style.setProperty("--wave-shift", `${-w.wavelength}px`);
+          path.style.setProperty("--wave-dur", w.dur);
+          svg.appendChild(path);
+        });
+      })();
+
+      const postForm = document.querySelector("#post-form");
+      const displayNameInput = document.querySelector("#display-name");
+      const postTitleInput = document.querySelector("#post-title");
+      const postBodyInput = document.querySelector("#post-body");
+      const charCounter = document.querySelector("#char-counter");
+      const postSubmit = document.querySelector("#post-submit");
+      const formStatus = document.querySelector("#form-status");
+      const forumStatus = document.querySelector("#forum-status");
+      const forumFeed = document.querySelector("#forum-feed");
+      const feedTitle = document.querySelector("#feed-title");
+      const feedFilterControls = document.querySelector(
+        "#feed-filter-controls",
+      );
+      const detailBackBar = document.querySelector("#detail-back-bar");
+      const backToListButton = document.querySelector("#back-to-list");
+      const refreshButton = document.querySelector("#refresh-feed");
+      const searchInput = document.querySelector("#search-input");
+      const filterChips = [...document.querySelectorAll(".filter-chip")];
+      const reportDialog = document.querySelector("#report-dialog");
+      const reportForm = document.querySelector("#report-form");
+      const reportReason = document.querySelector("#report-reason");
+      const submitReport = document.querySelector("#submit-report");
+      const forumBunny = document.querySelector("#forum-bunny");
+      const forumBunnyPupils = [
+        ...forumBunny.querySelectorAll(".mini-bunny-pupil"),
+      ];
+
+      const composerWrapper = document.querySelector("#composer-wrapper");
+      const openComposerButtons = [
+        ...document.querySelectorAll("[data-open-composer]"),
+      ];
+      const closeComposerButtons = [
+        ...document.querySelectorAll("[data-close-composer]"),
+      ];
+
+      document
+        .querySelector("#scroll-top-mobile")
+        .addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+      let reportTarget = null;
+      let isPosting = false;
+      let autoRefreshEnabled = true;
+      let cachedPosts = [];
+      let cachedReplies = [];
+      let activeFilter = "all";
+      let forumHasRendered = false;
+      let selectedPostId = null;
+
+      const ALIAS_PREFIXES = [
+        "Bunda",
+        "Ayah",
+        "Orang Tua",
+        "Sahabat",
+        "Keluarga",
+      ];
+      const ALIAS_WORDS = [
+        "Hangat",
+        "Sabar",
+        "Pelangi",
+        "Bintang",
+        "Mentari",
+        "Teduh",
+        "Ceria",
+        "Harapan",
+      ];
+
+      function generateAlias() {
+        const prefix =
+          ALIAS_PREFIXES[Math.floor(Math.random() * ALIAS_PREFIXES.length)];
+        const word =
+          ALIAS_WORDS[Math.floor(Math.random() * ALIAS_WORDS.length)];
+        const num = Math.floor(10 + Math.random() * 89);
+        return `${prefix} ${word} ${num}`;
+      }
+
+      displayNameInput.value = generateAlias();
+      document
+        .querySelector("#randomize-name")
+        .addEventListener("click", () => {
+          displayNameInput.value = generateAlias();
+        });
+
+      // Penghitung karakter real-time
+      postBodyInput.addEventListener("input", () => {
+        charCounter.textContent = `${postBodyInput.value.length} / 1.200`;
+      });
+
+      let forumBunnyPupilX = 0;
+      let forumBunnyPupilY = 0;
+      let forumBunnyPupilFrame = 0;
+
+      function renderForumBunnyPupils() {
+        forumBunnyPupilFrame = 0;
+        const transform = `translate(${forumBunnyPupilX}px, ${forumBunnyPupilY}px)`;
+        forumBunnyPupils.forEach((pupil) => {
+          pupil.style.transform = transform;
+        });
+      }
+
+      function lookAtForumBunnyPoint(clientX, clientY) {
+        const bounds = forumBunny.getBoundingClientRect();
+        const dx = clientX - (bounds.left + bounds.width * 0.5);
+        const dy = clientY - (bounds.top + bounds.height * 0.55);
+        const distance = Math.max(1, Math.hypot(dx, dy));
+        const strength = Math.min(1, distance / 100);
+        forumBunnyPupilX = (dx / distance) * 8 * strength;
+        forumBunnyPupilY = (dy / distance) * 6 * strength;
+        forumBunnyPupilFrame ||= requestAnimationFrame(renderForumBunnyPupils);
+      }
+
+      function resetForumBunnyGaze() {
+        forumBunnyPupilX = 0;
+        forumBunnyPupilY = 0;
+        forumBunnyPupilFrame ||= requestAnimationFrame(renderForumBunnyPupils);
+      }
+
+      window.addEventListener(
+        "pointermove",
+        (event) => lookAtForumBunnyPoint(event.clientX, event.clientY),
+        { passive: true },
+      );
+      window.addEventListener("pointerout", (event) => {
+        if (!event.relatedTarget) resetForumBunnyGaze();
+      });
+      window.addEventListener("blur", resetForumBunnyGaze);
+
+      // Kontrol dialog pembuatan diskusi
+      function setComposerExpanded(expanded) {
+        openComposerButtons.forEach((button) =>
+          button.setAttribute("aria-expanded", String(expanded)),
+        );
+      }
+
+      function openComposer() {
+        if (!composerWrapper.open) composerWrapper.showModal();
+        setComposerExpanded(true);
+      }
+
+      function closeComposer() {
+        if (composerWrapper.open) composerWrapper.close();
+      }
+
+      openComposerButtons.forEach((button) =>
+        button.addEventListener("click", openComposer),
+      );
+      closeComposerButtons.forEach((button) =>
+        button.addEventListener("click", closeComposer),
+      );
+      composerWrapper.addEventListener("close", () =>
+        setComposerExpanded(false),
+      );
+
+      function setStatus(element, message, isError = false) {
+        element.textContent = message;
+        element.className = isError
+          ? "mt-1 min-h-4 text-[11px] leading-relaxed text-red-700"
+          : "mt-1 min-h-4 text-[11px] leading-relaxed text-[#656b62]";
+      }
+
+      function createElement(tag, className, text) {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (text !== undefined) element.textContent = text;
+        return element;
+      }
+
+      // Warna avatar konsisten berdasarkan nama samaran
+      const AVATAR_STYLES = [
+        "bg-[#e3efd5] text-[#2f523d] ring-1 ring-[#c7dcb0]",
+        "bg-[#f6e8d2] text-[#7c5328] ring-1 ring-[#e5cfa9]",
+        "bg-[#dcebe6] text-[#28564b] ring-1 ring-[#bdd8cf]",
+        "bg-[#eef0d5] text-[#4e5b27] ring-1 ring-[#d7dbb0]",
+        "bg-[#e6e9f2] text-[#3a486b] ring-1 ring-[#ccd2e3]",
+      ];
+
+      function createAvatar(name, sizeClass = "size-9 text-xs") {
+        const clean = (name || "OT").trim();
+        const initials = clean
+          .split(/\s+/)
+          .slice(0, 2)
+          .map((w) => w[0]?.toUpperCase() || "")
+          .join("");
+        let hash = 0;
+        for (let i = 0; i < clean.length; i++) {
+          hash = clean.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const palette = AVATAR_STYLES[Math.abs(hash) % AVATAR_STYLES.length];
+        return createElement(
+          "span",
+          `grid ${sizeClass} shrink-0 place-items-center rounded-full font-bold ${palette}`,
+          initials || "OT",
+        );
+      }
+
+      function formatDate(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "Baru saja";
+        return new Intl.DateTimeFormat("id-ID", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(date);
+      }
+
+      function createReportButton(type, id) {
+        const button = createElement(
+          "button",
+          "inline-flex min-h-8 items-center gap-1 rounded-full px-2.5 text-[11px] font-medium text-[#81867b] transition hover:bg-[#f2f5ec] hover:text-[#355b45]",
+          "⚑ Laporkan",
+        );
+        button.type = "button";
+        button.dataset.reportType = type;
+        button.dataset.reportId = id;
+        return button;
+      }
+
+      function renderReply(reply) {
+        const item = createElement(
+          "article",
+          "rounded-2xl border border-[#e3eadc] bg-white/95 p-3.5 shadow-[0_2px_10px_rgba(32,35,31,0.03)] sm:p-4",
+        );
+        const header = createElement(
+          "div",
+          "flex items-center justify-between gap-2",
+        );
+        const authorWrap = createElement("div", "flex items-center gap-2");
+        authorWrap.append(
+          createAvatar(reply.display_name, "size-7 text-[10px]"),
+          createElement(
+            "strong",
+            "text-xs font-bold text-[#355b45]",
+            reply.display_name,
+          ),
+        );
+        const time = createElement(
+          "time",
+          "text-[10.5px] text-[#85897f]",
+          formatDate(reply.created_at),
+        );
+        time.dateTime = reply.created_at;
+        header.append(authorWrap, time);
+
+        const body = createElement(
+          "p",
+          "message-copy mb-1.5 mt-2.5 text-[13.5px] leading-relaxed text-[#383f36] sm:text-[13px]",
+          reply.body,
+        );
+        const footer = createElement("div", "flex justify-end");
+        footer.append(createReportButton("reply", reply.id));
+        item.append(header, body, footer);
+        return item;
+      }
+
+      // Kartu ringkas di daftar utama (deskripsi dipotong & tanpa balasan)
+      function renderPostPreview(post, replies, animate = false) {
+        const hasReplies = replies.length > 0;
+        const accentBorder = hasReplies
+          ? "border-l-4 border-l-[#7aa154]"
+          : "border-l-4 border-l-[#e0cbb0]";
+
+        const card = createElement(
+          "article",
+          `${animate ? "card-pop " : ""}${accentBorder} group cursor-pointer rounded-[22px] border border-[#dce3d4] bg-gradient-to-br from-white via-[#fffefa] to-[#f8fbf3] p-4 shadow-[0_10px_30px_-10px_rgba(32,35,31,0.07)] transition hover:-translate-y-0.5 hover:border-[#92ae70] hover:shadow-[0_18px_38px_-12px_rgba(53,91,69,0.14)] active:scale-[0.995] focus-visible:outline-2 focus-visible:outline-[#355b45] sm:p-6`,
+        );
+        card.tabIndex = 0;
+        card.setAttribute("role", "button");
+        card.setAttribute("aria-label", `Buka diskusi: ${post.title}`);
+
+        const header = createElement(
+          "div",
+          "flex items-center justify-between gap-2",
+        );
+        const authorWrap = createElement("div", "flex items-center gap-2.5");
+        const authorMeta = createElement("div", "leading-tight");
+        const author = createElement(
+          "strong",
+          "block text-xs font-bold text-[#2b4837] sm:text-[13px]",
+          post.display_name,
+        );
+        const time = createElement(
+          "time",
+          "text-[10.5px] text-[#7f867a]",
+          formatDate(post.created_at),
+        );
+        time.dateTime = post.created_at;
+        authorMeta.append(author, time);
+        authorWrap.append(createAvatar(post.display_name), authorMeta);
+
+        const badge = createElement(
+          "span",
+          hasReplies
+            ? "inline-flex items-center gap-1 rounded-full border border-[#cde0b8] bg-[#eaf3de] px-2.5 py-1 text-[10.5px] font-bold text-[#2f543e]"
+            : "inline-flex items-center gap-1 rounded-full border border-[#ebe0cf] bg-[#fbf5eb] px-2.5 py-1 text-[10.5px] font-semibold text-[#7d6240]",
+          hasReplies ? `💬 ${replies.length} balasan` : "Belum dibalas",
+        );
+        header.append(authorWrap, badge);
+
+        const title = createElement(
+          "h3",
+          "mb-0 mt-3.5 font-serif text-[1.2rem] font-normal leading-snug tracking-[-.02em] text-[#1f241e] transition group-hover:text-[#355b45] sm:text-2xl",
+          post.title,
+        );
+        const excerpt = createElement(
+          "p",
+          "mb-3.5 mt-2 line-clamp-2 text-[13.5px] leading-[1.68] text-[#586055] sm:text-sm",
+          post.body,
+        );
+
+        const actionBar = createElement(
+          "div",
+          "flex items-center justify-between border-t border-[#edf1e7] pt-2.5",
+        );
+        const readMoreHint = createElement(
+          "span",
+          "inline-flex items-center gap-1 text-[11.5px] font-bold text-[#355b45] group-hover:underline",
+          hasReplies
+            ? `Buka diskusi & ${replies.length} balasan →`
+            : "Baca & beri tanggapan →",
+        );
+        actionBar.append(readMoreHint, createReportButton("post", post.id));
+
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("[data-report-type]")) return;
+          openPostDetail(post.id);
+        });
+        card.addEventListener("keydown", (event) => {
+          if (event.target.closest("[data-report-type]")) return;
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openPostDetail(post.id);
+          }
+        });
+
+        card.append(header, title, excerpt, actionBar);
+        return card;
+      }
+
+      // Kartu detail penuh (seluruh deskripsi + semua balasan + form balas)
+      function renderPostDetail(post, replies, animate = true) {
+        const card = createElement(
+          "article",
+          `${animate ? "card-pop " : ""}border-l-4 border-l-[#355b45] rounded-[24px] border border-[#c6d3bc] bg-gradient-to-br from-white via-[#fffefa] to-[#f7fbf2] p-4 shadow-[0_16px_44px_-12px_rgba(32,35,31,0.1)] sm:p-7`,
+        );
+
+        const header = createElement(
+          "div",
+          "flex items-center justify-between gap-2",
+        );
+        const authorWrap = createElement("div", "flex items-center gap-2.5");
+        const authorMeta = createElement("div", "leading-tight");
+        const author = createElement(
+          "strong",
+          "block text-xs font-bold text-[#2b4837] sm:text-sm",
+          post.display_name,
+        );
+        const time = createElement(
+          "time",
+          "text-[11px] text-[#7f867a]",
+          formatDate(post.created_at),
+        );
+        time.dateTime = post.created_at;
+        authorMeta.append(author, time);
+        authorWrap.append(createAvatar(post.display_name), authorMeta);
+
+        const badge = createElement(
+          "span",
+          replies.length
+            ? "inline-flex items-center gap-1 rounded-full border border-[#cde0b8] bg-[#eaf3de] px-3 py-1 text-[11px] font-bold text-[#2f543e]"
+            : "inline-flex items-center gap-1 rounded-full border border-[#ebe0cf] bg-[#fbf5eb] px-3 py-1 text-[11px] font-semibold text-[#7d6240]",
+          replies.length ? `💬 ${replies.length} balasan` : "Belum dibalas",
+        );
+        header.append(authorWrap, badge);
+
+        const title = createElement(
+          "h3",
+          "mb-0 mt-4 font-serif text-xl font-normal leading-snug tracking-[-.025em] text-[#1f241e] sm:text-[1.7rem]",
+          post.title,
+        );
+        const body = createElement(
+          "p",
+          "message-copy mb-4 mt-2.5 text-[14px] leading-[1.8] text-[#3d463b] sm:text-[15px]",
+          post.body,
+        );
+
+        const actionBar = createElement(
+          "div",
+          "flex items-center justify-between border-t border-[#e8ede2] pt-3",
+        );
+        const replyToggleHint = createElement(
+          "span",
+          "text-[11.5px] font-medium text-[#6f776c]",
+          "Beri tanggapan hangat di bawah ↓",
+        );
+        actionBar.append(replyToggleHint, createReportButton("post", post.id));
+
+        card.append(header, title, body, actionBar);
+
+        const replySection = createElement(
+          "div",
+          "mt-4 rounded-2xl border border-[#e3eadc] bg-[#f4f8ee]/80 p-3.5 sm:p-5",
+        );
+        if (replies.length) {
+          const repliesList = createElement("div", "mb-4 space-y-3");
+          replies.forEach((reply) =>
+            repliesList.appendChild(renderReply(reply)),
+          );
+          replySection.appendChild(repliesList);
+        }
+
+        const replyForm = createElement(
+          "form",
+          "flex flex-col gap-2.5 sm:flex-row sm:items-end",
+        );
+        replyForm.dataset.replyForm = "";
+        replyForm.dataset.postId = post.id;
+        const replyInput = createElement(
+          "textarea",
+          "min-h-12 flex-1 resize-y rounded-xl border border-[#d4ddd0] bg-white px-3.5 py-2.5 text-base leading-relaxed outline-none transition focus:border-[#92ae70] focus:ring-3 focus:ring-[#92ae70]/20 sm:min-h-11 sm:text-xs",
+        );
+        replyInput.rows = 2;
+        replyInput.maxLength = 800;
+        replyInput.required = true;
+        replyInput.setAttribute("aria-label", `Balas diskusi: ${post.title}`);
+        replyInput.placeholder = "Tulis balasan dukungan Anda...";
+        const replyButton = createElement(
+          "button",
+          "min-h-11 shrink-0 rounded-full bg-[#355b45] px-5 text-xs font-bold text-white shadow-[0_6px_16px_#355b452e] transition hover:bg-[#294936] active:scale-[0.98] disabled:opacity-50",
+          "Kirim balasan",
+        );
+        replyButton.type = "submit";
+        replyForm.append(replyInput, replyButton);
+        replySection.appendChild(replyForm);
+        card.appendChild(replySection);
+        return card;
+      }
+
+      function openPostDetail(postId) {
+        selectedPostId = postId;
+        applyFiltersAndRender(true);
+        const topOffset = feedTitle.closest("section");
+        if (topOffset) {
+          topOffset.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
+      function closePostDetail() {
+        selectedPostId = null;
+        applyFiltersAndRender(true);
+      }
+
+      backToListButton.addEventListener("click", closePostDetail);
+
+      function applyFiltersAndRender(animateCards = false) {
+        const repliesByPost = new Map();
+        cachedReplies.forEach((reply) => {
+          const list = repliesByPost.get(reply.post_id) || [];
+          list.push(reply);
+          repliesByPost.set(reply.post_id, list);
+        });
+
+        // Mode detail: hanya tampilkan 1 forum yang dipilih beserta balasannya
+        if (selectedPostId !== null) {
+          const selectedPost = cachedPosts.find(
+            (post) => String(post.id) === String(selectedPostId),
+          );
+
+          if (!selectedPost) {
+            selectedPostId = null;
+          } else {
+            feedTitle.textContent = "Detail diskusi";
+            feedFilterControls.classList.add("hidden");
+            detailBackBar.classList.remove("hidden");
+
+            const postReplies = repliesByPost.get(selectedPost.id) || [];
+            setStatus(
+              forumStatus,
+              `Membaca diskusi oleh ${selectedPost.display_name} (${postReplies.length} balasan).`,
+            );
+
+            forumFeed.replaceChildren(
+              renderPostDetail(selectedPost, postReplies, animateCards),
+            );
+            return;
+          }
+        }
+
+        // Mode daftar semua forum
+        feedTitle.textContent = "Diskusi komunitas";
+        feedFilterControls.classList.remove("hidden");
+        detailBackBar.classList.add("hidden");
+
+        const keyword = searchInput.value.trim().toLowerCase();
+        const filteredPosts = cachedPosts.filter((post) => {
+          const postReplies = repliesByPost.get(post.id) || [];
+          if (activeFilter === "answered" && postReplies.length === 0)
+            return false;
+          if (activeFilter === "unanswered" && postReplies.length > 0)
+            return false;
+          if (!keyword) return true;
+          const inPost =
+            post.title.toLowerCase().includes(keyword) ||
+            post.body.toLowerCase().includes(keyword) ||
+            post.display_name.toLowerCase().includes(keyword);
+          const inReply = postReplies.some((r) =>
+            r.body.toLowerCase().includes(keyword),
+          );
+          return inPost || inReply;
+        });
+
+        forumFeed.replaceChildren();
+        if (!filteredPosts.length) {
+          forumFeed.appendChild(
+            createElement(
+              "div",
+              "rounded-2xl border border-dashed border-[#c2d0b8] bg-white/85 p-8 text-center text-xs leading-relaxed text-[#656b62] shadow-2xs",
+              cachedPosts.length
+                ? "Tidak ada diskusi yang cocok dengan pencarian atau filter Anda."
+                : "Belum ada diskusi. Yuk, mulai percakapan pertama dengan menekan tombol Buat diskusi!",
+            ),
+          );
+          return;
+        }
+
+        filteredPosts.forEach((post) =>
+          forumFeed.appendChild(
+            renderPostPreview(
+              post,
+              repliesByPost.get(post.id) || [],
+              animateCards,
+            ),
+          ),
+        );
+      }
+
+      searchInput.addEventListener("input", () => applyFiltersAndRender());
+      filterChips.forEach((chip) => {
+        chip.addEventListener("click", () => {
+          activeFilter = chip.dataset.filter;
+          filterChips.forEach((c) => {
+            const active = c === chip;
+            c.className = active
+              ? "filter-chip min-h-9 shrink-0 snap-start rounded-full bg-[#355b45] px-3.5 text-[11px] font-semibold text-white shadow-2xs transition"
+              : "filter-chip min-h-9 shrink-0 snap-start rounded-full border border-[#dce2d5] bg-white px-3.5 text-[11px] font-semibold text-[#5e655b] transition hover:border-[#92ae70]";
+          });
+          applyFiltersAndRender();
+        });
+      });
+
+      async function loadForum({ silent = false } = {}) {
+        if (!client) {
+          autoRefreshEnabled = false;
+          setStatus(
+            forumStatus,
+            "Pustaka Supabase tidak termuat. Periksa koneksi internet.",
+            true,
+          );
+          postSubmit.disabled = true;
+          return false;
+        }
+        if (!silent) setStatus(forumStatus, "Memuat diskusi...");
+        refreshButton.disabled = true;
+        try {
+          const expiresBefore = new Date(
+            Date.now() - 7 * 24 * 60 * 60 * 1000,
+          ).toISOString();
+          const { data: posts, error: postsError } = await client
+            .from("forum_posts")
+            .select("id, display_name, title, body, created_at")
+            .gte("created_at", expiresBefore)
+            .order("created_at", { ascending: false })
+            .limit(40);
+          if (postsError) throw postsError;
+
+          let replies = [];
+          if (posts.length) {
+            const { data, error } = await client
+              .from("forum_replies")
+              .select("id, post_id, display_name, body, created_at")
+              .in(
+                "post_id",
+                posts.map((post) => post.id),
+              )
+              .order("created_at", { ascending: true })
+              .limit(500);
+            if (error) throw error;
+            replies = data;
+          }
+
+          cachedPosts = posts;
+          cachedReplies = replies;
+          applyFiltersAndRender(!forumHasRendered);
+          forumHasRendered = true;
+          autoRefreshEnabled = true;
+          if (!silent && selectedPostId === null) {
+            setStatus(
+              forumStatus,
+              posts.length
+                ? `Menampilkan ${posts.length} diskusi komunitas.`
+                : "Belum ada diskusi. Jadilah yang pertama berbagi.",
+            );
+          }
+          return true;
+        } catch (error) {
+          console.error("Forum gagal dimuat:", error);
+          if (error && error.code === "PGRST205") autoRefreshEnabled = false;
+          setStatus(
+            forumStatus,
+            "Forum tidak dapat dimuat. Periksa koneksi internet Anda.",
+            true,
+          );
+          return false;
+        } finally {
+          refreshButton.disabled = false;
+        }
+      }
+
+      async function submitReply(form) {
+        const textarea = form.querySelector("textarea");
+        const button = form.querySelector('button[type="submit"]');
+        const body = textarea.value.trim();
+        const displayName = displayNameInput.value.trim() || generateAlias();
+        if (!body || isPosting) return;
+
+        isPosting = true;
+        button.disabled = true;
+        const originalLabel = button.textContent;
+        button.textContent = "Mengirim...";
+        try {
+          const { error } = await client.from("forum_replies").insert({
+            post_id: form.dataset.postId,
+            display_name: displayName,
+            body,
+          });
+          if (error) throw error;
+          textarea.value = "";
+          await loadForum({ silent: true });
+          setStatus(forumStatus, "Balasan Anda berhasil ditambahkan.");
+        } catch (error) {
+          console.error("Balasan forum gagal dikirim:", error);
+          setStatus(
+            forumStatus,
+            "Balasan belum terkirim. Periksa koneksi lalu coba lagi.",
+            true,
+          );
+        } finally {
+          isPosting = false;
+          button.disabled = false;
+          button.textContent = originalLabel;
+        }
+      }
+
+      postForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (isPosting || !client) return;
+        const displayName = displayNameInput.value.trim();
+        const title = postTitleInput.value.trim();
+        const body = postBodyInput.value.trim();
+        if (!displayName || !title || !body) {
+          setStatus(
+            formStatus,
+            "Lengkapi nama samaran, judul, dan cerita.",
+            true,
+          );
+          return;
+        }
+
+        isPosting = true;
+        postSubmit.disabled = true;
+        setStatus(formStatus, "Mempublikasikan diskusi...");
+        try {
+          const { error } = await client.from("forum_posts").insert({
+            display_name: displayName,
+            title,
+            body,
+          });
+          if (error) throw error;
+          postTitleInput.value = "";
+          postBodyInput.value = "";
+          charCounter.textContent = "0 / 1.200";
+          selectedPostId = null;
+          const loaded = await loadForum({ silent: true });
+          setStatus(
+            formStatus,
+            loaded
+              ? "Diskusi berhasil dipublikasikan."
+              : "Diskusi terkirim, tetapi daftar gagal diperbarui.",
+            !loaded,
+          );
+          closeComposer();
+        } catch (error) {
+          console.error("Diskusi forum gagal dikirim:", error);
+          setStatus(
+            formStatus,
+            "Diskusi belum terkirim. Periksa koneksi lalu coba lagi.",
+            true,
+          );
+        } finally {
+          isPosting = false;
+          postSubmit.disabled = false;
+        }
+      });
+
+      forumFeed.addEventListener("submit", (event) => {
+        const form = event.target.closest("form[data-reply-form]");
+        if (!form) return;
+        event.preventDefault();
+        if (!client) {
+          setStatus(forumStatus, "Layanan forum belum siap.", true);
+          return;
+        }
+        submitReply(form);
+      });
+
+      forumFeed.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-report-type]");
+        if (!button) return;
+        reportTarget = {
+          type: button.dataset.reportType,
+          id: button.dataset.reportId,
+        };
+        reportReason.value = "";
+        reportDialog.showModal();
+        reportReason.focus();
+      });
+
+      document
+        .querySelector("#cancel-report")
+        .addEventListener("click", () => reportDialog.close());
+      reportDialog.addEventListener("close", () => {
+        reportTarget = null;
+      });
+
+      reportForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!client || !reportTarget || isPosting) return;
+        const reason = reportReason.value.trim();
+        if (reason.length < 5) {
+          setStatus(
+            forumStatus,
+            "Jelaskan alasan laporan secara singkat.",
+            true,
+          );
+          return;
+        }
+
+        isPosting = true;
+        submitReport.disabled = true;
+        try {
+          const { error } = await client.from("forum_reports").insert({
+            target_type: reportTarget.type,
+            target_id: reportTarget.id,
+            reason,
+          });
+          if (error) throw error;
+          reportDialog.close();
+          setStatus(
+            forumStatus,
+            "Laporan berhasil dikirim ke pengelola forum.",
+          );
+        } catch (error) {
+          console.error("Laporan forum gagal dikirim:", error);
+          setStatus(
+            forumStatus,
+            "Laporan belum terkirim. Coba lagi nanti.",
+            true,
+          );
+        } finally {
+          isPosting = false;
+          submitReport.disabled = false;
+          reportTarget = null;
+        }
+      });
+
+      refreshButton.addEventListener("click", () => loadForum());
+      loadForum();
+      setInterval(() => {
+        if (autoRefreshEnabled && !document.hidden) loadForum({ silent: true });
+      }, 30000);
+    </script>
+  </body>
+</html>

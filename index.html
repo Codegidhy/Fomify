@@ -5,15 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Kenali tanda-tanda kebutuhan perkembangan anak dan lakukan skrining awal untuk autisme bersama Ruang Bertumbuh."
+      content="Kenali tanda-tanda kebutuhan perkembangan anak dan lakukan skrining awal untuk autisme bersama Fomify."
     />
-    <title>Ruang Bertumbuh — Memahami Anak dengan Lebih Hangat</title>
+    <title>Fomify — Memahami Anak dengan Lebih Hangat</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       html,
       body {
         height: 100%;
         overflow: hidden;
+      }
+      .brand-mark,
+      .brand-name {
+        font-family: "Space Grotesk", sans-serif;
+      }
+      #mobile-menu-toggle {
+        display: none;
+      }
+      #mobile-menu-toggle .menu-line {
+        transform-origin: center;
+        transition:
+          transform 0.2s ease,
+          opacity 0.2s ease;
+      }
+      #mobile-menu-toggle[aria-expanded="true"] .menu-line-top {
+        transform: translateY(5px) rotate(45deg);
+      }
+      #mobile-menu-toggle[aria-expanded="true"] .menu-line-middle {
+        opacity: 0;
+      }
+      #mobile-menu-toggle[aria-expanded="true"] .menu-line-bottom {
+        transform: translateY(-5px) rotate(-45deg);
+      }
+      @media (max-width: 639px) {
+        #mobile-menu-toggle {
+          display: grid;
+        }
+        #primary-nav {
+          position: absolute;
+          top: calc(100% + 0.5rem);
+          right: 1rem;
+          left: 1rem;
+          z-index: 40;
+          padding: 0.75rem;
+          border: 1px solid #dedfd6;
+          border-radius: 1rem;
+          background: rgb(255 255 255 / 96%);
+          box-shadow: 0 16px 40px #20231f1a;
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(-0.5rem);
+          visibility: hidden;
+          transition:
+            opacity 0.22s ease,
+            transform 0.22s ease,
+            visibility 0s linear 0.22s;
+        }
+        #primary-nav[data-open="true"] {
+          opacity: 1;
+          pointer-events: auto;
+          transform: none;
+          visibility: visible;
+          transition-delay: 0s;
+        }
+        #primary-nav > ul {
+          align-items: stretch;
+          flex-direction: column;
+          gap: 0.25rem;
+          padding: 0.25rem;
+        }
+        #primary-nav > ul > li,
+        #primary-nav > ul > li > a,
+        #primary-nav > ul > li > button {
+          width: 100%;
+        }
+        #primary-nav > ul > li > a,
+        #primary-nav > ul > li > button {
+          min-height: 2.75rem;
+          justify-content: space-between;
+          padding-inline: 0.75rem;
+        }
+      }
+      .bunny-peek-idle {
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        animation: forum-bunny-peek 7.5s cubic-bezier(0.34, 1.35, 0.64, 1)
+          infinite;
+      }
+      @keyframes forum-bunny-peek {
+        /* Sembunyi (hanya ujung telinga yang terlihat di atas kartu) */
+        0%,
+        52%,
+        82%,
+        100% {
+          transform: translateY(58%);
+        }
+        /* Keluar mengintip sebentar */
+        60%,
+        72% {
+          transform: translateY(8%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #mobile-menu-toggle .menu-line,
+        #primary-nav {
+          transition: none;
+        }
       }
       .corner-waves {
         position: absolute;
@@ -33,7 +136,9 @@
         opacity: 0.1;
       }
       #tentang,
-      #asisten-ai {
+      #asisten-ai,
+      #forum-komunitas,
+      #kontak-cs {
         background-image:
           radial-gradient(60rem 36rem at 88% 8%, #d7ed9b40, transparent 60%),
           radial-gradient(50rem 32rem at 8% 96%, #b9d5bd66, transparent 60%),
@@ -52,6 +157,96 @@
       .bunny:focus-visible,
       .bunny:active {
         outline: none;
+      }
+      .bunny-shadow {
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        animation: bunny-shadow 2.4s ease-in-out infinite;
+      }
+      .bunny-idle {
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        animation: bunny-hop 2.4s ease-in-out infinite;
+      }
+      .bunny-arm {
+        transform-box: fill-box;
+        animation: bunny-arm 2.4s ease-in-out infinite;
+      }
+      .bunny-arm-left {
+        transform-origin: 85% 15%;
+      }
+      .bunny-arm-right {
+        transform-origin: 15% 15%;
+        animation-name: bunny-arm-right;
+      }
+      .bunny-head {
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
+        animation: bunny-tilt 4.8s ease-in-out infinite;
+      }
+      .bunny-cheek {
+        transform-box: fill-box;
+        transform-origin: 50% 50%;
+        animation: bunny-blush 2.4s ease-in-out infinite;
+      }
+      @keyframes bunny-hop {
+        0%,
+        100% {
+          transform: translateY(0) scale(1.03, 0.97);
+        }
+        45%,
+        55% {
+          transform: translateY(-30px) scale(0.98, 1.03);
+        }
+      }
+      @keyframes bunny-shadow {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.25;
+        }
+        50% {
+          transform: scale(0.8);
+          opacity: 0.15;
+        }
+      }
+      @keyframes bunny-arm {
+        0%,
+        100% {
+          transform: rotate(0);
+        }
+        50% {
+          transform: rotate(-12deg);
+        }
+      }
+      @keyframes bunny-arm-right {
+        0%,
+        100% {
+          transform: rotate(0);
+        }
+        50% {
+          transform: rotate(12deg);
+        }
+      }
+      @keyframes bunny-tilt {
+        0%,
+        100% {
+          transform: rotate(-2deg);
+        }
+        50% {
+          transform: rotate(2deg);
+        }
+      }
+      @keyframes bunny-blush {
+        0%,
+        100% {
+          opacity: 0.85;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.08);
+        }
       }
       .bunny-pupil {
         transition: transform 90ms ease-out;
@@ -72,6 +267,15 @@
       }
       .bunny[data-startled="true"] .bunny-startle-eye {
         opacity: 1;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .bunny-shadow,
+        .bunny-idle,
+        .bunny-arm,
+        .bunny-head,
+        .bunny-cheek {
+          animation: none;
+        }
       }
 
       [data-panel] {
@@ -126,20 +330,42 @@
     class="bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] font-sans text-[#20231f] antialiased"
   >
     <header
-      class="absolute inset-x-0 top-0 z-30 mx-auto flex w-full items-center justify-between gap-2 border-b border-white/40 bg-white/40 px-4 py-3.5 backdrop-blur-md sm:px-10 sm:py-6"
+      class="absolute inset-x-0 top-0 z-30 mx-auto flex w-full items-center justify-between gap-2 border-b border-white/40 bg-white/40 px-4 py-3.5 backdrop-blur-md sm:px-10 sm:py-5"
     >
       <a
         class="inline-flex shrink-0 items-center gap-2 text-[13px] font-bold tracking-[-0.04em] no-underline sm:gap-2.5 sm:text-[15px]"
         href="index.html"
-        aria-label="Ruang Bertumbuh, halaman utama"
+        aria-label="Fomify, halaman utama"
       >
         <span
-          class="grid size-7 place-items-center rounded-full bg-[#355b45] text-sm text-white sm:size-8 sm:text-base"
+          class="brand-mark grid size-7 place-items-center rounded-full bg-[#355b45] text-sm text-white sm:size-8 sm:text-base"
           aria-hidden="true"
-          >r.</span
-        ><span>ruang bertumbuh</span>
+          >FY</span
+        ><span class="brand-name">Fomify</span>
       </a>
-      <nav aria-label="Navigasi utama">
+      <button
+        id="mobile-menu-toggle"
+        class="size-10 shrink-0 place-items-center rounded-full border border-[#dedfd6] bg-white/80 text-[#355b45]"
+        type="button"
+        aria-label="Buka navigasi"
+        aria-controls="primary-nav"
+        aria-expanded="false"
+      >
+        <svg
+          class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path class="menu-line menu-line-top" d="M4 7h16" />
+          <path class="menu-line menu-line-middle" d="M4 12h16" />
+          <path class="menu-line menu-line-bottom" d="M4 17h16" />
+        </svg>
+      </button>
+      <nav id="primary-nav" data-open="false" aria-label="Navigasi utama">
         <ul
           class="m-0 flex list-none items-center gap-2.5 p-0 text-[11px] font-semibold sm:gap-8 sm:text-[13px]"
         >
@@ -213,6 +439,13 @@
           </li>
           <li>
             <a
+              class="inline-flex items-center gap-1.5 whitespace-nowrap py-2 no-underline transition-colors hover:text-[#355b45] sm:py-3"
+              href="forum.html"
+              >Forum</a
+            >
+          </li>
+          <li>
+            <a
               class="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#355b45] px-2.5 py-2 text-white no-underline outline-none transition-colors hover:bg-[#294936] sm:gap-1.5 sm:px-[17px] sm:py-2.5"
               href="test.html"
               ><span>Tes skrining</span>
@@ -270,7 +503,7 @@
         ></div>
         <div class="relative z-10 h-full overflow-y-auto overscroll-contain">
           <div
-            class="mx-auto grid min-h-full w-full max-w-6xl items-center gap-6 px-5 pb-12 pl-5 pr-9 pt-22 sm:px-10 sm:pb-16 sm:pt-28 md:grid-cols-[1.1fr_.9fr] md:gap-12"
+            class="mx-auto grid min-h-full w-full max-w-6xl items-center gap-6 px-5 pb-12 pl-5 pr-9 pt-24 sm:px-10 sm:pb-16 sm:pt-28 md:grid-cols-[1.1fr_.9fr] md:gap-12"
           >
             <div>
               <div
@@ -375,7 +608,7 @@
         data-panel
         data-state="after"
         id="tentang"
-        class="absolute inset-0 flex flex-col justify-between overflow-y-auto overflow-x-hidden overscroll-contain bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] pb-6 pl-5 pr-9 pt-20 sm:px-10 sm:pb-6 sm:pt-24"
+        class="absolute inset-0 isolate overflow-hidden bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] pt-16 sm:pt-24"
         aria-labelledby="intro-title"
       >
         <svg
@@ -427,408 +660,450 @@
         </div>
 
         <div
-          class="relative z-10 mx-auto my-auto grid max-w-5xl gap-6 py-4 sm:py-6 md:grid-cols-[.8fr_1.2fr] md:gap-[4.375rem]"
+          class="relative z-10 flex h-full flex-col justify-between overflow-y-auto overflow-x-hidden overscroll-contain pb-5 pl-5 pr-9 pt-4 sm:px-10 sm:pb-6 sm:pt-6"
         >
-          <div class="relative">
-            <div
-              class="pointer-events-none absolute -bottom-2 left-1/2 -z-10 size-44 -translate-x-1/2 rounded-full border border-[#92ae70]/25 bg-white/45 blur-[1px] sm:size-60 md:left-4 md:translate-x-0"
-              aria-hidden="true"
-            ></div>
-
-            <h2
-              data-reveal
-              style="--i: 0"
-              id="intro-title"
-              class="m-0 font-serif text-[clamp(1.85rem,4.5vw,3rem)] font-normal leading-tight tracking-[-.05em]"
-            >
-              Ruang untuk memahami, mendukung, dan bertumbuh bersama.
-            </h2>
-
-            <!-- Kelinci Berdiri dengan Syal & Telinga Bergerak (Section 2) -->
-            <svg
-              id="bunny-tentang"
-              data-reveal
-              style="--i: 2"
-              class="bunny mx-auto mt-5 h-auto w-full max-w-[10.5rem] drop-shadow-[0_10px_18px_#20231f14] sm:mt-6 sm:max-w-[13.5rem] md:mx-0"
-              viewBox="250 0 560 1000"
-              role="button"
-              tabindex="0"
-              aria-label="Ilustrasi kelinci bersyal dengan telinga bergerak, klik untuk menyapa"
-            >
-              <defs>
-                <clipPath id="clip-eye-l-1">
-                  <circle cx="433" cy="535" r="76" />
-                </clipPath>
-                <clipPath id="clip-eye-r-1">
-                  <circle cx="595" cy="535" r="76" />
-                </clipPath>
-                <clipPath id="clip-scarf-1">
-                  <ellipse cx="513" cy="749" rx="171" ry="58" />
-                </clipPath>
-              </defs>
-
-              <g class="bunny-rig">
-                <!-- Tangan & Kaki -->
-                <ellipse
-                  cx="646"
-                  cy="784"
-                  rx="82"
-                  ry="44"
-                  transform="rotate(42 646 784)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-                <ellipse
-                  cx="562"
-                  cy="915"
-                  rx="80"
-                  ry="44"
-                  transform="rotate(44 562 915)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-                <ellipse
-                  cx="386"
-                  cy="783"
-                  rx="82"
-                  ry="44"
-                  transform="rotate(-42 386 783)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-                <ellipse
-                  cx="456"
-                  cy="912"
-                  rx="80"
-                  ry="44"
-                  transform="rotate(-44 456 912)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-
-                <!-- Badan -->
-                <ellipse
-                  cx="513"
-                  cy="840"
-                  rx="128"
-                  ry="119"
-                  fill="#9EB096"
-                  stroke="#6B7E7A"
-                  stroke-width="16"
-                />
-
-                <!-- Kepala -->
-                <circle
-                  cx="517"
-                  cy="550"
-                  r="232"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-
-                <!-- Telinga Kiri (bergerak ke kanan) -->
-                <g transform="rotate(-11 428 205)">
-                  <g>
-                    <animateTransform
-                      attributeName="transform"
-                      type="rotate"
-                      values="-4 428 368; 12 428 368; -4 428 368"
-                      keyTimes="0; 0.5; 1"
-                      calcMode="spline"
-                      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                      dur="2.4s"
-                      repeatCount="indefinite"
-                    />
-                    <ellipse
-                      cx="428"
-                      cy="205"
-                      rx="68"
-                      ry="188"
-                      fill="#F9EFE0"
-                    />
-                    <path
-                      d="M 394 368 A 68 188 0 1 1 462 368"
-                      fill="none"
-                      stroke="#74839B"
-                      stroke-width="16"
-                      stroke-linecap="round"
-                    />
-                    <ellipse
-                      cx="428"
-                      cy="210"
-                      rx="28"
-                      ry="114"
-                      fill="#D2AA92"
-                    />
-                  </g>
-                </g>
-
-                <!-- Telinga Kanan (bergerak ke kiri) -->
-                <g transform="rotate(11 572 205)">
-                  <g>
-                    <animateTransform
-                      attributeName="transform"
-                      type="rotate"
-                      values="4 572 368; -12 572 368; 4 572 368"
-                      keyTimes="0; 0.5; 1"
-                      calcMode="spline"
-                      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                      dur="2.4s"
-                      repeatCount="indefinite"
-                    />
-                    <ellipse
-                      cx="572"
-                      cy="205"
-                      rx="68"
-                      ry="188"
-                      fill="#F9EFE0"
-                    />
-                    <path
-                      d="M 538 368 A 68 188 0 1 1 606 368"
-                      fill="none"
-                      stroke="#74839B"
-                      stroke-width="16"
-                      stroke-linecap="round"
-                    />
-                    <ellipse
-                      cx="572"
-                      cy="210"
-                      rx="28"
-                      ry="114"
-                      fill="#D2AA92"
-                    />
-                  </g>
-                </g>
-
-                <!-- Syal (Ujung Tergantung Tertiup Angin + Lingkar Leher) -->
-                <g id="syal-1">
-                  <g>
-                    <animateTransform
-                      attributeName="transform"
-                      type="rotate"
-                      values="-2 450 745; 13 450 745; 4 450 745; 15 450 745; -2 450 745"
-                      keyTimes="0; 0.32; 0.55; 0.78; 1"
-                      calcMode="spline"
-                      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
-                      dur="3.4s"
-                      repeatCount="indefinite"
-                    />
-                    <rect
-                      x="405"
-                      y="721"
-                      width="90"
-                      height="177"
-                      rx="4"
-                      fill="#EED0A2"
-                      stroke="#BA8880"
-                      stroke-width="10"
-                    />
-                    <line
-                      x1="405"
-                      y1="848"
-                      x2="495"
-                      y2="848"
-                      stroke="#BA8880"
-                      stroke-width="12"
-                    />
-                    <line
-                      x1="405"
-                      y1="868"
-                      x2="495"
-                      y2="868"
-                      stroke="#BA8880"
-                      stroke-width="12"
-                    />
-                  </g>
-
-                  <ellipse cx="513" cy="749" rx="176" ry="63" fill="#EED0A2" />
-                  <g clip-path="url(#clip-scarf-1)">
-                    <path
-                      d="M 594 686 Q 618 749 594 812"
-                      fill="none"
-                      stroke="#BA8880"
-                      stroke-width="14"
-                    />
-                    <path
-                      d="M 632 686 Q 654 749 632 812"
-                      fill="none"
-                      stroke="#BA8880"
-                      stroke-width="14"
-                    />
-                  </g>
-                  <ellipse
-                    cx="513"
-                    cy="749"
-                    rx="176"
-                    ry="63"
-                    fill="none"
-                    stroke="#BA8880"
-                    stroke-width="10"
-                  />
-                </g>
-
-                <!-- Hidung -->
-                <ellipse
-                  cx="515"
-                  cy="608"
-                  rx="32"
-                  ry="19"
-                  fill="#D5AA92"
-                  stroke="#A59AA4"
-                  stroke-width="8"
-                />
-
-                <!-- Mata Terbuka + Pupil (Eye Tracking) -->
-                <g class="bunny-open-eye">
-                  <circle
-                    cx="433"
-                    cy="535"
-                    r="80"
-                    fill="#EEF5EC"
-                    stroke="#6B7A90"
-                    stroke-width="8"
-                  />
-                  <g clip-path="url(#clip-eye-l-1)">
-                    <g class="bunny-pupil">
-                      <circle cx="432" cy="522" r="68" fill="#333333" />
-                      <ellipse
-                        cx="442"
-                        cy="491"
-                        rx="15"
-                        ry="13"
-                        fill="#EEF3EC"
-                      />
-                    </g>
-                  </g>
-
-                  <circle
-                    cx="595"
-                    cy="535"
-                    r="80"
-                    fill="#EEF5EC"
-                    stroke="#6B7A90"
-                    stroke-width="8"
-                  />
-                  <g clip-path="url(#clip-eye-r-1)">
-                    <g class="bunny-pupil">
-                      <circle cx="594" cy="522" r="68" fill="#333333" />
-                      <ellipse
-                        cx="604"
-                        cy="491"
-                        rx="15"
-                        ry="13"
-                        fill="#EEF3EC"
-                      />
-                    </g>
-                  </g>
-                </g>
-
-                <!-- Mata Berkedip Normal -->
-                <g class="bunny-blink-line">
-                  <path
-                    d="M 378 542 Q 433 576 488 542"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M 540 542 Q 595 576 650 542"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                </g>
-
-                <!-- Mata Tertutup Bentuk "n" saat Diklik -->
-                <g class="bunny-startle-eye">
-                  <path
-                    d="M 384 556 Q 433 488 482 556"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M 546 556 Q 595 488 644 556"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                </g>
-
-                <!-- Pipi -->
-                <ellipse cx="402" cy="614" rx="60" ry="33" fill="#D5AA92" />
-                <ellipse cx="644" cy="611" rx="60" ry="33" fill="#D5AA92" />
-              </g>
-            </svg>
-          </div>
           <div
-            class="text-[13.5px] leading-[1.8] text-[#656b62] sm:text-sm sm:leading-[1.85]"
+            class="mx-auto my-auto grid max-w-5xl items-center gap-6 py-2 md:grid-cols-[.8fr_1.2fr] md:gap-12 lg:gap-[4.375rem]"
           >
-            <p data-reveal style="--i: 1" class="mb-3.5 mt-0">
-              Setiap anak memiliki cara dan ritme tumbuh yang berbeda. Ruang
-              Bertumbuh hadir sebagai teman awal bagi orang tua untuk memahami
-              kebutuhan perkembangan anak, termasuk mengenali tanda-tanda yang
-              dapat berkaitan dengan spektrum autisme, tanpa memberi label atau
-              membandingkan anak dengan orang lain.
-            </p>
-            <p data-reveal style="--i: 2" class="mb-3.5 mt-0">
-              Pengamatan kecil sehari-hari dapat membantu memberi gambaran yang
-              lebih utuh: bagaimana anak merespons saat diajak berinteraksi,
-              menyampaikan keinginan, bermain, mengikuti rutinitas, atau
-              menghadapi suara dan perubahan. Perhatikan juga hal-hal yang
-              disukai anak serta dukungan yang membuatnya merasa nyaman.
-            </p>
-            <p data-reveal style="--i: 3" class="mb-3.5 mt-0">
-              Pertanyaan singkat di situs ini disusun untuk membantu Anda
-              merefleksikan pengamatan tersebut. Jawablah berdasarkan pengalaman
-              anak sehari-hari, bukan dugaan atau perbandingan. Hasilnya hanya
-              gambaran awal untuk membantu mempertimbangkan apakah Anda ingin
-              berdiskusi lebih lanjut dengan tenaga profesional.
-            </p>
-            <p data-reveal style="--i: 4" class="mb-3.5 mt-0">
-              Jika ada hal yang membuat Anda khawatir, catatan tentang situasi
-              yang diamati dan hal yang membantu anak dapat menjadi awal
-              percakapan dengan dokter anak, psikolog, atau tenaga profesional
-              yang berwenang. Mencari informasi dan dukungan adalah langkah yang
-              wajar.
-            </p>
-            <p
-              data-reveal
-              style="--i: 5"
-              class="m-0 text-[11px] text-[#85897f]"
+            <div class="relative">
+              <div
+                class="pointer-events-none absolute -bottom-2 left-1/2 -z-10 size-44 -translate-x-1/2 rounded-full border border-[#92ae70]/25 bg-white/45 blur-[1px] sm:size-56 md:left-4 md:translate-x-0"
+                aria-hidden="true"
+              ></div>
+
+              <h2
+                data-reveal
+                style="--i: 0"
+                id="intro-title"
+                class="m-0 font-serif text-[clamp(1.75rem,3.8vw,2.75rem)] font-normal leading-[1.15] tracking-[-.05em]"
+              >
+                Ruang untuk memahami, mendukung, dan bertumbuh bersama.
+              </h2>
+
+              <!-- Kelinci Berdiri dengan Syal & Telinga Bergerak (Section 2) -->
+              <svg
+                id="bunny-tentang"
+                data-reveal
+                style="--i: 2"
+                class="bunny mx-auto mt-4 h-auto w-full max-w-[9.5rem] drop-shadow-[0_10px_18px_#20231f14] sm:mt-5 sm:max-w-[12rem] md:mx-0"
+                viewBox="250 -60 560 1060"
+                role="button"
+                tabindex="0"
+                aria-label="Ilustrasi kelinci bersyal dengan telinga bergerak, klik untuk menyapa"
+              >
+                <defs>
+                  <clipPath id="clip-eye-l-1">
+                    <circle cx="433" cy="535" r="76" />
+                  </clipPath>
+                  <clipPath id="clip-eye-r-1">
+                    <circle cx="595" cy="535" r="76" />
+                  </clipPath>
+                  <clipPath id="clip-scarf-1">
+                    <ellipse cx="513" cy="749" rx="171" ry="58" />
+                  </clipPath>
+                </defs>
+
+                <ellipse
+                  class="bunny-shadow"
+                  cx="516"
+                  cy="965"
+                  rx="162"
+                  ry="17"
+                  fill="#5a6482"
+                />
+                <g class="bunny-idle">
+                  <g class="bunny-rig">
+                    <!-- Tangan & Kaki -->
+                    <g class="bunny-arm bunny-arm-right">
+                      <ellipse
+                        cx="646"
+                        cy="784"
+                        rx="82"
+                        ry="44"
+                        transform="rotate(42 646 784)"
+                        fill="#F9EFE0"
+                        stroke="#74839B"
+                        stroke-width="16"
+                      />
+                    </g>
+                    <ellipse
+                      cx="562"
+                      cy="915"
+                      rx="80"
+                      ry="44"
+                      transform="rotate(44 562 915)"
+                      fill="#F9EFE0"
+                      stroke="#74839B"
+                      stroke-width="16"
+                    />
+                    <g class="bunny-arm bunny-arm-left">
+                      <ellipse
+                        cx="386"
+                        cy="783"
+                        rx="82"
+                        ry="44"
+                        transform="rotate(-42 386 783)"
+                        fill="#F9EFE0"
+                        stroke="#74839B"
+                        stroke-width="16"
+                      />
+                    </g>
+                    <ellipse
+                      cx="456"
+                      cy="912"
+                      rx="80"
+                      ry="44"
+                      transform="rotate(-44 456 912)"
+                      fill="#F9EFE0"
+                      stroke="#74839B"
+                      stroke-width="16"
+                    />
+
+                    <!-- Badan -->
+                    <ellipse
+                      cx="513"
+                      cy="840"
+                      rx="128"
+                      ry="119"
+                      fill="#9EB096"
+                      stroke="#6B7E7A"
+                      stroke-width="16"
+                    />
+
+                    <g class="bunny-head">
+                      <!-- Kepala -->
+                      <circle
+                        cx="517"
+                        cy="550"
+                        r="232"
+                        fill="#F9EFE0"
+                        stroke="#74839B"
+                        stroke-width="16"
+                      />
+
+                      <!-- Telinga Kiri (bergerak ke kanan) -->
+                      <g transform="rotate(-11 428 205)">
+                        <g>
+                          <animateTransform
+                            attributeName="transform"
+                            type="rotate"
+                            values="-4 428 368; 12 428 368; -4 428 368"
+                            keyTimes="0; 0.5; 1"
+                            calcMode="spline"
+                            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                            dur="2.4s"
+                            repeatCount="indefinite"
+                          />
+                          <ellipse
+                            cx="428"
+                            cy="205"
+                            rx="68"
+                            ry="188"
+                            fill="#F9EFE0"
+                          />
+                          <path
+                            d="M 394 368 A 68 188 0 1 1 462 368"
+                            fill="none"
+                            stroke="#74839B"
+                            stroke-width="16"
+                            stroke-linecap="round"
+                          />
+                          <ellipse
+                            cx="428"
+                            cy="210"
+                            rx="28"
+                            ry="114"
+                            fill="#D2AA92"
+                          />
+                        </g>
+                      </g>
+
+                      <!-- Telinga Kanan (bergerak ke kiri) -->
+                      <g transform="rotate(11 572 205)">
+                        <g>
+                          <animateTransform
+                            attributeName="transform"
+                            type="rotate"
+                            values="4 572 368; -12 572 368; 4 572 368"
+                            keyTimes="0; 0.5; 1"
+                            calcMode="spline"
+                            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                            dur="2.4s"
+                            repeatCount="indefinite"
+                          />
+                          <ellipse
+                            cx="572"
+                            cy="205"
+                            rx="68"
+                            ry="188"
+                            fill="#F9EFE0"
+                          />
+                          <path
+                            d="M 538 368 A 68 188 0 1 1 606 368"
+                            fill="none"
+                            stroke="#74839B"
+                            stroke-width="16"
+                            stroke-linecap="round"
+                          />
+                          <ellipse
+                            cx="572"
+                            cy="210"
+                            rx="28"
+                            ry="114"
+                            fill="#D2AA92"
+                          />
+                        </g>
+                      </g>
+
+                      <!-- Syal (Ujung Tergantung Tertiup Angin + Lingkar Leher) -->
+                      <g id="syal-1">
+                        <g>
+                          <animateTransform
+                            attributeName="transform"
+                            type="rotate"
+                            values="-2 450 745; 13 450 745; 4 450 745; 15 450 745; -2 450 745"
+                            keyTimes="0; 0.32; 0.55; 0.78; 1"
+                            calcMode="spline"
+                            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
+                            dur="3.4s"
+                            repeatCount="indefinite"
+                          />
+                          <rect
+                            x="405"
+                            y="721"
+                            width="90"
+                            height="177"
+                            rx="4"
+                            fill="#EED0A2"
+                            stroke="#BA8880"
+                            stroke-width="10"
+                          />
+                          <line
+                            x1="405"
+                            y1="848"
+                            x2="495"
+                            y2="848"
+                            stroke="#BA8880"
+                            stroke-width="12"
+                          />
+                          <line
+                            x1="405"
+                            y1="868"
+                            x2="495"
+                            y2="868"
+                            stroke="#BA8880"
+                            stroke-width="12"
+                          />
+                        </g>
+
+                        <ellipse
+                          cx="513"
+                          cy="749"
+                          rx="176"
+                          ry="63"
+                          fill="#EED0A2"
+                        />
+                        <g clip-path="url(#clip-scarf-1)">
+                          <path
+                            d="M 594 686 Q 618 749 594 812"
+                            fill="none"
+                            stroke="#BA8880"
+                            stroke-width="14"
+                          />
+                          <path
+                            d="M 632 686 Q 654 749 632 812"
+                            fill="none"
+                            stroke="#BA8880"
+                            stroke-width="14"
+                          />
+                        </g>
+                        <ellipse
+                          cx="513"
+                          cy="749"
+                          rx="176"
+                          ry="63"
+                          fill="none"
+                          stroke="#BA8880"
+                          stroke-width="10"
+                        />
+                      </g>
+
+                      <!-- Hidung -->
+                      <ellipse
+                        cx="515"
+                        cy="608"
+                        rx="32"
+                        ry="19"
+                        fill="#D5AA92"
+                        stroke="#A59AA4"
+                        stroke-width="8"
+                      />
+
+                      <!-- Mata Terbuka + Pupil (Eye Tracking) -->
+                      <g class="bunny-open-eye">
+                        <circle
+                          cx="433"
+                          cy="535"
+                          r="80"
+                          fill="#EEF5EC"
+                          stroke="#6B7A90"
+                          stroke-width="8"
+                        />
+                        <g clip-path="url(#clip-eye-l-1)">
+                          <g class="bunny-pupil">
+                            <circle cx="432" cy="522" r="68" fill="#333333" />
+                            <ellipse
+                              cx="442"
+                              cy="491"
+                              rx="15"
+                              ry="13"
+                              fill="#EEF3EC"
+                            />
+                          </g>
+                        </g>
+
+                        <circle
+                          cx="595"
+                          cy="535"
+                          r="80"
+                          fill="#EEF5EC"
+                          stroke="#6B7A90"
+                          stroke-width="8"
+                        />
+                        <g clip-path="url(#clip-eye-r-1)">
+                          <g class="bunny-pupil">
+                            <circle cx="594" cy="522" r="68" fill="#333333" />
+                            <ellipse
+                              cx="604"
+                              cy="491"
+                              rx="15"
+                              ry="13"
+                              fill="#EEF3EC"
+                            />
+                          </g>
+                        </g>
+                      </g>
+
+                      <!-- Mata Berkedip Normal -->
+                      <g class="bunny-blink-line">
+                        <path
+                          d="M 378 542 Q 433 576 488 542"
+                          fill="none"
+                          stroke="#6B7A90"
+                          stroke-width="14"
+                          stroke-linecap="round"
+                        />
+                        <path
+                          d="M 540 542 Q 595 576 650 542"
+                          fill="none"
+                          stroke="#6B7A90"
+                          stroke-width="14"
+                          stroke-linecap="round"
+                        />
+                      </g>
+
+                      <!-- Mata Tertutup Bentuk "n" saat Diklik -->
+                      <g class="bunny-startle-eye">
+                        <path
+                          d="M 384 556 Q 433 488 482 556"
+                          fill="none"
+                          stroke="#6B7A90"
+                          stroke-width="14"
+                          stroke-linecap="round"
+                        />
+                        <path
+                          d="M 546 556 Q 595 488 644 556"
+                          fill="none"
+                          stroke="#6B7A90"
+                          stroke-width="14"
+                          stroke-linecap="round"
+                        />
+                      </g>
+
+                      <!-- Pipi -->
+                      <ellipse
+                        class="bunny-cheek"
+                        cx="402"
+                        cy="614"
+                        rx="60"
+                        ry="33"
+                        fill="#D5AA92"
+                      />
+                      <ellipse
+                        class="bunny-cheek"
+                        cx="644"
+                        cy="611"
+                        rx="60"
+                        ry="33"
+                        fill="#D5AA92"
+                      />
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            <div
+              class="text-[13.5px] leading-[1.75] text-[#656b62] sm:text-sm sm:leading-[1.8]"
             >
-              Tes ini bukan alat diagnosis dan tidak menggantikan penilaian
-              psikolog, dokter anak, atau tenaga profesional yang berwenang.
-            </p>
+              <p data-reveal style="--i: 1" class="mb-3 mt-0">
+                Setiap anak memiliki cara dan ritme tumbuh yang berbeda. Ruang
+                Bertumbuh hadir sebagai teman awal bagi orang tua untuk memahami
+                kebutuhan perkembangan anak, termasuk mengenali tanda-tanda yang
+                dapat berkaitan dengan spektrum autisme, tanpa memberi label
+                atau membandingkan anak dengan orang lain.
+              </p>
+              <p data-reveal style="--i: 2" class="mb-3 mt-0">
+                Pengamatan kecil sehari-hari dapat membantu memberi gambaran
+                yang lebih utuh: bagaimana anak merespons saat diajak
+                berinteraksi, menyampaikan keinginan, bermain, mengikuti
+                rutinitas, atau menghadapi suara dan perubahan. Perhatikan juga
+                hal-hal yang disukai anak serta dukungan yang membuatnya merasa
+                nyaman.
+              </p>
+              <p data-reveal style="--i: 3" class="mb-3 mt-0">
+                Pertanyaan singkat di situs ini disusun untuk membantu Anda
+                merefleksikan pengamatan tersebut. Jawablah berdasarkan
+                pengalaman anak sehari-hari, bukan dugaan atau perbandingan.
+                Hasilnya hanya gambaran awal untuk membantu mempertimbangkan
+                apakah Anda ingin berdiskusi lebih lanjut dengan tenaga
+                profesional.
+              </p>
+              <p data-reveal style="--i: 4" class="mb-3 mt-0">
+                Jika ada hal yang membuat Anda khawatir, catatan tentang situasi
+                yang diamati dan hal yang membantu anak dapat menjadi awal
+                percakapan dengan dokter anak, psikolog, atau tenaga profesional
+                yang berwenang. Mencari informasi dan dukungan adalah langkah
+                yang wajar.
+              </p>
+              <p
+                data-reveal
+                style="--i: 5"
+                class="m-0 text-[11px] text-[#85897f]"
+              >
+                Tes ini bukan alat diagnosis dan tidak menggantikan penilaian
+                psikolog, dokter anak, atau tenaga profesional yang berwenang.
+              </p>
+            </div>
           </div>
+          <footer
+            data-reveal
+            style="--i: 4"
+            class="mx-auto flex w-full max-w-5xl shrink-0 flex-col items-start justify-between gap-2 pt-3 text-[11px] text-[#81867b] sm:flex-row sm:items-center sm:gap-4"
+          >
+            <a
+              class="inline-flex items-center gap-2.5 text-[14px] font-bold tracking-[-0.04em] text-[#20231f] no-underline sm:text-[15px]"
+              href="index.html"
+              ><span
+                class="brand-mark grid size-7 place-items-center rounded-full bg-[#355b45] text-white sm:size-8"
+                aria-hidden="true"
+                >FY</span
+              ><span class="brand-name">Fomify</span></a
+            >
+            <span class="sm:text-right"
+              >Deteksi dini membuka ruang dukungan lebih awal.</span
+            >
+          </footer>
         </div>
-        <footer
-          data-reveal
-          style="--i: 4"
-          class="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-start justify-between gap-2 py-4 text-[11px] text-[#81867b] sm:flex-row sm:items-center sm:gap-4"
-        >
-          <a
-            class="inline-flex items-center gap-2.5 text-[14px] font-bold tracking-[-0.04em] text-[#20231f] no-underline sm:text-[15px]"
-            href="index.html"
-            ><span
-              class="grid size-7 place-items-center rounded-full bg-[#355b45] text-white sm:size-8"
-              aria-hidden="true"
-              >r.</span
-            ><span>ruang bertumbuh</span></a
-          >
-          <span class="sm:text-right"
-            >Deteksi dini membuka ruang dukungan lebih awal.</span
-          >
-        </footer>
       </section>
 
       <!-- PANEL 3: ASISTEN AI -->
@@ -836,7 +1111,7 @@
         data-panel
         data-state="after"
         id="asisten-ai"
-        class="absolute inset-0 overflow-y-auto overflow-x-hidden overscroll-contain bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] pb-12 pl-5 pr-9 pt-20 sm:px-10 sm:pb-8 sm:pt-28"
+        class="absolute inset-0 overflow-y-auto overflow-x-hidden overscroll-contain bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] pb-12 pl-5 pr-9 pt-24 sm:px-10 sm:pb-8 sm:pt-28"
         aria-labelledby="assistant-title"
       >
         <svg
@@ -907,8 +1182,8 @@
               class="mt-5 max-w-xl text-[14px] leading-[1.8] text-[#656b62] sm:mt-6 sm:text-[15px]"
             >
               Punya pertanyaan tentang komunikasi, perilaku, atau cara
-              mendampingi anak? Asisten AI Ruang Bertumbuh dapat membantu Anda
-              mencari informasi awal dan memikirkan langkah berikutnya.
+              mendampingi anak? Asisten AI Fomify dapat membantu Anda mencari
+              informasi awal dan memikirkan langkah berikutnya.
             </p>
             <p
               data-reveal
@@ -955,7 +1230,7 @@
             <svg
               id="peeking-bunny"
               class="bunny pointer-events-auto absolute -top-36 right-2 z-0 h-auto w-[132px] rotate-[8deg] drop-shadow-[0_12px_18px_#20231f24] sm:-top-14 sm:left-full sm:right-auto sm:w-[190px] sm:-translate-x-[22%] sm:rotate-[14deg]"
-              viewBox="250 0 560 1000"
+              viewBox="250 -60 560 1060"
               role="button"
               tabindex="0"
               aria-label="Ilustrasi kelinci bersyal mengintip, klik untuk menyapa"
@@ -972,282 +1247,330 @@
                 </clipPath>
               </defs>
 
-              <g class="bunny-rig">
-                <!-- Tangan & Kaki -->
-                <ellipse
-                  cx="646"
-                  cy="784"
-                  rx="82"
-                  ry="44"
-                  transform="rotate(42 646 784)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-                <ellipse
-                  cx="562"
-                  cy="915"
-                  rx="80"
-                  ry="44"
-                  transform="rotate(44 562 915)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-                <ellipse
-                  cx="386"
-                  cy="783"
-                  rx="82"
-                  ry="44"
-                  transform="rotate(-42 386 783)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-                <ellipse
-                  cx="456"
-                  cy="912"
-                  rx="80"
-                  ry="44"
-                  transform="rotate(-44 456 912)"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-
-                <!-- Badan -->
-                <ellipse
-                  cx="513"
-                  cy="840"
-                  rx="128"
-                  ry="119"
-                  fill="#9EB096"
-                  stroke="#6B7E7A"
-                  stroke-width="16"
-                />
-
-                <!-- Kepala -->
-                <circle
-                  cx="517"
-                  cy="550"
-                  r="232"
-                  fill="#F9EFE0"
-                  stroke="#74839B"
-                  stroke-width="16"
-                />
-
-                <!-- Telinga Kiri (Bergerak) -->
-                <g transform="rotate(-11 428 205)">
-                  <g>
-                    <animateTransform
-                      attributeName="transform"
-                      type="rotate"
-                      values="-4 428 368; 10 428 368; -4 428 368"
-                      keyTimes="0; 0.5; 1"
-                      calcMode="spline"
-                      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                      dur="2.4s"
-                      repeatCount="indefinite"
-                    />
+              <ellipse
+                class="bunny-shadow"
+                cx="516"
+                cy="965"
+                rx="162"
+                ry="17"
+                fill="#5a6482"
+              />
+              <g class="bunny-idle">
+                <g class="bunny-rig">
+                  <!-- Tangan & Kaki -->
+                  <g class="bunny-arm bunny-arm-right">
                     <ellipse
-                      cx="428"
-                      cy="205"
-                      rx="68"
-                      ry="188"
+                      cx="646"
+                      cy="784"
+                      rx="82"
+                      ry="44"
+                      transform="rotate(42 646 784)"
                       fill="#F9EFE0"
-                    />
-                    <path
-                      d="M 394 368 A 68 188 0 1 1 462 368"
-                      fill="none"
                       stroke="#74839B"
                       stroke-width="16"
-                      stroke-linecap="round"
-                    />
-                    <ellipse
-                      cx="428"
-                      cy="210"
-                      rx="28"
-                      ry="114"
-                      fill="#D2AA92"
-                    />
-                  </g>
-                </g>
-
-                <!-- Telinga Kanan (Diam) -->
-                <g transform="rotate(11 572 205)">
-                  <ellipse cx="572" cy="205" rx="68" ry="188" fill="#F9EFE0" />
-                  <path
-                    d="M 538 368 A 68 188 0 1 1 606 368"
-                    fill="none"
-                    stroke="#74839B"
-                    stroke-width="16"
-                    stroke-linecap="round"
-                  />
-                  <ellipse cx="572" cy="210" rx="28" ry="114" fill="#D2AA92" />
-                </g>
-
-                <!-- Syal (Ujung Tergantung Tertiup Angin + Lingkar Leher) -->
-                <g id="syal-2">
-                  <g>
-                    <animateTransform
-                      attributeName="transform"
-                      type="rotate"
-                      values="-2 450 745; 13 450 745; 4 450 745; 15 450 745; -2 450 745"
-                      keyTimes="0; 0.32; 0.55; 0.78; 1"
-                      calcMode="spline"
-                      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
-                      dur="3.4s"
-                      repeatCount="indefinite"
-                    />
-                    <rect
-                      x="405"
-                      y="721"
-                      width="90"
-                      height="177"
-                      rx="4"
-                      fill="#EED0A2"
-                      stroke="#BA8880"
-                      stroke-width="10"
-                    />
-                    <line
-                      x1="405"
-                      y1="848"
-                      x2="495"
-                      y2="848"
-                      stroke="#BA8880"
-                      stroke-width="12"
-                    />
-                    <line
-                      x1="405"
-                      y1="868"
-                      x2="495"
-                      y2="868"
-                      stroke="#BA8880"
-                      stroke-width="12"
-                    />
-                  </g>
-
-                  <ellipse cx="513" cy="749" rx="176" ry="63" fill="#EED0A2" />
-                  <g clip-path="url(#clip-scarf-2)">
-                    <path
-                      d="M 594 686 Q 618 749 594 812"
-                      fill="none"
-                      stroke="#BA8880"
-                      stroke-width="14"
-                    />
-                    <path
-                      d="M 632 686 Q 654 749 632 812"
-                      fill="none"
-                      stroke="#BA8880"
-                      stroke-width="14"
                     />
                   </g>
                   <ellipse
+                    cx="562"
+                    cy="915"
+                    rx="80"
+                    ry="44"
+                    transform="rotate(44 562 915)"
+                    fill="#F9EFE0"
+                    stroke="#74839B"
+                    stroke-width="16"
+                  />
+                  <g class="bunny-arm bunny-arm-left">
+                    <ellipse
+                      cx="386"
+                      cy="783"
+                      rx="82"
+                      ry="44"
+                      transform="rotate(-42 386 783)"
+                      fill="#F9EFE0"
+                      stroke="#74839B"
+                      stroke-width="16"
+                    />
+                  </g>
+                  <ellipse
+                    cx="456"
+                    cy="912"
+                    rx="80"
+                    ry="44"
+                    transform="rotate(-44 456 912)"
+                    fill="#F9EFE0"
+                    stroke="#74839B"
+                    stroke-width="16"
+                  />
+
+                  <!-- Badan -->
+                  <ellipse
                     cx="513"
-                    cy="749"
-                    rx="176"
-                    ry="63"
-                    fill="none"
-                    stroke="#BA8880"
-                    stroke-width="10"
+                    cy="840"
+                    rx="128"
+                    ry="119"
+                    fill="#9EB096"
+                    stroke="#6B7E7A"
+                    stroke-width="16"
                   />
-                </g>
 
-                <!-- Hidung -->
-                <ellipse
-                  cx="515"
-                  cy="608"
-                  rx="32"
-                  ry="19"
-                  fill="#D5AA92"
-                  stroke="#A59AA4"
-                  stroke-width="8"
-                />
+                  <g class="bunny-head">
+                    <!-- Kepala -->
+                    <circle
+                      cx="517"
+                      cy="550"
+                      r="232"
+                      fill="#F9EFE0"
+                      stroke="#74839B"
+                      stroke-width="16"
+                    />
 
-                <!-- Mata Terbuka + Pupil (Eye Tracking) -->
-                <g class="bunny-open-eye">
-                  <circle
-                    cx="433"
-                    cy="535"
-                    r="80"
-                    fill="#EEF5EC"
-                    stroke="#6B7A90"
-                    stroke-width="8"
-                  />
-                  <g clip-path="url(#clip-eye-l-2)">
-                    <g class="bunny-pupil">
-                      <circle cx="432" cy="522" r="68" fill="#333333" />
+                    <!-- Telinga Kiri (Bergerak) -->
+                    <g transform="rotate(-11 428 205)">
+                      <g>
+                        <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          values="-4 428 368; 10 428 368; -4 428 368"
+                          keyTimes="0; 0.5; 1"
+                          calcMode="spline"
+                          keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                          dur="2.4s"
+                          repeatCount="indefinite"
+                        />
+                        <ellipse
+                          cx="428"
+                          cy="205"
+                          rx="68"
+                          ry="188"
+                          fill="#F9EFE0"
+                        />
+                        <path
+                          d="M 394 368 A 68 188 0 1 1 462 368"
+                          fill="none"
+                          stroke="#74839B"
+                          stroke-width="16"
+                          stroke-linecap="round"
+                        />
+                        <ellipse
+                          cx="428"
+                          cy="210"
+                          rx="28"
+                          ry="114"
+                          fill="#D2AA92"
+                        />
+                      </g>
+                    </g>
+
+                    <!-- Telinga Kanan (Diam) -->
+                    <g transform="rotate(11 572 205)">
                       <ellipse
-                        cx="442"
-                        cy="491"
-                        rx="15"
-                        ry="13"
-                        fill="#EEF3EC"
+                        cx="572"
+                        cy="205"
+                        rx="68"
+                        ry="188"
+                        fill="#F9EFE0"
+                      />
+                      <path
+                        d="M 538 368 A 68 188 0 1 1 606 368"
+                        fill="none"
+                        stroke="#74839B"
+                        stroke-width="16"
+                        stroke-linecap="round"
+                      />
+                      <ellipse
+                        cx="572"
+                        cy="210"
+                        rx="28"
+                        ry="114"
+                        fill="#D2AA92"
                       />
                     </g>
-                  </g>
 
-                  <circle
-                    cx="595"
-                    cy="535"
-                    r="80"
-                    fill="#EEF5EC"
-                    stroke="#6B7A90"
-                    stroke-width="8"
-                  />
-                  <g clip-path="url(#clip-eye-r-2)">
-                    <g class="bunny-pupil">
-                      <circle cx="594" cy="522" r="68" fill="#333333" />
+                    <!-- Syal (Ujung Tergantung Tertiup Angin + Lingkar Leher) -->
+                    <g id="syal-2">
+                      <g>
+                        <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          values="-2 450 745; 13 450 745; 4 450 745; 15 450 745; -2 450 745"
+                          keyTimes="0; 0.32; 0.55; 0.78; 1"
+                          calcMode="spline"
+                          keySplines="0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1; 0.42 0 0.58 1"
+                          dur="3.4s"
+                          repeatCount="indefinite"
+                        />
+                        <rect
+                          x="405"
+                          y="721"
+                          width="90"
+                          height="177"
+                          rx="4"
+                          fill="#EED0A2"
+                          stroke="#BA8880"
+                          stroke-width="10"
+                        />
+                        <line
+                          x1="405"
+                          y1="848"
+                          x2="495"
+                          y2="848"
+                          stroke="#BA8880"
+                          stroke-width="12"
+                        />
+                        <line
+                          x1="405"
+                          y1="868"
+                          x2="495"
+                          y2="868"
+                          stroke="#BA8880"
+                          stroke-width="12"
+                        />
+                      </g>
+
                       <ellipse
-                        cx="604"
-                        cy="491"
-                        rx="15"
-                        ry="13"
-                        fill="#EEF3EC"
+                        cx="513"
+                        cy="749"
+                        rx="176"
+                        ry="63"
+                        fill="#EED0A2"
+                      />
+                      <g clip-path="url(#clip-scarf-2)">
+                        <path
+                          d="M 594 686 Q 618 749 594 812"
+                          fill="none"
+                          stroke="#BA8880"
+                          stroke-width="14"
+                        />
+                        <path
+                          d="M 632 686 Q 654 749 632 812"
+                          fill="none"
+                          stroke="#BA8880"
+                          stroke-width="14"
+                        />
+                      </g>
+                      <ellipse
+                        cx="513"
+                        cy="749"
+                        rx="176"
+                        ry="63"
+                        fill="none"
+                        stroke="#BA8880"
+                        stroke-width="10"
                       />
                     </g>
+
+                    <!-- Hidung -->
+                    <ellipse
+                      cx="515"
+                      cy="608"
+                      rx="32"
+                      ry="19"
+                      fill="#D5AA92"
+                      stroke="#A59AA4"
+                      stroke-width="8"
+                    />
+
+                    <!-- Mata Terbuka + Pupil (Eye Tracking) -->
+                    <g class="bunny-open-eye">
+                      <circle
+                        cx="433"
+                        cy="535"
+                        r="80"
+                        fill="#EEF5EC"
+                        stroke="#6B7A90"
+                        stroke-width="8"
+                      />
+                      <g clip-path="url(#clip-eye-l-2)">
+                        <g class="bunny-pupil">
+                          <circle cx="432" cy="522" r="68" fill="#333333" />
+                          <ellipse
+                            cx="442"
+                            cy="491"
+                            rx="15"
+                            ry="13"
+                            fill="#EEF3EC"
+                          />
+                        </g>
+                      </g>
+
+                      <circle
+                        cx="595"
+                        cy="535"
+                        r="80"
+                        fill="#EEF5EC"
+                        stroke="#6B7A90"
+                        stroke-width="8"
+                      />
+                      <g clip-path="url(#clip-eye-r-2)">
+                        <g class="bunny-pupil">
+                          <circle cx="594" cy="522" r="68" fill="#333333" />
+                          <ellipse
+                            cx="604"
+                            cy="491"
+                            rx="15"
+                            ry="13"
+                            fill="#EEF3EC"
+                          />
+                        </g>
+                      </g>
+                    </g>
+
+                    <!-- Mata Berkedip Normal -->
+                    <g class="bunny-blink-line">
+                      <path
+                        d="M 378 542 Q 433 576 488 542"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M 540 542 Q 595 576 650 542"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                    </g>
+
+                    <!-- Mata Tertutup Bentuk "n" saat Diklik -->
+                    <g class="bunny-startle-eye">
+                      <path
+                        d="M 384 556 Q 433 488 482 556"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M 546 556 Q 595 488 644 556"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                    </g>
+
+                    <!-- Pipi -->
+                    <ellipse
+                      class="bunny-cheek"
+                      cx="402"
+                      cy="614"
+                      rx="60"
+                      ry="33"
+                      fill="#D5AA92"
+                    />
+                    <ellipse
+                      class="bunny-cheek"
+                      cx="644"
+                      cy="611"
+                      rx="60"
+                      ry="33"
+                      fill="#D5AA92"
+                    />
                   </g>
                 </g>
-
-                <!-- Mata Berkedip Normal -->
-                <g class="bunny-blink-line">
-                  <path
-                    d="M 378 542 Q 433 576 488 542"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M 540 542 Q 595 576 650 542"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                </g>
-
-                <!-- Mata Tertutup Bentuk "n" saat Diklik -->
-                <g class="bunny-startle-eye">
-                  <path
-                    d="M 384 556 Q 433 488 482 556"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M 546 556 Q 595 488 644 556"
-                    fill="none"
-                    stroke="#6B7A90"
-                    stroke-width="14"
-                    stroke-linecap="round"
-                  />
-                </g>
-
-                <!-- Pipi -->
-                <ellipse cx="402" cy="614" rx="60" ry="33" fill="#D5AA92" />
-                <ellipse cx="644" cy="611" rx="60" ry="33" fill="#D5AA92" />
               </g>
             </svg>
 
@@ -1257,12 +1580,11 @@
               <div class="mb-5 flex items-center gap-3 sm:mb-6">
                 <span
                   class="grid size-10 shrink-0 place-items-center rounded-full bg-[#355b45] text-sm font-bold text-white"
-                  aria-label="Profil Asisten Ruang"
-                  >AR.</span
+                  aria-label="Profil Asisten Fomify"
+                  >A.FY</span
                 >
                 <div>
-                  <strong class="block text-[13px]"
-                    >Asisten Ruang Bertumbuh</strong
+                  <strong class="block text-[13px]">Asisten Fomify</strong
                   ><span class="text-[11px] text-[#81867b]"
                     >Contoh percakapan</span
                   >
@@ -1292,6 +1614,557 @@
           </div>
         </div>
       </section>
+
+      <!-- PANEL 4: FORUM KOMUNITAS ORANG TUA -->
+      <section
+        data-panel
+        data-state="after"
+        id="forum-komunitas"
+        class="absolute inset-0 isolate overflow-y-auto overflow-x-hidden overscroll-contain bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] pb-12 pl-5 pr-9 pt-24 sm:px-10 sm:pb-10 sm:pt-28"
+        aria-labelledby="forum-section-title"
+      >
+        <svg
+          class="corner-waves"
+          viewBox="0 0 1000 800"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        ></svg>
+
+        <!-- Hiasan Latar Belakang Section 4 -->
+        <div
+          class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none"
+          aria-hidden="true"
+        >
+          <div
+            class="absolute -right-24 top-20 size-72 rounded-full bg-[#d7ed9b]/40 blur-3xl sm:size-96"
+          ></div>
+          <div
+            class="absolute -bottom-24 left-12 size-80 rounded-full bg-[#92ae70]/20 blur-3xl sm:size-[26rem]"
+          ></div>
+          <div
+            class="absolute right-10 top-28 hidden h-32 w-36 bg-[radial-gradient(#355b45_1.2px,transparent_1.2px)] opacity-[0.12] [background-size:16px_16px] sm:block"
+          ></div>
+          <div
+            class="absolute bottom-24 left-[6%] hidden size-10 rotate-12 rounded-2xl border border-[#92ae70]/30 bg-white/50 backdrop-blur-[1px] lg:block"
+          ></div>
+        </div>
+
+        <div
+          class="relative z-10 mx-auto grid min-h-full max-w-6xl items-center gap-7 py-4 sm:gap-10 sm:py-8 md:grid-cols-[1.05fr_.95fr] md:gap-16"
+        >
+          <div>
+            <div
+              data-reveal
+              style="--i: 0"
+              class="mb-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.13em] text-[#355b45] before:h-px before:w-5 before:bg-current before:content-[''] sm:mb-5 sm:text-[11px]"
+            >
+              Ruang berbagi sesama orang tua
+            </div>
+            <h2
+              data-reveal
+              style="--i: 1"
+              id="forum-section-title"
+              class="m-0 max-w-2xl font-serif text-[clamp(2.1rem,7.5vw,4.35rem)] font-normal leading-[1.04] tracking-[-.06em]"
+            >
+              Cerita Anda selalu punya
+              <em class="text-[#355b45]">pendengar.</em>
+            </h2>
+            <p
+              data-reveal
+              style="--i: 2"
+              class="mt-5 max-w-xl text-[14px] leading-[1.8] text-[#656b62] sm:mt-6 sm:text-[15px]"
+            >
+              Selain bertanya pada AI, Anda juga bisa berdiskusi langsung dengan
+              orang tua lainnya melalui fitur Forum Fomify. Bagikan pengalaman
+              sehari-hari, bertukar tips praktis, dan saling menguatkan dalam
+              ruang komunitas yang aman dan anonim.
+            </p>
+            <p
+              data-reveal
+              style="--i: 3"
+              class="mt-3 max-w-xl text-xs leading-[1.8] text-[#85897f]"
+            >
+              Tidak perlu akun atau nama asli—cukup gunakan nama samaran untuk
+              menjaga privasi keluarga Anda.
+            </p>
+            <div
+              data-reveal
+              style="--i: 4"
+              class="mt-6 flex flex-wrap items-center gap-3.5 sm:mt-8 sm:gap-4"
+            >
+              <a
+                class="inline-flex min-h-11 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white no-underline transition-colors hover:bg-[#294936] sm:min-h-12"
+                href="forum.html"
+                >Buka Forum Komunitas <span aria-hidden="true">→</span></a
+              >
+              <span class="text-xs text-[#656b62]"
+                >Gratis, anonim, dan saling mendukung.</span
+              >
+            </div>
+          </div>
+
+          <!-- Kartu Ilustrasi Percakapan Forum -->
+          <div
+            data-reveal
+            style="--i: 2"
+            class="relative mx-auto mt-16 w-full max-w-md sm:mt-14"
+          >
+            <div
+              class="pointer-events-none absolute -right-4 -top-5 -z-10 size-24 rounded-full bg-[#d7ed9b]/70 blur-xl"
+              aria-hidden="true"
+            ></div>
+
+            <!-- Kelinci Mengintip di Balik Kartu Forum -->
+            <svg
+              id="forum-peek-bunny"
+              class="bunny pointer-events-auto absolute -top-28 right-5 z-0 h-auto w-[132px] drop-shadow-[0_10px_16px_#20231f1a] sm:-top-32 sm:right-7 sm:w-[152px]"
+              viewBox="250 -60 560 760"
+              role="button"
+              tabindex="0"
+              aria-label="Ilustrasi kelinci mengintip di atas kartu forum, klik untuk menyapa"
+            >
+              <defs>
+                <clipPath id="clip-eye-l-4">
+                  <circle cx="433" cy="535" r="76" />
+                </clipPath>
+                <clipPath id="clip-eye-r-4">
+                  <circle cx="595" cy="535" r="76" />
+                </clipPath>
+              </defs>
+
+              <g class="bunny-peek-idle">
+                <g class="bunny-rig">
+                  <g class="bunny-head">
+                    <!-- Kepala -->
+                    <circle
+                      cx="517"
+                      cy="550"
+                      r="232"
+                      fill="#F9EFE0"
+                      stroke="#74839B"
+                      stroke-width="16"
+                    />
+
+                    <!-- Telinga Kiri -->
+                    <g transform="rotate(-11 428 205)">
+                      <g>
+                        <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          values="-4 428 368; 10 428 368; -4 428 368"
+                          keyTimes="0; 0.5; 1"
+                          calcMode="spline"
+                          keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                          dur="2.4s"
+                          repeatCount="indefinite"
+                        />
+                        <ellipse
+                          cx="428"
+                          cy="205"
+                          rx="68"
+                          ry="188"
+                          fill="#F9EFE0"
+                        />
+                        <path
+                          d="M 394 368 A 68 188 0 1 1 462 368"
+                          fill="none"
+                          stroke="#74839B"
+                          stroke-width="16"
+                          stroke-linecap="round"
+                        />
+                        <ellipse
+                          cx="428"
+                          cy="210"
+                          rx="28"
+                          ry="114"
+                          fill="#D2AA92"
+                        />
+                      </g>
+                    </g>
+
+                    <!-- Telinga Kanan -->
+                    <g transform="rotate(11 572 205)">
+                      <g>
+                        <animateTransform
+                          attributeName="transform"
+                          type="rotate"
+                          values="4 572 368; -10 572 368; 4 572 368"
+                          keyTimes="0; 0.5; 1"
+                          calcMode="spline"
+                          keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+                          dur="2.4s"
+                          repeatCount="indefinite"
+                        />
+                        <ellipse
+                          cx="572"
+                          cy="205"
+                          rx="68"
+                          ry="188"
+                          fill="#F9EFE0"
+                        />
+                        <path
+                          d="M 538 368 A 68 188 0 1 1 606 368"
+                          fill="none"
+                          stroke="#74839B"
+                          stroke-width="16"
+                          stroke-linecap="round"
+                        />
+                        <ellipse
+                          cx="572"
+                          cy="210"
+                          rx="28"
+                          ry="114"
+                          fill="#D2AA92"
+                        />
+                      </g>
+                    </g>
+
+                    <!-- Hidung -->
+                    <ellipse
+                      cx="515"
+                      cy="608"
+                      rx="32"
+                      ry="19"
+                      fill="#D5AA92"
+                      stroke="#A59AA4"
+                      stroke-width="8"
+                    />
+
+                    <!-- Mata Terbuka + Pupil (Eye Tracking) -->
+                    <g class="bunny-open-eye">
+                      <circle
+                        cx="433"
+                        cy="535"
+                        r="80"
+                        fill="#EEF5EC"
+                        stroke="#6B7A90"
+                        stroke-width="8"
+                      />
+                      <g clip-path="url(#clip-eye-l-4)">
+                        <g class="bunny-pupil">
+                          <circle cx="432" cy="522" r="68" fill="#333333" />
+                          <ellipse
+                            cx="442"
+                            cy="491"
+                            rx="15"
+                            ry="13"
+                            fill="#EEF3EC"
+                          />
+                        </g>
+                      </g>
+
+                      <circle
+                        cx="595"
+                        cy="535"
+                        r="80"
+                        fill="#EEF5EC"
+                        stroke="#6B7A90"
+                        stroke-width="8"
+                      />
+                      <g clip-path="url(#clip-eye-r-4)">
+                        <g class="bunny-pupil">
+                          <circle cx="594" cy="522" r="68" fill="#333333" />
+                          <ellipse
+                            cx="604"
+                            cy="491"
+                            rx="15"
+                            ry="13"
+                            fill="#EEF3EC"
+                          />
+                        </g>
+                      </g>
+                    </g>
+
+                    <!-- Mata Berkedip Normal -->
+                    <g class="bunny-blink-line">
+                      <path
+                        d="M 378 542 Q 433 576 488 542"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M 540 542 Q 595 576 650 542"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                    </g>
+
+                    <!-- Mata Tertutup Bentuk "n" saat Diklik -->
+                    <g class="bunny-startle-eye">
+                      <path
+                        d="M 384 556 Q 433 488 482 556"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M 546 556 Q 595 488 644 556"
+                        fill="none"
+                        stroke="#6B7A90"
+                        stroke-width="14"
+                        stroke-linecap="round"
+                      />
+                    </g>
+
+                    <!-- Pipi -->
+                    <ellipse
+                      class="bunny-cheek"
+                      cx="402"
+                      cy="614"
+                      rx="60"
+                      ry="33"
+                      fill="#D5AA92"
+                    />
+                    <ellipse
+                      class="bunny-cheek"
+                      cx="644"
+                      cy="611"
+                      rx="60"
+                      ry="33"
+                      fill="#D5AA92"
+                    />
+                  </g>
+                </g>
+              </g>
+            </svg>
+
+            <div
+              class="relative z-10 space-y-3.5 rounded-[24px] border border-[#dedfd6] bg-[#fffefa] p-5 shadow-[0_22px_60px_#293e2a12] sm:p-6"
+            >
+              <div
+                class="flex items-center justify-between border-b border-[#eceee6] pb-3"
+              >
+                <span
+                  class="text-[11px] font-bold uppercase tracking-[.1em] text-[#355b45]"
+                  >Diskusi Komunitas</span
+                >
+                <span
+                  class="rounded-full bg-[#e8f1dc] px-2.5 py-0.5 text-[10px] font-bold text-[#355b45]"
+                  >Anonim & Aman</span
+                >
+              </div>
+
+              <!-- Contoh Postingan Orang Tua 1 -->
+              <div class="rounded-2xl border border-[#e3eadc] bg-[#f8fbf4] p-4">
+                <div class="mb-2 flex items-center gap-2.5">
+                  <span
+                    class="grid size-8 shrink-0 place-items-center rounded-full bg-[#e3efd5] text-[11px] font-bold text-[#2f523d]"
+                    >BH</span
+                  >
+                  <div class="leading-tight">
+                    <strong class="block text-xs text-[#2b4837]"
+                      >Bunda Hangat 24</strong
+                    >
+                    <span class="text-[10px] text-[#81867b]">Baru saja</span>
+                  </div>
+                </div>
+                <p class="m-0 text-xs leading-relaxed text-[#3c433a]">
+                  “Ada tips menenangkan anak saat mendengar suara bising di
+                  tempat umum? Kami baru mulai membiasakan rutinitas baru.”
+                </p>
+              </div>
+
+              <!-- Contoh Balasan Orang Tua 2 -->
+              <div
+                class="ml-5 rounded-2xl border border-[#e8e9e2] bg-white p-3.5 shadow-2xs"
+              >
+                <div class="mb-1.5 flex items-center gap-2">
+                  <span
+                    class="grid size-7 shrink-0 place-items-center rounded-full bg-[#f6e8d2] text-[10px] font-bold text-[#7c5328]"
+                    >AT</span
+                  >
+                  <strong class="text-[11px] text-[#355b45]"
+                    >Ayah Teduh 19</strong
+                  >
+                </div>
+                <p class="m-0 text-[11.5px] leading-relaxed text-[#586055]">
+                  “Kami biasanya membawa earmuff favorit dan memberi tahu anak
+                  sebelum masuk ke tempat ramai. Sangat membantu!”
+                </p>
+              </div>
+
+              <div
+                class="flex items-center justify-between pt-1 text-[11px] text-[#81867b]"
+              >
+                <span>💬 Saling berbagi pengalaman</span>
+                <a
+                  href="forum.html"
+                  class="font-bold text-[#355b45] no-underline hover:underline"
+                  >Ikut diskusi →</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PANEL 5: CS, INSTAGRAM & FOOTER -->
+      <section
+        data-panel
+        data-state="after"
+        id="kontak-cs"
+        class="absolute inset-0 isolate overflow-hidden bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc] pt-16 sm:pt-24"
+        aria-labelledby="cs-title"
+      >
+        <svg
+          class="corner-waves"
+          viewBox="0 0 1000 800"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        ></svg>
+
+        <!-- Hiasan Latar Belakang Section 5 -->
+        <div
+          class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none"
+          aria-hidden="true"
+        >
+          <div
+            class="absolute -left-24 top-20 size-72 rounded-full bg-[#d7ed9b]/35 blur-3xl sm:size-96"
+          ></div>
+          <div
+            class="absolute -right-20 bottom-16 size-80 rounded-full bg-[#92ae70]/25 blur-3xl sm:size-[26rem]"
+          ></div>
+          <div
+            class="absolute -bottom-24 -right-24 size-72 rounded-full border border-[#355b45]/10 sm:size-96"
+          >
+            <div
+              class="absolute inset-8 rounded-full border border-dashed border-[#92ae70]/30"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          class="relative z-10 flex h-full flex-col justify-between overflow-y-auto overflow-x-hidden overscroll-contain pb-6 pl-5 pr-9 pt-6 sm:px-10 sm:pb-8 sm:pt-10"
+        >
+          <div class="mx-auto my-auto w-full max-w-4xl">
+            <div
+              data-reveal
+              style="--i: 0"
+              class="rounded-[28px] border border-[#d6e0cd] bg-white/90 p-6 text-center shadow-[0_22px_60px_#293e2a12] backdrop-blur-md sm:p-12"
+            >
+              <div
+                class="mb-4 inline-flex items-center gap-2 rounded-full border border-[#dce4d4] bg-[#f4f7ef] px-3.5 py-1 text-[10px] font-bold uppercase tracking-[.12em] text-[#355b45] sm:text-[11px]"
+              >
+                <span class="size-1.5 rounded-full bg-[#7aa154]"></span>
+                Bantuan & Terhubung Bersama Kami
+              </div>
+
+              <h2
+                id="cs-title"
+                class="mx-auto my-0 max-w-2xl font-serif text-[clamp(1.9rem,6vw,3.4rem)] font-normal leading-[1.08] tracking-[-.045em] text-[#1f241e]"
+              >
+                Menemukan kendala atau <em class="text-[#355b45]">bug?</em>
+              </h2>
+
+              <p
+                class="mx-auto mb-0 mt-4 max-w-xl text-[13.5px] leading-[1.8] text-[#656b62] sm:text-[15px]"
+              >
+                Tim kami siap membantu agar pengalaman Anda menggunakan Fomify
+                tetap nyaman. Hubungi layanan Customer Service kami atau ikuti
+                kabar terbaru melalui Instagram resmi Fomify.
+              </p>
+
+              <!-- Kartu Kontak CS & Tombol Instagram -->
+              <div
+                data-reveal
+                style="--i: 1"
+                class="mx-auto mt-7 grid max-w-2xl gap-4 sm:mt-9 sm:grid-cols-2"
+              >
+                <!-- Nomor CS Placeholder -->
+                <div
+                  class="flex flex-col items-center justify-center rounded-2xl border border-[#dce6d3] bg-[#f7faf3] p-5 text-center"
+                >
+                  <span
+                    class="mb-1 text-[11px] font-bold uppercase tracking-[.1em] text-[#656b62]"
+                    >Customer Service (CS)</span
+                  >
+                  <a
+                    href="tel:+6281234567890"
+                    class="text-lg font-bold tracking-tight text-[#355b45] no-underline hover:underline sm:text-xl"
+                  >
+                    +62 812-3456-7890
+                  </a>
+                  <span class="mt-1 text-[11px] text-[#81867b]"
+                    >Laporkan bug atau kendala teknis</span
+                  >
+                </div>
+
+                <!-- Tombol Instagram Putih & Hijau -->
+                <a
+                  href="#"
+                  aria-label="Instagram resmi Fomify"
+                  class="group flex flex-col items-center justify-center rounded-2xl border border-[#355b45] bg-[#355b45] p-5 text-white no-underline shadow-[0_12px_28px_#355b452e] transition hover:bg-[#294936]"
+                >
+                  <div class="flex items-center gap-3">
+                    <!-- Logo IG Putih & Hijau -->
+                    <span
+                      class="grid size-11 place-items-center rounded-xl bg-white text-[#355b45] shadow-xs transition-transform group-hover:scale-105"
+                    >
+                      <svg
+                        class="size-6"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
+                        <circle cx="12" cy="12" r="4.2" />
+                        <circle
+                          cx="17.5"
+                          cy="6.5"
+                          r="1.1"
+                          fill="currentColor"
+                          stroke="none"
+                        />
+                      </svg>
+                    </span>
+                    <div class="text-left">
+                      <span
+                        class="block text-[10.5px] font-semibold uppercase tracking-[.1em] text-[#d7ed9b]"
+                        >Ikuti Kami</span
+                      >
+                      <strong class="block text-base font-bold text-white"
+                        >@fomify.id</strong
+                      >
+                    </div>
+                  </div>
+                  <span class="mt-2 text-[11px] text-white/80"
+                    >Edukasi & pembaruan komunitas →</span
+                  >
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Paling Bawah Website -->
+          <footer
+            data-reveal
+            style="--i: 2"
+            class="mx-auto flex w-full max-w-5xl shrink-0 flex-col items-center justify-between gap-2 border-t border-[#dce3d4]/80 pt-4 text-center text-xs text-[#656b62] sm:flex-row sm:text-left"
+          >
+            <a
+              class="inline-flex items-center gap-2.5 text-[14px] font-bold tracking-[-0.04em] text-[#20231f] no-underline sm:text-[15px]"
+              href="index.html"
+              ><span
+                class="brand-mark grid size-7 place-items-center rounded-full bg-[#355b45] text-white sm:size-8"
+                aria-hidden="true"
+                >FY</span
+              ><span class="brand-name">Fomify</span></a
+            >
+            <span class="font-semibold tracking-[-0.01em] text-[#355b45]"
+              >by Fomify 2026</span
+            >
+          </footer>
+        </div>
+      </section>
     </main>
 
     <script>
@@ -1306,12 +2179,48 @@
         const tandaMenu = $("#tanda-menu");
         const tandaTrigger = $("#tanda-trigger");
         const tandaPanel = $("#tanda-perkembangan");
+        const mobileMenuToggle = $("#mobile-menu-toggle");
+        const primaryNav = $("#primary-nav");
         const fine = !matchMedia("(pointer: coarse)").matches;
         const reduceMotion = matchMedia(
           "(prefers-reduced-motion: reduce)",
         ).matches;
         let current = 0,
           locked = false;
+
+        if (mobileMenuToggle && primaryNav) {
+          const setPrimaryNavOpen = (open) => {
+            primaryNav.dataset.open = String(open);
+            mobileMenuToggle.setAttribute("aria-expanded", String(open));
+            mobileMenuToggle.setAttribute(
+              "aria-label",
+              open ? "Tutup navigasi" : "Buka navigasi",
+            );
+          };
+          mobileMenuToggle.addEventListener("click", () => {
+            setPrimaryNavOpen(primaryNav.dataset.open !== "true");
+          });
+          primaryNav.addEventListener("click", (event) => {
+            if (event.target.closest("a")) setPrimaryNavOpen(false);
+          });
+          document.addEventListener("click", (event) => {
+            if (
+              !primaryNav.contains(event.target) &&
+              !mobileMenuToggle.contains(event.target)
+            )
+              setPrimaryNavOpen(false);
+          });
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") setPrimaryNavOpen(false);
+          });
+          addEventListener(
+            "resize",
+            () => {
+              if (innerWidth >= 640) setPrimaryNavOpen(false);
+            },
+            { passive: true },
+          );
+        }
 
         /* ---------- Dropdown Tanda Perkembangan (ramah tap di HP) ---------- */
         if (tandaTrigger && tandaPanel) {
@@ -1630,7 +2539,11 @@
               i === current ? "active" : i < current ? "before" : "after";
             panel.inert = i !== current;
             panel.setAttribute("aria-hidden", String(i !== current));
-            if (i === current) panel.scrollTop = 0;
+            if (i === current) {
+              panel.scrollTop = 0;
+              const innerScroller = panel.querySelector(".overflow-y-auto");
+              if (innerScroller) innerScroller.scrollTop = 0;
+            }
           });
           dots.forEach((d, i) =>
             d.setAttribute("aria-current", String(i === current)),

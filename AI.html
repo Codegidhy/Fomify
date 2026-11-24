@@ -9,20 +9,43 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <title>Tanya AI — Ruang Bertumbuh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Tanya AI — Fomify</title>
     <style>
+      .brand-mark,
+      .brand-name {
+        font-family: "Space Grotesk", sans-serif;
+      }
       :root {
         color-scheme: light;
       }
 
+      html,
       body {
-        min-height: 100vh;
+        height: 100%;
+        max-width: 100vw;
+        overflow-x: hidden;
+        overscroll-behavior: none;
+      }
+
+      body {
+        position: relative;
+        isolation: isolate;
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
       }
 
       #messages {
         scrollbar-color: #cbd6c3 transparent;
         scrollbar-width: thin;
         min-height: 0;
+        overscroll-behavior: contain;
       }
 
       .message-copy {
@@ -202,20 +225,16 @@
         height: 2.75rem;
         max-height: 9rem;
         overflow-y: auto;
-      }
-
-      body {
-        position: relative;
-        isolation: isolate;
-        overflow-x: hidden;
+        overscroll-behavior: contain;
       }
 
       .aurora-wave {
         position: fixed;
         inset: 0;
         z-index: 0;
-        width: 100%;
-        height: 100%;
+        width: 100vw;
+        height: 100dvh;
+        overflow: hidden;
         pointer-events: none;
       }
 
@@ -300,20 +319,20 @@
       />
     </svg>
     <header
-      class="relative z-10 border-b border-[#dedfd6] bg-white/70 px-5 py-4 sm:px-10 sm:py-5"
+      class="relative z-10 shrink-0 border-b border-[#dedfd6] bg-white/70 px-5 py-3.5 backdrop-blur-sm sm:px-10 sm:py-4"
     >
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-2">
         <a
           class="inline-flex items-center gap-2.5 text-[15px] font-bold tracking-[-0.04em] no-underline"
           href="index.html"
-          aria-label="Ruang Bertumbuh, halaman utama"
+          aria-label="Fomify, halaman utama"
         >
           <span
-            class="grid size-8 place-items-center rounded-full bg-[#355b45] text-base text-white"
+            class="brand-mark grid size-8 place-items-center rounded-full bg-[#355b45] text-base text-white"
             aria-hidden="true"
-            >r.</span
+            >FY</span
           >
-          <span>ruang bertumbuh</span>
+          <span class="brand-name">Fomify</span>
         </a>
         <nav
           class="flex items-center gap-3 text-xs font-semibold sm:gap-7 sm:text-[13px]"
@@ -326,6 +345,11 @@
           >
           <a
             class="text-[#656b62] no-underline hover:text-[#355b45]"
+            href="forum.html"
+            >Forum</a
+          >
+          <a
+            class="text-[#656b62] no-underline hover:text-[#355b45]"
             href="test.html"
             >Tes skrining</a
           >
@@ -334,31 +358,31 @@
     </header>
 
     <main
-      class="relative z-10 mx-auto grid max-w-6xl gap-6 px-5 py-7 sm:px-10 sm:py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.7fr)] lg:gap-10"
+      class="relative z-10 mx-auto grid w-full max-w-6xl flex-1 items-start gap-6 px-5 py-5 sm:px-10 sm:py-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.7fr)] lg:gap-10"
     >
-      <aside class="lg:pt-5">
+      <aside class="lg:pt-1">
         <div
-          class="mb-3.5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.13em] text-[#355b45] before:h-px before:w-5 before:bg-current before:content-['']"
+          class="mb-2.5 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.13em] text-[#355b45] before:h-px before:w-5 before:bg-current before:content-['']"
         >
           Teman bicara orang tua
         </div>
         <h1
-          class="m-0 max-w-lg font-serif text-[clamp(2.4rem,5vw,4rem)] font-normal leading-[1.02] tracking-[-.06em]"
+          class="m-0 max-w-lg font-serif text-[clamp(2.2rem,4.5vw,3.6rem)] font-normal leading-[1.02] tracking-[-.06em]"
         >
           Bertanya, memahami, <em class="text-[#355b45]">bertumbuh.</em>
         </h1>
-        <p class="mt-5 max-w-lg text-sm leading-[1.85] text-[#656b62]">
+        <p class="mt-4 max-w-lg text-sm leading-[1.75] text-[#656b62]">
           Sampaikan pertanyaan tentang tumbuh kembang, komunikasi, perilaku,
           atau cara mendukung anak. Mulai dari hal kecil yang sedang Anda
           pikirkan.
         </p>
 
         <section
-          class="mt-7 rounded-2xl border border-[#dedfd6] bg-[#fffefa] p-5"
+          class="mt-5 rounded-2xl border border-[#dedfd6] bg-[#fffefa] p-4 sm:p-5"
         >
           <h2 class="m-0 font-serif text-xl font-normal">Perlu diingat</h2>
           <ul
-            class="mb-0 mt-3 space-y-2.5 pl-4 text-xs leading-relaxed text-[#656b62]"
+            class="mb-0 mt-2.5 space-y-2 pl-4 text-xs leading-relaxed text-[#656b62]"
           >
             <li>
               AI dapat keliru; gunakan jawaban sebagai informasi awal, bukan
@@ -375,7 +399,7 @@
           </ul>
         </section>
 
-        <p class="mb-0 mt-4 text-[11px] leading-relaxed text-[#85897f]">
+        <p class="mb-0 mt-3 text-[11px] leading-relaxed text-[#85897f]">
           Riwayat chat disimpan di browser ini dan dikirim ke layanan AI saat
           Anda bertanya agar percakapan tetap memiliki konteks. Hindari mengirim
           informasi yang dapat mengidentifikasi anak.
@@ -383,38 +407,38 @@
       </aside>
 
       <section
-        class="flex h-[74vh] min-h-[480px] flex-col overflow-hidden rounded-[22px] border border-[#dedfd6] bg-[#fffefa] shadow-[0_18px_55px_#20231f0d] lg:h-[750px] lg:min-h-0"
+        class="flex h-[70dvh] min-h-[440px] max-h-[760px] flex-col overflow-hidden rounded-[22px] border border-[#dedfd6] bg-[#fffefa] shadow-[0_18px_55px_#20231f0d] lg:h-[calc(100dvh-7.5rem)]"
         aria-label="Chat dengan asisten AI"
       >
         <div
-          class="flex items-center justify-between gap-4 border-b border-[#e8e9e2] px-5 py-4 sm:px-6"
+          class="flex shrink-0 items-center justify-between gap-4 border-b border-[#e8e9e2] px-5 py-3.5 sm:px-6"
         >
           <div class="flex items-center gap-3">
             <span
               class="grid size-10 shrink-0 place-items-center rounded-full bg-[#355b45] text-sm font-bold text-white"
-              aria-label="Profil Asisten Ruang"
-              >AR.</span
+              aria-label="Profil Asisten Fomify"
+              >A.FY</span
             >
             <div>
-              <h2 class="m-0 text-sm font-bold">Asisten Ruang Bertumbuh</h2>
-              <p class="m-0 mt-1 text-[11px] text-[#81867b]">
+              <h2 class="m-0 text-sm font-bold">Asisten Fomify</h2>
+              <p class="m-0 mt-0.5 text-[11px] text-[#81867b]">
                 Siap mendengarkan pertanyaan Anda
               </p>
             </div>
           </div>
           <button
             id="clear-chat"
-            class="rounded-full border border-[#dedfd6] px-3 py-2 text-[11px] font-semibold text-[#656b62] transition hover:border-[#355b45] hover:text-[#355b45] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c987]"
+            class="rounded-full border border-[#dedfd6] px-3 py-1.5 text-[11px] font-semibold text-[#656b62] transition hover:border-[#355b45] hover:text-[#355b45] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c987]"
             type="button"
           >
             Hapus chat
           </button>
         </div>
 
-        <div id="chat-stage" class="relative min-h-0 flex-1">
+        <div id="chat-stage" class="relative min-h-0 flex-1 overflow-hidden">
           <div
             id="messages"
-            class="absolute inset-0 space-y-4 overflow-y-auto overscroll-contain px-4 py-5 pb-20 sm:px-6"
+            class="absolute inset-0 space-y-4 overflow-y-auto px-4 py-5 pb-20 sm:px-6"
             role="log"
             aria-live="polite"
             aria-relevant="additions text"
@@ -424,17 +448,17 @@
 
         <div
           id="suggestions"
-          class="flex flex-wrap gap-2 px-4 pb-4 sm:px-6"
+          class="flex shrink-0 flex-wrap gap-2 px-4 pb-3 sm:px-6"
           aria-label="Contoh pertanyaan"
         >
           <button
-            class="suggestion rounded-full border border-[#dedfd6] px-3 py-2 text-left text-[11px] text-[#656b62] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] hover:text-[#355b45]"
+            class="suggestion rounded-full border border-[#dedfd6] px-3 py-1.5 text-left text-[11px] text-[#656b62] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] hover:text-[#355b45]"
             type="button"
           >
             Bagaimana mendukung komunikasi anak?
           </button>
           <button
-            class="suggestion rounded-full border border-[#dedfd6] px-3 py-2 text-left text-[11px] text-[#656b62] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] hover:text-[#355b45]"
+            class="suggestion rounded-full border border-[#dedfd6] px-3 py-1.5 text-left text-[11px] text-[#656b62] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] hover:text-[#355b45]"
             type="button"
           >
             Kapan sebaiknya berkonsultasi?
@@ -443,7 +467,7 @@
 
         <form
           id="chat-form"
-          class="border-t border-[#e8e9e2] p-4 sm:px-6 sm:py-5"
+          class="shrink-0 border-t border-[#e8e9e2] p-3.5 sm:px-6 sm:py-4"
         >
           <label class="sr-only" for="message-input"
             >Tulis pertanyaan Anda</label
@@ -453,7 +477,7 @@
           >
             <textarea
               id="message-input"
-              class="max-h-36 min-h-11 flex-1 resize-none border-0 bg-transparent py-3 text-sm leading-relaxed outline-none placeholder:text-[#9a9e95]"
+              class="max-h-36 min-h-11 flex-1 resize-none border-0 bg-transparent py-2.5 text-sm leading-relaxed outline-none placeholder:text-[#9a9e95]"
               placeholder="Ceritakan apa yang ingin Anda tanyakan..."
               rows="1"
               maxlength="4000"
@@ -461,7 +485,7 @@
             ></textarea>
             <button
               id="send-button"
-              class="mb-1 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[#355b45] text-white transition hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
+              class="mb-0.5 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[#355b45] text-white transition hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
               type="submit"
               aria-label="Kirim pesan"
             >
@@ -479,7 +503,7 @@
             ></p>
             <button
               id="retry-button"
-              class="rounded-full border border-[#dedfd6] px-3 py-1.5 text-[11px] font-semibold text-[#355b45] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c987]"
+              class="rounded-full border border-[#dedfd6] px-3 py-1 text-[11px] font-semibold text-[#355b45] transition hover:border-[#92ae70] hover:bg-[#f4f6ef] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a9c987]"
               type="button"
               hidden
             >
@@ -530,6 +554,7 @@
       function setupWelcomeRobot() {
         const robot = document.querySelector("#welcome-robot");
         if (!robot) return;
+        robot.setAttribute("aria-label", "Maskot Fomify");
 
         if (!document.documentElement.dataset.welcomeRobotTracking) {
           document.documentElement.dataset.welcomeRobotTracking = "true";
@@ -574,10 +599,11 @@
         if (!robot) {
           const wrapper = document.createElement("div");
           wrapper.innerHTML =
-            '<svg id="welcome-robot" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Asisten Ruang"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg>';
+            '<svg id="welcome-robot" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Fomify"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg>';
           robot = wrapper.firstElementChild;
           setupWelcomeRobot();
         }
+        robot.setAttribute("aria-label", "Maskot Fomify");
         robot.classList.remove("mx-auto", "mb-4", "robot-bottom-left");
         robot.classList.add("robot-reply-avatar");
         return robot;
@@ -615,7 +641,7 @@
         setRobotMood("neutral");
       }
 
-      function setStatus(message, isError) {
+      function setStatus(message, isError = false) {
         status.textContent = message;
         status.className = isError
           ? "m-0 text-[11px] text-red-700"
@@ -625,7 +651,21 @@
       function persistMessages() {
         if (!storageAvailable) return;
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+          const completedMessages = [...messages];
+          while (
+            completedMessages.length > 0 &&
+            completedMessages[completedMessages.length - 1].role === "user"
+          ) {
+            completedMessages.pop();
+          }
+          if (completedMessages.length === 0) {
+            localStorage.removeItem(STORAGE_KEY);
+          } else {
+            localStorage.setItem(
+              STORAGE_KEY,
+              JSON.stringify(completedMessages),
+            );
+          }
         } catch (error) {
           storageAvailable = false;
           console.error("Riwayat chat gagal disimpan:", error);
@@ -656,7 +696,7 @@
         label.className = isUser
           ? "mb-1 text-[10px] font-bold text-white/75"
           : "mb-1 text-[10px] font-bold text-[#55724e]";
-        label.textContent = isUser ? "Anda" : "Ruang Bertumbuh";
+        label.textContent = isUser ? "Anda" : "Fomify";
 
         const copy = document.createElement("div");
         copy.className = "message-copy";
@@ -675,7 +715,7 @@
           const welcome = document.createElement("div");
           welcome.className = "mx-auto my-8 max-w-md text-center";
           welcome.innerHTML =
-            '<svg id="welcome-robot" class="mx-auto mb-4 h-16 w-16" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Asisten Ruang"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg><h3 class="m-0 font-serif text-2xl font-normal">Halo, saya siap membantu.</h3><p class="mb-0 mt-2 text-sm leading-relaxed text-[#656b62]">Apa yang sedang Anda amati atau ingin pahami tentang anak?</p>';
+            '<svg id="welcome-robot" class="mx-auto mb-4 h-16 w-16" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Fomify"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg><h3 class="m-0 font-serif text-2xl font-normal">Halo, saya siap membantu.</h3><p class="mb-0 mt-2 text-sm leading-relaxed text-[#656b62]">Apa yang sedang Anda amati atau ingin pahami tentang anak?</p>';
           chatLog.appendChild(welcome);
           setupWelcomeRobot();
         } else {
@@ -773,7 +813,14 @@
             ) {
               throw new Error("Format riwayat chat tidak sesuai.");
             }
+            while (
+              parsed.length > 0 &&
+              parsed[parsed.length - 1].role === "user"
+            ) {
+              parsed.pop();
+            }
             messages = parsed;
+            persistMessages();
           }
         } catch (error) {
           storageAvailable = false;
@@ -784,16 +831,6 @@
           );
         }
         renderMessages();
-        const lastMessage = messages[messages.length - 1];
-        if (lastMessage && lastMessage.role === "user") {
-          failedMessage = lastMessage;
-          retryHistory = messages.slice(-10);
-          retryButton.hidden = false;
-          setStatus(
-            "Pesan terakhir belum mendapat jawaban. Anda bisa mencoba ulang.",
-            true,
-          );
-        }
       }
 
       function makePrompt(history) {
@@ -844,6 +881,9 @@
             },
           );
           if (error) throw error;
+          if (data?.errorDetail) {
+            throw new Error(data.errorDetail);
+          }
           if (!data || typeof data.reply !== "string" || !data.reply.trim()) {
             throw new Error(
               "Layanan tidak mengembalikan jawaban yang dapat dibaca.",
@@ -865,7 +905,7 @@
           );
         } catch (error) {
           hideTypingIndicator();
-          console.error("Permintaan ke asisten gagal:", error);
+          console.error("Permintaan ke asisten gagal:", error.message || error);
           setStatus(
             "Maaf, jawaban belum berhasil dimuat. Anda bisa mencoba ulang pesan ini.",
             true,
