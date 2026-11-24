@@ -25,152 +25,9 @@
         color-scheme: light;
       }
 
-      html,
-      body {
-        height: 100%;
-        max-width: 100vw;
-        overflow-x: hidden;
-        overscroll-behavior: none;
-      }
-
-      body {
-        position: relative;
-        isolation: isolate;
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
-      }
-
       #messages {
         scrollbar-color: #cbd6c3 transparent;
         scrollbar-width: thin;
-        min-height: 0;
-        overscroll-behavior: contain;
-      }
-
-      .message-copy {
-        overflow-wrap: anywhere;
-        white-space: pre-wrap;
-      }
-
-      .message-pop {
-        animation: message-pop 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
-      }
-
-      .typing-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 9999px;
-        background: #789069;
-        animation: typing-bounce 1s infinite ease-in-out;
-      }
-
-      .typing-dot:nth-child(2) {
-        animation-delay: 120ms;
-      }
-
-      .typing-dot:nth-child(3) {
-        animation-delay: 240ms;
-      }
-
-      #welcome-robot .welcome-open-eye,
-      #welcome-robot .welcome-pupil,
-      #welcome-robot .welcome-blink-line {
-        transition:
-          opacity 90ms ease,
-          transform 90ms ease;
-      }
-
-      #welcome-robot .welcome-blink-line {
-        opacity: 0;
-      }
-
-      #welcome-robot[data-blinking="true"] .welcome-open-eye,
-      #welcome-robot[data-blinking="true"] .welcome-pupil {
-        opacity: 0;
-      }
-
-      #welcome-robot[data-blinking="true"] .welcome-blink-line {
-        opacity: 1;
-      }
-
-      #welcome-robot {
-        position: relative;
-        z-index: 20;
-        transition:
-          width 700ms cubic-bezier(0.22, 1, 0.36, 1),
-          height 700ms cubic-bezier(0.22, 1, 0.36, 1),
-          margin 700ms cubic-bezier(0.22, 1, 0.36, 1),
-          transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      #welcome-robot.robot-bottom-left {
-        position: absolute;
-        left: 12px;
-        bottom: 12px;
-        width: 56px;
-        height: 56px;
-        margin: 0;
-        pointer-events: none;
-      }
-
-      #welcome-robot.robot-reply-avatar {
-        width: 44px;
-        height: 44px;
-        margin: 0 6px 2px 0;
-        flex: none;
-        pointer-events: none;
-      }
-
-      #welcome-robot .welcome-mouth-thinking,
-      #welcome-robot .welcome-mouth-speaking {
-        opacity: 0;
-        transition: opacity 120ms ease;
-      }
-
-      #welcome-robot[data-mood="thinking"] .welcome-mouth-neutral,
-      #welcome-robot[data-mood="speaking"] .welcome-mouth-neutral {
-        opacity: 0;
-      }
-
-      #welcome-robot[data-mood="thinking"] .welcome-mouth-thinking {
-        opacity: 1;
-        transform-origin: center;
-        transform-box: fill-box;
-        animation: thinking-mouth 800ms ease-in-out infinite;
-      }
-
-      #welcome-robot[data-mood="thinking"] {
-        animation: thinking-bob 900ms ease-in-out infinite;
-      }
-
-      #welcome-robot[data-mood="speaking"] .welcome-mouth-speaking {
-        opacity: 1;
-        transform-origin: center;
-        transform-box: fill-box;
-        animation: speaking-mouth 260ms ease-in-out infinite alternate;
-      }
-
-      @keyframes speaking-mouth {
-        from {
-          transform: scaleY(0.45);
-        }
-        to {
-          transform: scaleY(1.15);
-        }
-      }
-
-      @keyframes thinking-mouth {
-        50% {
-          transform: scale(0.72);
-          opacity: 0.65;
-        }
-      }
-
-      @keyframes thinking-bob {
-        50% {
-          transform: translateY(-3px) rotate(1deg);
-        }
       }
 
       @keyframes message-pop {
@@ -197,55 +54,10 @@
         }
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        .message-pop,
-        .typing-dot {
-          animation: none;
-        }
-      }
-
-      .streaming-cursor::after {
-        content: "";
-        display: inline-block;
-        width: 2px;
-        height: 1em;
-        margin-left: 3px;
-        vertical-align: -2px;
-        background: #355b45;
-        animation: cursor-blink 700ms steps(1) infinite;
-      }
-
       @keyframes cursor-blink {
         50% {
           opacity: 0;
         }
-      }
-
-      textarea {
-        height: 2.75rem;
-        max-height: 9rem;
-        overflow-y: auto;
-        overscroll-behavior: contain;
-      }
-
-      .aurora-wave {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        width: 100vw;
-        height: 100dvh;
-        overflow: hidden;
-        pointer-events: none;
-      }
-
-      .aurora-line {
-        transform-origin: center;
-        animation: aurora-drift 12s ease-in-out infinite alternate;
-      }
-
-      .aurora-line-secondary {
-        animation-duration: 16s;
-        animation-direction: alternate-reverse;
       }
 
       @keyframes aurora-drift {
@@ -260,38 +72,154 @@
         }
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        .aurora-line {
-          animation: none;
+      /* Animasi Ekspresi Robot (Berpikir & Berbicara) */
+      @keyframes robot-think-bob {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-5deg);
         }
+        50% {
+          transform: translateY(-5px) rotate(5deg);
+        }
+      }
+
+      @keyframes robot-think-eyes {
+        0%,
+        100% {
+          transform: translate(-3px, -4px);
+        }
+        50% {
+          transform: translate(3px, -4.5px);
+        }
+      }
+
+      @keyframes robot-think-mouth {
+        0%,
+        100% {
+          transform: translateX(-3px) scale(0.85);
+        }
+        50% {
+          transform: translateX(3px) scale(1.1);
+        }
+      }
+
+      @keyframes robot-speak-nod {
+        0% {
+          transform: translateY(0) rotate(-2deg) scale(1);
+        }
+        100% {
+          transform: translateY(-3px) rotate(2deg) scale(1.03);
+        }
+      }
+
+      @keyframes robot-speak-mouth {
+        0% {
+          transform: scaleY(0.35);
+        }
+        50% {
+          transform: scaleY(1.15);
+        }
+        100% {
+          transform: scaleY(0.65);
+        }
+      }
+
+      @keyframes robot-antenna-glow {
+        0% {
+          transform: scale(0.9);
+        }
+        100% {
+          transform: scale(1.35);
+        }
+      }
+
+      #welcome-robot {
+        transform-origin: 50% 85%;
+      }
+
+      #welcome-robot .robot-part {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      /* Berkedip */
+      #welcome-robot[data-blinking="true"] .robot-eyes-open {
+        opacity: 0;
+      }
+      #welcome-robot[data-blinking="true"] .robot-eyes-blink {
+        opacity: 1;
+      }
+
+      /* Mode Berpikir (Generating Message) */
+      #welcome-robot[data-mood="thinking"] {
+        animation: robot-think-bob 1s ease-in-out infinite;
+      }
+      #welcome-robot[data-mood="thinking"] .robot-mouth-neutral,
+      #welcome-robot[data-mood="thinking"] .robot-mouth-speaking {
+        opacity: 0;
+      }
+      #welcome-robot[data-mood="thinking"] .robot-mouth-thinking {
+        opacity: 1;
+        animation: robot-think-mouth 850ms ease-in-out infinite;
+      }
+      #welcome-robot[data-mood="thinking"] .welcome-pupil {
+        animation: robot-think-eyes 1.4s ease-in-out infinite;
+      }
+      #welcome-robot[data-mood="thinking"] .robot-antenna {
+        fill: #f59e0b;
+        animation: robot-antenna-glow 600ms ease-in-out infinite alternate;
+      }
+
+      /* Mode Berbicara (Streaming Message) */
+      #welcome-robot[data-mood="speaking"] {
+        animation: robot-speak-nod 360ms ease-in-out infinite alternate;
+      }
+      #welcome-robot[data-mood="speaking"] .robot-mouth-neutral,
+      #welcome-robot[data-mood="speaking"] .robot-mouth-thinking {
+        opacity: 0;
+      }
+      #welcome-robot[data-mood="speaking"] .robot-mouth-speaking {
+        opacity: 1;
+        animation: robot-speak-mouth 170ms ease-in-out infinite alternate;
+      }
+      #welcome-robot[data-mood="speaking"] .robot-cheek {
+        opacity: 0.85;
+      }
+      #welcome-robot[data-mood="speaking"] .robot-antenna {
+        fill: #d7ed9b;
+        animation: robot-antenna-glow 280ms ease-in-out infinite alternate;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #welcome-robot,
+        #welcome-robot * {
+          animation: none !important;
+        }
+      }
+
+      .streaming-cursor::after {
+        content: "";
+        display: inline-block;
+        width: 2px;
+        height: 1em;
+        margin-left: 3px;
+        vertical-align: -2px;
+        background: #355b45;
+        animation: cursor-blink 700ms steps(1) infinite;
       }
     </style>
   </head>
   <body
-    class="font-sans text-[#20231f] antialiased"
-    style="
-      background:
-        radial-gradient(
-          circle at 12% 18%,
-          rgba(146, 174, 112, 0.32),
-          transparent 30rem
-        ),
-        radial-gradient(
-          circle at 88% 82%,
-          rgba(198, 219, 158, 0.26),
-          transparent 28rem
-        ),
-        linear-gradient(135deg, #f7f8ef 0%, #edf3e7 52%, #e4eddf 100%);
-    "
+    class="relative isolate flex h-full min-h-dvh max-w-full flex-col overflow-x-hidden overscroll-none bg-[radial-gradient(circle_at_12%_18%,rgba(146,174,112,0.32),transparent_30rem),radial-gradient(circle_at_88%_82%,rgba(198,219,158,0.26),transparent_28rem),linear-gradient(135deg,#f7f8ef_0%,#edf3e7_52%,#e4eddf_100%)] font-sans text-[#20231f] antialiased"
   >
     <svg
-      class="aurora-wave"
+      class="pointer-events-none fixed inset-0 z-0 h-dvh w-screen overflow-hidden"
       viewBox="0 0 1440 900"
       preserveAspectRatio="none"
       aria-hidden="true"
     >
       <path
-        class="aurora-line"
+        class="origin-center animate-[aurora-drift_12s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
         d="M-120 650C120 430 300 760 560 520C820 280 1040 560 1560 260"
         fill="none"
         stroke="#92ae70"
@@ -300,7 +228,7 @@
         stroke-linecap="round"
       />
       <path
-        class="aurora-line aurora-line-secondary"
+        class="origin-center animate-[aurora-drift_16s_ease-in-out_infinite_alternate-reverse] motion-reduce:animate-none"
         d="M-180 740C120 560 330 820 680 590C960 405 1160 620 1580 410"
         fill="none"
         stroke="#d7ed9b"
@@ -309,7 +237,7 @@
         stroke-linecap="round"
       />
       <path
-        class="aurora-line"
+        class="origin-center animate-[aurora-drift_12s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
         d="M-80 520C220 300 420 610 700 390C980 170 1180 360 1520 150"
         fill="none"
         stroke="#355b45"
@@ -318,6 +246,7 @@
         stroke-linecap="round"
       />
     </svg>
+
     <header
       class="relative z-10 shrink-0 border-b border-[#dedfd6] bg-white/70 px-5 py-3.5 backdrop-blur-sm sm:px-10 sm:py-4"
     >
@@ -438,7 +367,7 @@
         <div id="chat-stage" class="relative min-h-0 flex-1 overflow-hidden">
           <div
             id="messages"
-            class="absolute inset-0 space-y-4 overflow-y-auto px-4 py-5 pb-20 sm:px-6"
+            class="absolute inset-0 min-h-0 space-y-4 overflow-y-auto overscroll-contain px-4 py-5 pb-20 sm:px-6"
             role="log"
             aria-live="polite"
             aria-relevant="additions text"
@@ -477,7 +406,7 @@
           >
             <textarea
               id="message-input"
-              class="max-h-36 min-h-11 flex-1 resize-none border-0 bg-transparent py-2.5 text-sm leading-relaxed outline-none placeholder:text-[#9a9e95]"
+              class="h-11 max-h-36 min-h-11 flex-1 resize-none overflow-y-auto overscroll-contain border-0 bg-transparent py-2.5 text-sm leading-relaxed outline-none placeholder:text-[#9a9e95]"
               placeholder="Ceritakan apa yang ingin Anda tanyakan..."
               rows="1"
               maxlength="4000"
@@ -525,8 +454,27 @@
       const SYSTEM_GUIDANCE =
         "Anda adalah asisten yang ramah dan empatik untuk orang tua. Jawab selalu dalam Bahasa Indonesia yang jelas, ringkas (maksimal 2-3 paragraf pendek), dan tidak menghakimi. Berikan informasi umum tentang tumbuh kembang dan dukungan anak, jangan mendiagnosis atau memastikan anak memiliki kondisi tertentu. Jelaskan bahwa tanda perkembangan bukan diagnosis dan anjurkan konsultasi tenaga profesional bila relevan. Jangan meminta data pribadi sensitif.";
 
+      const ROBOT_SVG_MARKUP =
+        '<svg id="welcome-robot" class="relative z-20 mx-auto mb-4 size-16 transition-all duration-500" viewBox="0 0 100 100" fill="none" data-mood="neutral" data-blinking="false" aria-label="Maskot robot Fomify">' +
+        '<rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/>' +
+        '<path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/>' +
+        '<circle class="robot-part robot-antenna transition-colors duration-200" cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/>' +
+        '<g class="robot-eyes-open transition-opacity duration-100">' +
+        '<circle class="robot-part welcome-pupil transition-transform duration-100" cx="38" cy="49" r="5" fill="#355b45"/>' +
+        '<circle class="robot-part welcome-pupil transition-transform duration-100" cx="62" cy="49" r="5" fill="#355b45"/>' +
+        "</g>" +
+        '<g class="robot-eyes-blink opacity-0 transition-opacity duration-100">' +
+        '<path d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/>' +
+        '<path d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/>' +
+        "</g>" +
+        '<circle class="robot-cheek opacity-0 transition-opacity duration-200" cx="29" cy="60" r="4.5" fill="#e59889"/>' +
+        '<circle class="robot-cheek opacity-0 transition-opacity duration-200" cx="71" cy="60" r="4.5" fill="#e59889"/>' +
+        '<path class="robot-mouth-neutral transition-opacity duration-150" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/>' +
+        '<ellipse class="robot-part robot-mouth-thinking opacity-0 transition-opacity duration-150" cx="50" cy="68" rx="6.5" ry="4.5" fill="#355b45"/>' +
+        '<ellipse class="robot-part robot-mouth-speaking opacity-0 transition-opacity duration-150" cx="50" cy="68" rx="9" ry="6.5" fill="#355b45"/>' +
+        "</svg>";
+
       const chatLog = document.querySelector("#messages");
-      const chatStage = document.querySelector("#chat-stage");
       const chatForm = document.querySelector("#chat-form");
       const input = document.querySelector("#message-input");
       const sendButton = document.querySelector("#send-button");
@@ -561,7 +509,7 @@
           document.addEventListener("mousemove", (event) => {
             if (window.matchMedia("(pointer: coarse)").matches) return;
             const activeRobot = document.querySelector("#welcome-robot");
-            if (!activeRobot) return;
+            if (!activeRobot || activeRobot.dataset.mood !== "neutral") return;
             const activePupils = [
               ...activeRobot.querySelectorAll(".welcome-pupil"),
             ];
@@ -578,41 +526,51 @@
         }
 
         const blink = () => {
-          if (robot.dataset.blinking === "true") return;
-          robot.dataset.blinking = "true";
+          const activeRobot = document.querySelector("#welcome-robot");
+          if (!activeRobot || activeRobot.dataset.blinking === "true") return;
+          activeRobot.dataset.blinking = "true";
           setTimeout(() => {
-            robot.dataset.blinking = "false";
+            activeRobot.dataset.blinking = "false";
           }, 140);
         };
 
         if (welcomeRobotInterval) clearInterval(welcomeRobotInterval);
-        welcomeRobotInterval = setInterval(blink, 5200);
+        welcomeRobotInterval = setInterval(blink, 4800);
       }
 
       function setRobotMood(mood) {
         const robot = document.querySelector("#welcome-robot");
-        if (robot) robot.dataset.mood = mood;
+        if (!robot) return;
+        robot.querySelectorAll(".welcome-pupil").forEach((pupil) => {
+          pupil.style.transform = "";
+        });
+        robot.dataset.mood = mood;
       }
 
       function createReplyRobot() {
-        let robot = document.querySelector("#welcome-robot");
-        if (!robot) {
-          const wrapper = document.createElement("div");
-          wrapper.innerHTML =
-            '<svg id="welcome-robot" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Fomify"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg>';
-          robot = wrapper.firstElementChild;
-          setupWelcomeRobot();
-        }
-        robot.setAttribute("aria-label", "Maskot Fomify");
-        robot.classList.remove("mx-auto", "mb-4", "robot-bottom-left");
-        robot.classList.add("robot-reply-avatar");
+        const existing = document.querySelector("#welcome-robot");
+        if (existing) existing.remove();
+
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = ROBOT_SVG_MARKUP;
+        const robot = wrapper.firstElementChild;
+        robot.classList.remove("mx-auto", "mb-4", "size-16");
+        robot.classList.add(
+          "mr-1.5",
+          "mb-0.5",
+          "size-11",
+          "shrink-0",
+          "pointer-events-none",
+        );
+        setupWelcomeRobot();
         return robot;
       }
 
       function showTypingIndicator() {
         hideTypingIndicator();
         typingIndicator = document.createElement("article");
-        typingIndicator.className = "message-pop flex items-end justify-start";
+        typingIndicator.className =
+          "flex animate-[message-pop_280ms_cubic-bezier(0.22,1,0.36,1)_both] items-end justify-start motion-reduce:animate-none";
         typingIndicator.setAttribute("aria-label", "Asisten sedang berpikir");
 
         typingIndicator.appendChild(createReplyRobot());
@@ -624,7 +582,10 @@
 
         for (let index = 0; index < 3; index += 1) {
           const dot = document.createElement("span");
-          dot.className = "typing-dot";
+          dot.className =
+            "size-[7px] animate-[typing-bounce_1s_infinite_ease-in-out] rounded-full bg-[#789069] motion-reduce:animate-none";
+          if (index === 1) dot.style.animationDelay = "120ms";
+          if (index === 2) dot.style.animationDelay = "240ms";
           bubble.appendChild(dot);
         }
 
@@ -679,7 +640,7 @@
       function createMessageElement(message, withRobot = false) {
         const isUser = message.role === "user";
         const row = document.createElement("article");
-        row.className = `message-pop flex items-end ${
+        row.className = `flex animate-[message-pop_280ms_cubic-bezier(0.22,1,0.36,1)_both] items-end motion-reduce:animate-none ${
           isUser ? "justify-end" : "justify-start"
         }`;
         row.setAttribute(
@@ -699,7 +660,8 @@
         label.textContent = isUser ? "Anda" : "Fomify";
 
         const copy = document.createElement("div");
-        copy.className = "message-copy";
+        copy.className =
+          "message-copy whitespace-pre-wrap [overflow-wrap:anywhere]";
         copy.textContent = message.content;
         bubble.append(label, copy);
         if (!isUser && withRobot) {
@@ -715,7 +677,8 @@
           const welcome = document.createElement("div");
           welcome.className = "mx-auto my-8 max-w-md text-center";
           welcome.innerHTML =
-            '<svg id="welcome-robot" class="mx-auto mb-4 h-16 w-16" viewBox="0 0 100 100" fill="none" data-mood="neutral" aria-label="Maskot robot Fomify"><rect x="17" y="20" width="66" height="62" rx="22" fill="#d7ed9b" stroke="#355b45" stroke-width="5"/><path d="M50 20V9" stroke="#355b45" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="7" r="5" fill="#92ae70" stroke="#355b45" stroke-width="4"/><g class="welcome-open-eye"><circle class="welcome-pupil" cx="38" cy="49" r="5" fill="#355b45"/></g><g class="welcome-open-eye"><circle class="welcome-pupil" cx="62" cy="49" r="5" fill="#355b45"/></g><path class="welcome-blink-line" d="M31 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-blink-line" d="M55 51c4 4 10 4 14 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><path class="welcome-mouth-neutral" d="M40 68c6 5 14 5 20 0" stroke="#355b45" stroke-width="4" stroke-linecap="round"/><ellipse class="welcome-mouth-thinking" cx="50" cy="68" rx="7" ry="5" fill="#355b45"/><ellipse class="welcome-mouth-speaking" cx="50" cy="68" rx="9" ry="7" fill="#355b45"/></svg><h3 class="m-0 font-serif text-2xl font-normal">Halo, saya siap membantu.</h3><p class="mb-0 mt-2 text-sm leading-relaxed text-[#656b62]">Apa yang sedang Anda amati atau ingin pahami tentang anak?</p>';
+            ROBOT_SVG_MARKUP +
+            '<h3 class="m-0 font-serif text-2xl font-normal">Halo, saya siap membantu.</h3><p class="mb-0 mt-2 text-sm leading-relaxed text-[#656b62]">Apa yang sedang Anda amati atau ingin pahami tentang anak?</p>';
           chatLog.appendChild(welcome);
           setupWelcomeRobot();
         } else {
@@ -761,8 +724,8 @@
         suggestions.hidden = true;
 
         const row = createMessageElement(storedMessage, true);
-        setRobotMood("speaking");
         chatLog.appendChild(row);
+        setRobotMood("speaking");
 
         const copy = row.querySelector(".message-copy");
         const fullText = message.content;
@@ -787,7 +750,7 @@
                 resolve();
                 return;
               }
-              setTimeout(reveal, 18);
+              setTimeout(reveal, 20);
             };
             reveal();
           });
@@ -912,7 +875,6 @@
           );
           retryButton.hidden = false;
         } finally {
-          hideTypingIndicator();
           isSending = false;
           sendButton.disabled = false;
           input.disabled = false;

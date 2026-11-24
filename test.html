@@ -5,998 +5,1337 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Tes skrining awal untuk membantu orang tua mengenali tanda-tanda kebutuhan perkembangan anak."
+      content="Tes skrining perkembangan awal anak (M-CHAT-R/F) bersama Fomify untuk mengenali tanda-tanda komunikasi dan interaksi anak dengan hangat."
     />
+    <title>Tes Skrining Perkembangan — Fomify</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
+      :root {
+        color-scheme: light;
+      }
+      html,
+      body {
+        min-height: 100dvh;
+        max-width: 100vw;
+        overflow-x: hidden;
+        overscroll-behavior-x: none;
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      }
+      .font-serif {
+        font-family: "Newsreader", Georgia, serif;
+      }
       .brand-mark,
       .brand-name {
         font-family: "Space Grotesk", sans-serif;
       }
-      [data-question] {
-        position: absolute;
-        inset-inline: 0;
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transition:
-          opacity 0.65s ease,
-          transform 0.65s ease,
-          visibility 0s linear 0.65s;
+      .card-enter {
+        animation: card-enter 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
       }
-      [data-question][data-state="before"] {
-        transform: translateY(-1.75rem);
-      }
-      [data-question][data-state="after"] {
-        transform: translateY(1.75rem);
-      }
-      [data-question][data-state="active"] {
-        position: relative;
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-        transform: none;
-        transition-delay: 0s;
-      }
-      @keyframes deco-float {
-        to {
-          transform: translateY(-14px);
-        }
-      }
-      @keyframes deco-drift {
+      @keyframes card-enter {
         from {
-          transform: translateY(-6px);
+          opacity: 0;
+          transform: translateY(10px);
         }
         to {
-          transform: translateY(6px);
+          opacity: 1;
+          transform: translateY(0);
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        [data-question] {
-          transition: none;
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
         }
       }
     </style>
-    <title>Tes Skrining — Fomify</title>
   </head>
-  <body class="font-sans text-[#20231f] antialiased">
-    <div
-      class="deco fixed inset-0 -z-10 overflow-hidden bg-gradient-to-br from-white via-[#f7faf6] to-[#dcebdc]"
-      aria-hidden="true"
-    >
-      <div
-        class="absolute inset-0 bg-[radial-gradient(44rem_28rem_at_92%_6%,#d7ed9b55,transparent_65%),radial-gradient(40rem_30rem_at_4%_94%,#b9d5bd80,transparent_65%)]"
-      ></div>
-      <div
-        class="absolute left-[2%] top-[16%] size-60 [background-image:radial-gradient(#355b4540_1.6px,transparent_1.9px)] [background-size:20px_20px] [mask-image:radial-gradient(circle,#000_25%,transparent_70%)]"
-      ></div>
-      <div
-        class="absolute right-[2%] bottom-[10%] size-60 [background-image:radial-gradient(#355b4540_1.6px,transparent_1.9px)] [background-size:20px_20px] [mask-image:radial-gradient(circle,#000_25%,transparent_70%)]"
-      ></div>
-      <div
-        class="absolute -right-40 top-[28%] size-[28rem] rounded-full border border-[#dfe2d7]"
-      >
-        <div
-          class="absolute inset-9 rounded-full border border-[#e6e7df]"
-        ></div>
-        <div
-          class="absolute inset-[4.5rem] rounded-full border border-[#e6e7df]"
-        ></div>
-      </div>
-      <div
-        class="absolute -left-32 bottom-[12%] size-[20rem] rounded-full border border-[#dfe2d7]"
-      >
-        <div
-          class="absolute inset-8 rounded-full border border-[#e6e7df]"
-        ></div>
-      </div>
-      <span
-        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute right-[9%] top-[22%] size-12 rounded-full bg-[#d7ed9b]"
-      ></span>
-      <span
-        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute left-[7%] top-[46%] size-6 rounded-full bg-[#92ae70]/60 [animation-delay:-2s]"
-      ></span>
-      <span
-        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute bottom-[22%] right-[14%] size-8 rounded-full border-4 border-[#92ae70]/50 [animation-delay:-4s]"
-      ></span>
-      <span
-        class="animate-[deco-float_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none absolute bottom-[30%] left-[16%] size-4 rounded-full bg-[#d7ed9b] [animation-delay:-1s]"
-      ></span>
-      <svg
-        class="absolute inset-0 size-full"
-        viewBox="0 0 1000 800"
-        preserveAspectRatio="none"
-      >
-        <defs>
-          <linearGradient
-            id="a"
-            gradientUnits="userSpaceOnUse"
-            x1="1020"
-            x2="560"
-          >
-            <stop offset="0" stop-color="#92ae70" />
-            <stop offset=".7" stop-color="#92ae70" stop-opacity=".7" />
-            <stop offset="1" stop-color="#92ae70" stop-opacity="0" />
-          </linearGradient>
-          <linearGradient
-            id="b"
-            gradientUnits="userSpaceOnUse"
-            x1="1020"
-            x2="600"
-          >
-            <stop offset="0" stop-color="#355b45" />
-            <stop offset=".7" stop-color="#355b45" stop-opacity=".6" />
-            <stop offset="1" stop-color="#355b45" stop-opacity="0" />
-          </linearGradient>
-          <linearGradient
-            id="c"
-            gradientUnits="userSpaceOnUse"
-            x1="-20"
-            x2="440"
-          >
-            <stop offset="0" stop-color="#92ae70" />
-            <stop offset=".7" stop-color="#92ae70" stop-opacity=".7" />
-            <stop offset="1" stop-color="#92ae70" stop-opacity="0" />
-          </linearGradient>
-          <linearGradient
-            id="d"
-            gradientUnits="userSpaceOnUse"
-            x1="-20"
-            x2="400"
-          >
-            <stop offset="0" stop-color="#355b45" />
-            <stop offset=".7" stop-color="#355b45" stop-opacity=".6" />
-            <stop offset="1" stop-color="#355b45" stop-opacity="0" />
-          </linearGradient>
-        </defs>
-        <g
-          class="animate-[deco-drift_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none"
-          opacity=".8"
-        >
-          <path
-            d="M1020 70C940 20 880 120 800 70S660 20 580 60"
-            stroke="url(#a)"
-            stroke-width="4"
-            fill="none"
-            stroke-linecap="round"
-            vector-effect="non-scaling-stroke"
-          />
-          <path
-            d="M1020 100C940 50 880 150 800 100S675 55 600 90"
-            stroke="url(#b)"
-            stroke-width="2.2"
-            fill="none"
-            stroke-linecap="round"
-            vector-effect="non-scaling-stroke"
-          />
-        </g>
-        <g
-          class="animate-[deco-drift_7s_ease-in-out_infinite_alternate] motion-reduce:animate-none [animation-direction:alternate-reverse] [animation-duration:8s]"
-          opacity=".8"
-        >
-          <path
-            d="M-20 740C60 790 120 690 200 740S340 790 440 750"
-            stroke="url(#c)"
-            stroke-width="4"
-            fill="none"
-            stroke-linecap="round"
-            vector-effect="non-scaling-stroke"
-          />
-          <path
-            d="M-20 710C60 760 120 660 200 710S330 755 400 720"
-            stroke="url(#d)"
-            stroke-width="2.2"
-            fill="none"
-            stroke-linecap="round"
-            vector-effect="non-scaling-stroke"
-          />
-        </g>
-      </svg>
-    </div>
-
+  <body
+    class="flex min-h-dvh flex-col text-[#20231f] antialiased"
+    style="
+      background:
+        radial-gradient(circle at 8% 10%, rgba(146, 174, 112, 0.28), transparent 34rem),
+        radial-gradient(circle at 92% 85%, rgba(215, 237, 155, 0.36), transparent 32rem),
+        linear-gradient(145deg, #fcfdf9 0%, #f1f6eb 52%, #e4eee0 100%);
+    "
+  >
+    <!-- Header -->
     <header
-      class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5 sm:px-10 sm:py-6"
+      class="sticky top-0 z-30 border-b border-[#dce3d4]/80 bg-white/80 px-4 py-3 backdrop-blur-lg sm:px-8 sm:py-4"
     >
-      <a
-        class="inline-flex items-center gap-2.5 text-[15px] font-bold tracking-[-0.04em] no-underline"
-        href="index.html"
-        ><span
-          class="brand-mark grid size-8 place-items-center rounded-full bg-[#355b45] text-white"
-          aria-hidden="true"
-          >FY</span
-        ><span class="brand-name">Fomify</span></a
-      >
-      <nav
-        class="flex items-center gap-4 text-xs font-semibold"
-        aria-label="Navigasi utama"
-      >
+      <div class="mx-auto flex max-w-5xl items-center justify-between gap-2">
         <a
-          class="text-[#656b62] no-underline hover:text-[#355b45]"
-          href="forum.html"
-          >Forum</a
-        >
-        <a
-          class="text-xs text-[#656b62] no-underline hover:text-[#355b45]"
+          class="inline-flex shrink-0 items-center gap-2 text-sm font-bold tracking-[-0.04em] no-underline sm:gap-2.5 sm:text-[15px]"
           href="index.html"
-          >← Kembali ke beranda</a
+          aria-label="Fomify, halaman utama"
         >
-      </nav>
+          <span
+            class="brand-mark grid size-8 place-items-center rounded-full bg-[#355b45] text-xs text-white shadow-[0_4px_12px_#355b4533] sm:size-9 sm:text-sm"
+            aria-hidden="true"
+            >FY</span
+          ><span class="brand-name text-[#20231f]">Fomify</span>
+        </a>
+        <nav
+          class="flex items-center gap-1.5 text-[11px] font-semibold sm:gap-5 sm:text-xs"
+          aria-label="Navigasi utama"
+        >
+          <a
+            class="rounded-full px-2.5 py-1.5 text-[#5a6157] no-underline transition hover:bg-[#f1f5ea] hover:text-[#355b45]"
+            href="index.html"
+            >Beranda</a
+          >
+          <a
+            class="rounded-full px-2.5 py-1.5 text-[#5a6157] no-underline transition hover:bg-[#f1f5ea] hover:text-[#355b45]"
+            href="AI.html"
+            >Tanya AI</a
+          >
+          <a
+            class="rounded-full px-2.5 py-1.5 text-[#5a6157] no-underline transition hover:bg-[#f1f5ea] hover:text-[#355b45]"
+            href="forum.html"
+            >Forum</a
+          >
+        </nav>
+      </div>
     </header>
 
-    <main class="mx-auto my-9 max-w-3xl px-6 pb-12 sm:my-12 sm:px-10">
-      <div
-        class="mb-3.5 text-[11px] font-bold uppercase tracking-[.13em] text-[#355b45]"
+    <main class="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-4 py-8 sm:px-6 sm:py-12">
+      <!-- LAYAR 1: PEMBUKA -->
+      <section
+        id="screen-intro"
+        class="card-enter rounded-[28px] border border-[#d6e0cd] bg-white/92 p-6 shadow-[0_22px_60px_-14px_rgba(32,35,31,0.09)] backdrop-blur-md sm:p-10"
       >
-        Skrining awal untuk orang tua
-      </div>
-      <h1
-        class="m-0 font-serif text-[clamp(2.625rem,7vw,4rem)] font-normal leading-tight tracking-[-.06em]"
-      >
-        Perhatikan perkembangan anak
-      </h1>
-      <p class="mb-8 mt-4 max-w-xl text-sm leading-[1.8] text-[#656b62]">
-        Jawablah pertanyaan berikut berdasarkan kebiasaan anak sehari-hari dalam
-        beberapa bulan terakhir. Tes ini membantu memetakan area perkembangan
-        anak dan bukan pengganti diagnosis klinis.
-      </p>
+        <div
+          class="mb-3 inline-flex items-center gap-2 rounded-full border border-[#d5e0ca] bg-[#f2f7ec] px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em] text-[#355b45] sm:text-[11px]"
+        >
+          <span class="size-1.5 rounded-full bg-[#6e9b47]"></span>
+          Skrining 2 Tahap (M-CHAT-R/F)
+        </div>
+        <h1
+          class="m-0 font-serif text-[clamp(1.85rem,6vw,3.1rem)] font-normal leading-[1.08] tracking-[-.04em] text-[#1d221c]"
+        >
+          Kenali kebiasaan anak <em class="text-[#355b45]">sehari-hari.</em>
+        </h1>
+        <p class="mt-3.5 text-sm leading-[1.75] text-[#555d52] sm:text-[15px]">
+          Kuesioner ini terdiri dari <strong>20 pertanyaan utama</strong> untuk anak usia 16–30 bulan (hingga 48 bulan). Jika terdapat jawaban yang memerlukan pendalaman (skor 3–7), sistem akan otomatis menampilkan <strong>pertanyaan lanjutan bercabang</strong> yang relevan.
+        </p>
 
-      <div id="quiz-wrapper">
-        <div class="mb-4">
-          <div
-            class="flex items-center justify-between text-[11px] font-semibold text-[#656b62]"
+        <div class="mt-5 rounded-2xl border border-[#e3eadc] bg-[#f7faf3] p-4 text-xs leading-relaxed text-[#4a5448] sm:p-5 sm:text-[13px]">
+          <strong class="mb-1 block text-[#355b45]">Panduan menjawab:</strong>
+          Jawablah berdasarkan perilaku yang <strong>paling sering</strong> dilakukan anak Anda sehari-hari. Jika anak pernah melakukannya sesekali saja tetapi tidak biasa melakukannya, pilih <strong>Tidak</strong>.
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            id="btn-start"
+            type="button"
+            class="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#355b45] px-7 text-xs font-bold text-white shadow-[0_10px_24px_#355b4533] transition hover:bg-[#294936] active:scale-[0.99] sm:text-sm"
           >
-            <span id="question-count" aria-live="polite"
-              >Pertanyaan 1 dari 25</span
+            Mulai Skrining Sekarang <span aria-hidden="true">→</span>
+          </button>
+          <span class="text-[11px] text-[#7c8277]">Estimasi waktu: 2–5 menit</span>
+        </div>
+
+        <p class="mb-0 mt-6 border-t border-[#e8e9e2] pt-4 text-[11px] leading-relaxed text-[#81867b]">
+          Adaptasi edukatif berdasarkan M-CHAT-R/F™ (© 2009 Diana Robins, Deborah Fein, &amp; Marianne Barton). Hasil skrining bukan diagnosis medis dan tidak menggantikan evaluasi dokter anak atau psikolog.
+        </p>
+      </section>
+
+      <!-- LAYAR 2: TAHAP 1 (20 PERTANYAAN UTAMA) -->
+      <section
+        id="screen-stage1"
+        class="hidden rounded-[28px] border border-[#d6e0cd] bg-white/95 p-6 shadow-[0_22px_60px_-14px_rgba(32,35,31,0.09)] backdrop-blur-md sm:p-9"
+        aria-live="polite"
+      >
+        <div class="mb-5">
+          <div class="mb-2 flex items-center justify-between text-xs font-semibold text-[#5a6157]">
+            <span id="s1-stage-label" class="rounded-full bg-[#eef5e6] px-3 py-1 text-[11px] font-bold text-[#355b45]"
+              >Tahap 1 • Pertanyaan Utama</span
             >
-            <span
-              id="question-category"
-              class="rounded-full bg-[#e9eee5] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#355b45]"
-              >Interaksi Sosial</span
-            >
+            <span id="s1-counter">1 / 20</span>
           </div>
-          <div
-            class="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e6e9df]"
-            role="progressbar"
-            aria-label="Progres pertanyaan"
-            aria-valuemin="1"
-            aria-valuemax="25"
-            aria-valuenow="1"
-            id="question-progress"
-          >
+          <div class="h-2 w-full overflow-hidden rounded-full bg-[#e8ede2]">
             <div
-              id="question-progress-bar"
-              class="h-full rounded-full bg-[#70985d] transition-[width] duration-500"
-              style="width: 4%"
+              id="s1-progress"
+              class="h-full rounded-full bg-[#355b45] transition-all duration-300"
+              style="width: 5%"
             ></div>
           </div>
         </div>
 
-        <form id="development-form">
-          <div id="question-stage" class="relative"></div>
+        <div id="s1-card" class="card-enter">
+          <h2
+            id="s1-question"
+            class="m-0 font-serif text-xl font-normal leading-snug tracking-[-.02em] text-[#1f241e] sm:text-2xl"
+          ></h2>
+          <p
+            id="s1-example"
+            class="mt-3 rounded-xl border border-[#e6ece0] bg-[#f8fbf4] p-3.5 text-xs leading-relaxed text-[#555d52] sm:text-[13px]"
+          ></p>
 
-          <div class="mt-5 flex items-center justify-between gap-3">
+          <div class="mt-6 grid grid-cols-2 gap-3 sm:gap-4">
             <button
-              id="previous-question"
-              class="inline-flex min-h-11 items-center justify-center rounded-full border border-[#dedfd6] bg-white/80 px-4 text-[12px] font-semibold text-[#656b62] transition hover:border-[#83977c] disabled:cursor-not-allowed disabled:opacity-40"
+              id="btn-s1-yes"
               type="button"
-              disabled
+              class="s1-choice flex min-h-13 items-center justify-center gap-2 rounded-2xl border-2 border-[#dce3d4] bg-white px-4 text-sm font-bold text-[#20231f] transition hover:border-[#355b45] hover:bg-[#f4f8ee] active:scale-[0.98]"
             >
-              ← Sebelumnya
+              Ya
             </button>
-            <div>
-              <button
-                id="next-question"
-                class="inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
-                type="button"
-                disabled
-              >
-                Berikutnya <span aria-hidden="true">→</span>
-              </button>
-              <button
-                id="submit-questionnaire"
-                class="hidden min-h-12 items-center justify-center gap-3 rounded-full bg-[#355b45] px-5 text-[13px] font-bold text-white transition-colors hover:bg-[#294936] disabled:cursor-not-allowed disabled:opacity-50"
-                type="submit"
-                disabled
-              >
-                Lihat hasil skrining <span aria-hidden="true">→</span>
-              </button>
-            </div>
+            <button
+              id="btn-s1-no"
+              type="button"
+              class="s1-choice flex min-h-13 items-center justify-center gap-2 rounded-2xl border-2 border-[#dce3d4] bg-white px-4 text-sm font-bold text-[#20231f] transition hover:border-[#355b45] hover:bg-[#f4f8ee] active:scale-[0.98]"
+            >
+              Tidak
+            </button>
           </div>
-        </form>
-      </div>
+        </div>
 
+        <div class="mt-6 flex items-center justify-between border-t border-[#edf1e7] pt-4">
+          <button
+            id="btn-s1-prev"
+            type="button"
+            class="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-[#dce3d4] px-4 text-xs font-semibold text-[#5a6157] transition hover:bg-[#f4f6ef] disabled:opacity-40"
+          >
+            ← Sebelumnya
+          </button>
+          <span class="text-[11px] text-[#81867b]">Pilih jawaban yang paling sesuai</span>
+        </div>
+      </section>
+
+      <!-- LAYAR 3: TRANSISI KE TAHAP 2 (PERTANYAAN BERCABANG) -->
       <section
-        id="result"
-        class="mt-6 rounded-[18px] border border-[#cbd6c3] bg-[#fffefa] p-6 shadow-[0_18px_50px_#293e2a12] sm:p-8"
-        aria-live="polite"
-        tabindex="-1"
-        hidden
-      ></section>
+        id="screen-branch-intro"
+        class="card-enter hidden rounded-[28px] border border-[#d6e0cd] bg-white/95 p-6 shadow-[0_22px_60px_-14px_rgba(32,35,31,0.09)] backdrop-blur-md sm:p-10"
+      >
+        <div
+          class="mb-3 inline-flex items-center gap-2 rounded-full border border-[#e5cfa9] bg-[#fbf5eb] px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em] text-[#7c5328] sm:text-[11px]"
+        >
+          Tahap 2 • Pertanyaan Lanjutan (Follow-Up)
+        </div>
+        <h2
+          class="m-0 font-serif text-2xl font-normal leading-tight tracking-[-.03em] text-[#1d221c] sm:text-3xl"
+        >
+          Mari perdalam beberapa jawaban Anda.
+        </h2>
+        <p id="branch-intro-desc" class="mt-3 text-sm leading-[1.75] text-[#555d52]">
+          Berdasarkan jawaban pada Tahap 1, terdapat beberapa poin perilaku yang perlu diperjelas melalui pertanyaan bercabang agar hasilnya lebih akurat.
+        </p>
+        <div class="mt-6">
+          <button
+            id="btn-start-branch"
+            type="button"
+            class="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#355b45] px-6 text-xs font-bold text-white shadow-[0_10px_24px_#355b4533] transition hover:bg-[#294936] sm:w-auto sm:text-sm"
+          >
+            Lanjut ke Pertanyaan Pendalaman <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </section>
 
-      <p class="mt-6 text-[11px] leading-relaxed text-[#85897f]">
-        Hasil ini merupakan gambaran skrining awal untuk membantu orang tua
-        berkomunikasi dengan tenaga profesional, bukan diagnosis medis resmi.
-      </p>
+      <!-- LAYAR 4: TAHAP 2 (ALUR PERTANYAAN BERCABANG) -->
+      <section
+        id="screen-stage2"
+        class="hidden rounded-[28px] border border-[#d6e0cd] bg-white/95 p-6 shadow-[0_22px_60px_-14px_rgba(32,35,31,0.09)] backdrop-blur-md sm:p-9"
+        aria-live="polite"
+      >
+        <div class="mb-5">
+          <div class="mb-2 flex items-center justify-between text-xs font-semibold text-[#5a6157]">
+            <span
+              id="s2-topic-badge"
+              class="rounded-full bg-[#fbf5eb] px-3 py-1 text-[11px] font-bold text-[#7c5328]"
+              >Pendalaman No. 1</span
+            >
+            <span id="s2-counter">Cabang 1 dari 3</span>
+          </div>
+          <div class="h-2 w-full overflow-hidden rounded-full bg-[#e8ede2]">
+            <div
+              id="s2-progress"
+              class="h-full rounded-full bg-[#7aa154] transition-all duration-300"
+              style="width: 20%"
+            ></div>
+          </div>
+        </div>
+
+        <div id="s2-body" class="card-enter"></div>
+      </section>
+
+      <!-- LAYAR 5: HASIL SKRINING -->
+      <section
+        id="screen-result"
+        class="card-enter hidden rounded-[28px] border border-[#d6e0cd] bg-white/95 p-6 shadow-[0_22px_60px_-14px_rgba(32,35,31,0.09)] backdrop-blur-md sm:p-10"
+      >
+        <div id="result-badge" class="mb-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1 text-xs font-bold"></div>
+        <h2
+          id="result-title"
+          class="m-0 font-serif text-2xl font-normal leading-tight tracking-[-.03em] text-[#1d221c] sm:text-3xl"
+        ></h2>
+        <p id="result-summary" class="mt-3.5 text-sm leading-[1.8] text-[#555d52]"></p>
+
+        <div
+          id="result-details-box"
+          class="mt-5 rounded-2xl border border-[#e3eadc] bg-[#f7faf3] p-4 sm:p-5"
+        ></div>
+
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <a
+            href="AI.html"
+            class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#355b45] px-5 text-xs font-bold text-white no-underline transition hover:bg-[#294936]"
+          >
+            Diskusikan hasil dengan Asisten AI →
+          </a>
+          <a
+            href="forum.html"
+            class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#c6d3bc] bg-[#f2f7ec] px-5 text-xs font-bold text-[#355b45] no-underline transition hover:bg-[#e5f0d9]"
+          >
+            Berbagi di Forum Orang Tua
+          </a>
+          <button
+            id="btn-restart"
+            type="button"
+            class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#dce3d4] bg-white px-5 text-xs font-semibold text-[#5a6157] transition hover:bg-[#f4f6ef]"
+          >
+            ↻ Ulangi Tes
+          </button>
+        </div>
+
+        <p class="mb-0 mt-6 border-t border-[#e8e9e2] pt-4 text-[11px] leading-relaxed text-[#81867b]">
+          Catatan penting: M-CHAT-R/F adalah alat skrining awal, bukan alat diagnosis medis. Apabila Anda memiliki kekhawatiran mengenai perkembangan anak, segera konsultasikan dengan dokter spesialis anak, psikolog klinis anak, atau klinik tumbuh kembang.
+        </p>
+      </section>
     </main>
 
+    <footer class="border-t border-[#dce3d4]/80 bg-white/70 px-4 py-4 text-center text-[11px] text-[#7c8277]">
+      Fomify • Ruang aman untuk memahami dan mendampingi tumbuh kembang anak.
+    </footer>
+
     <script>
-      const QUESTIONS = [
+      // 20 Pertanyaan Utama M-CHAT-R (Bahasa Indonesia)
+      // riskAnswer: "no" artinya jawaban "Tidak" bernilai 1 poin; "yes" artinya jawaban "Ya" bernilai 1 poin (No. 2, 5, 12)
+      const STAGE1_QUESTIONS = [
         {
-          id: "q1",
-          domain: "sosial",
-          domainLabel: "Interaksi Sosial",
-          type: "scale",
-          prompt:
-            "1. Anak menghindari atau jarang mempertahankan kontak mata saat diajak berbicara, disuapi, atau bermain bersama.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 1,
+          text: "Jika Anda menunjuk sesuatu di seberang ruangan, apakah anak Anda melihat ke arah benda tersebut?",
+          example: "Contoh: Jika Anda menunjuk mainan atau hewan, apakah anak melihat ke mainan atau hewan itu?",
+          riskAnswer: "no",
         },
         {
-          id: "q2",
-          domain: "sosial",
-          domainLabel: "Interaksi Sosial",
-          type: "choice",
-          prompt:
-            "2. Ketika Anda menunjuk mainan atau benda menarik di seberang ruangan dan berkata, “Lihat itu!”, apa yang biasanya dilakukan anak?",
-          options: [
-            {
-              value: 1,
-              tag: "Respons A",
-              text: "Mengikuti arah tunjukan tangan Anda, melihat benda tersebut, lalu menoleh kembali ke arah Anda.",
-            },
-            {
-              value: 5,
-              tag: "Respons B",
-              text: "Tetap fokus pada aktivitasnya sendiri, hanya melihat tangan Anda, atau tampak tidak merespons arah tunjukan.",
-            },
-          ],
+          id: 2,
+          text: "Pernahkah Anda bertanya-tanya apakah anak Anda mungkin tuli (mengalami gangguan pendengaran)?",
+          example: "Contoh: Anak tampak tidak bereaksi terhadap suara di sekitarnya sehingga Anda sempat menduga pendengarannya terganggu.",
+          riskAnswer: "yes",
         },
         {
-          id: "q3",
-          domain: "sosial",
-          domainLabel: "Interaksi Sosial",
-          type: "boolean",
-          prompt:
-            "3. Saat namanya dipanggil dari jarak beberapa langkah (ketika tidak sedang memakai headphone atau menonton layar), apakah anak sering kali tampak tidak menoleh seolah tidak mendengar?",
-          yesValue: 5,
-          noValue: 1,
-          yesHint: "Ya, sering tidak menoleh saat dipanggil",
-          noHint: "Tidak, anak umumnya menoleh atau merespons",
+          id: 3,
+          text: "Apakah anak Anda bermain pura-pura atau berimajinasi?",
+          example: "Contoh: Pura-pura minum dari cangkir kosong, pura-pura menelepon, atau pura-pura menyuapi boneka.",
+          riskAnswer: "no",
         },
         {
-          id: "q4",
-          domain: "komunikasi",
-          domainLabel: "Komunikasi & Bahasa",
-          type: "choice",
-          prompt:
-            "4. Saat anak menginginkan mainan atau makanan yang berada di luar jangkauannya, bagaimana cara ia biasanya menyampaikannya?",
-          options: [
-            {
-              value: 1,
-              tag: "Respons A",
-              text: "Menunjuk benda tersebut, mengeluarkan suara atau kata, dan menatap Anda untuk meminta bantuan.",
-            },
-            {
-              value: 5,
-              tag: "Respons B",
-              text: "Menarik atau menuntun tangan Anda langsung ke arah benda tanpa menatap mata atau berusaha mengucapkan kata.",
-            },
-          ],
+          id: 4,
+          text: "Apakah anak Anda suka memanjat benda-benda?",
+          example: "Contoh: Memanjat perabotan rumah (kursi/sofa), alat bermain di taman, atau tangga.",
+          riskAnswer: "no",
         },
         {
-          id: "q5",
-          domain: "komunikasi",
-          domainLabel: "Komunikasi & Bahasa",
-          type: "scale",
-          prompt:
-            "5. Anak kesulitan memahami instruksi sederhana dua langkah (misalnya: “Ambil bola lalu berikan ke Ibu”) atau belum menggunakan kata/gestur untuk berbagi cerita.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 5,
+          text: "Apakah anak Anda membuat gerakan jari yang tidak biasa di dekat matanya?",
+          example: "Contoh: Menggoyang-goyangkan jari atau mengepakkan tangan sangat dekat di depan atau samping matanya.",
+          riskAnswer: "yes",
         },
         {
-          id: "q6",
-          domain: "komunikasi",
-          domainLabel: "Komunikasi & Bahasa",
-          type: "boolean",
-          prompt:
-            "6. Apakah anak sering mengulang-ulang kata atau potongan kalimat persis seperti yang baru didengarnya (dari orang lain atau tontonan) tanpa konteks percakapan yang jelas?",
-          yesValue: 5,
-          noValue: 1,
-          yesHint: "Ya, sering membeo atau mengulang frasa yang sama",
-          noHint: "Tidak, ucapan digunakan sesuai konteks",
+          id: 6,
+          text: "Apakah anak Anda menunjuk dengan satu jari untuk meminta sesuatu atau mendapatkan bantuan?",
+          example: "Contoh: Menunjuk camilan atau mainan yang berada di luar jangkauannya.",
+          riskAnswer: "no",
         },
         {
-          id: "q7",
-          domain: "perilaku",
-          domainLabel: "Perilaku & Fleksibilitas",
-          type: "choice",
-          prompt:
-            "7. Ketika jadwal harian berubah tiba-tiba atau rute jalan pulang berbeda dari biasanya, bagaimana reaksi anak?",
-          options: [
-            {
-              value: 1,
-              tag: "Respons A",
-              text: "Mungkin bertanya atau bingung sebentar, namun dapat beradaptasi dengan penjelasan singkat.",
-            },
-            {
-              value: 5,
-              tag: "Respons B",
-              text: "Mengalami tantrum intens, cemas berlebihan, atau sangat sulit ditenangkan karena rutinitasnya berubah.",
-            },
-          ],
+          id: 7,
+          text: "Apakah anak Anda menunjuk dengan satu jari hanya untuk menunjukkan sesuatu yang menarik kepada Anda?",
+          example: "Contoh: Menunjuk pesawat di langit atau truk besar di jalan agar Anda ikut melihatnya.",
+          riskAnswer: "no",
         },
         {
-          id: "q8",
-          domain: "perilaku",
-          domainLabel: "Perilaku & Fleksibilitas",
-          type: "scale",
-          prompt:
-            "8. Anak menunjukkan gerakan tubuh berulang (seperti mengepakkan tangan, berputar-putar, atau berjalan berjinjit) maupun kebiasaan menyusun benda secara berbaris kaku.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 8,
+          text: "Apakah anak Anda tertarik pada anak-anak lain?",
+          example: "Contoh: Memperhatikan anak lain, tersenyum kepada mereka, atau menghampiri mereka.",
+          riskAnswer: "no",
         },
         {
-          id: "q9",
-          domain: "perilaku",
-          domainLabel: "Perilaku & Fleksibilitas",
-          type: "boolean",
-          prompt:
-            "9. Saat bermain dengan mobil-mobilan atau boneka, apakah anak lebih sering memutar rodanya atau mengamati satu bagian kecil saja daripada memainkannya secara pura-pura (imajinatif)?",
-          yesValue: 5,
-          noValue: 1,
-          yesHint: "Ya, terpaku pada bagian kecil atau gerakan berulang",
-          noHint: "Tidak, anak bermain sesuai fungsi atau imajinatif",
+          id: 9,
+          text: "Apakah anak Anda menunjukkan benda kepada Anda dengan membawanya atau mengangkatnya agar Anda lihat—bukan untuk minta tolong, tetapi hanya untuk berbagi?",
+          example: "Contoh: Membawakan bunga, boneka, atau mobil mainan sekadar untuk diperlihatkan kepada Anda.",
+          riskAnswer: "no",
         },
         {
-          id: "q10",
-          domain: "sensorik",
-          domainLabel: "Pemrosesan Sensorik",
-          type: "scale",
-          prompt:
-            "10. Anak bereaksi sangat kuat (menutup telinga, menangis, atau panik) terhadap suara sehari-hari seperti blender, pengering rambut, sirine, atau keramaian.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 10,
+          text: "Apakah anak Anda merespons saat Anda memanggil namanya?",
+          example: "Contoh: Menengok, bersuara/mengoceh, atau menghentikan aktivitasnya saat namanya dipanggil.",
+          riskAnswer: "no",
         },
         {
-          id: "q11",
-          domain: "sensorik",
-          domainLabel: "Pemrosesan Sensorik",
-          type: "choice",
-          prompt:
-            "11. Bagaimana respons anak terhadap tekstur pakaian tertentu, label baju, atau makanan dengan tekstur baru?",
-          options: [
-            {
-              value: 1,
-              tag: "Respons A",
-              text: "Dapat menerima sebagian besar pakaian dan mau mencoba makanan baru secara bertahap.",
-            },
-            {
-              value: 5,
-              tag: "Respons B",
-              text: "Menolak keras tekstur tertentu hingga sangat terganggu dan hanya mau makan jenis makanan yang sangat terbatas.",
-            },
-          ],
+          id: 11,
+          text: "Saat Anda tersenyum pada anak Anda, apakah ia membalas senyuman Anda?",
+          example: "Contoh: Tersenyum balik ketika Anda menatap dan tersenyum kepadanya.",
+          riskAnswer: "no",
         },
         {
-          id: "q12",
-          domain: "sensorik",
-          domainLabel: "Pemrosesan Sensorik",
-          type: "boolean",
-          prompt:
-            "12. Apakah anak tampak kurang peka terhadap rasa sakit atau suhu (misalnya tetap diam saat terjatuh cukup keras) atau justru sangat menghindar saat disentuh ringan?",
-          yesValue: 5,
-          noValue: 1,
-          yesHint: "Ya, terlihat respons sensorik yang sangat ekstrem",
-          noHint: "Tidak, respons terhadap sentuhan dan rasa sakit wajar",
+          id: 12,
+          text: "Apakah anak Anda merasa kesal atau terganggu oleh suara-suara sehari-hari?",
+          example: "Contoh: Berteriak atau menangis saat mendengar suara penyedot debu, blender, atau musik keras.",
+          riskAnswer: "yes",
         },
         {
-          id: "q13",
-          domain: "sosial",
-          domainLabel: "Interaksi Sosial",
-          type: "scale",
-          prompt:
-            "13. Anak jarang menunjukkan atau membawa sesuatu kepada Anda hanya untuk berbagi minat atau kegembiraan, bukan sekadar meminta bantuan.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 13,
+          text: "Apakah anak Anda sudah bisa berjalan?",
+          example: "Contoh: Berjalan sendiri tanpa berpegangan pada benda atau orang lain.",
+          riskAnswer: "no",
         },
         {
-          id: "q14",
-          domain: "sosial",
-          domainLabel: "Interaksi Sosial",
-          type: "scale",
-          prompt:
-            "14. Dalam permainan bersama, anak kesulitan bergiliran sederhana (misalnya menggelindingkan bola atau menyusun balok bergantian), meskipun Anda memberi contoh.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 14,
+          text: "Apakah anak Anda menatap mata Anda saat Anda berbicara dengannya, bermain bersamanya, atau memakaikan pakaiannya?",
+          example: "Contoh: Melakukan kontak mata saat berinteraksi langsung dengan Anda.",
+          riskAnswer: "no",
         },
         {
-          id: "q15",
-          domain: "sosial",
-          domainLabel: "Interaksi Sosial",
-          type: "scale",
-          prompt:
-            "15. Saat Anda mengajak berinteraksi melalui ekspresi, gestur, atau permainan, anak jarang menanggapi dengan caranya sendiri (misalnya tersenyum, meniru, bersuara, atau mendekat).",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 15,
+          text: "Apakah anak Anda mencoba meniru apa yang Anda lakukan?",
+          example: "Contoh: Melambaikan tangan dadah, bertepuk tangan, atau membuat suara lucu saat Anda melakukannya.",
+          riskAnswer: "no",
         },
         {
-          id: "q16",
-          domain: "sosial",
-          domainLabel: "Interaksi Sosial",
-          type: "scale",
-          prompt:
-            "16. Saat merasa tidak nyaman atau sedih, anak kesulitan memberi isyarat kepada Anda bahwa ia membutuhkan bantuan atau kenyamanan, dengan cara komunikasi yang biasa digunakannya.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 16,
+          text: "Jika Anda menoleh untuk melihat sesuatu, apakah anak Anda ikut menoleh untuk melihat apa yang sedang Anda lihat?",
+          example: "Contoh: Mengikuti arah pandangan mata atau tolehan kepala Anda.",
+          riskAnswer: "no",
         },
         {
-          id: "q17",
-          domain: "komunikasi",
-          domainLabel: "Komunikasi & Bahasa",
-          type: "scale",
-          prompt:
-            "17. Jika Anda belum memahami maksudnya, anak kesulitan mencoba cara lain untuk menyampaikan keinginan (misalnya gestur, menunjuk, gambar, kata, atau alat komunikasi).",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 17,
+          text: "Apakah anak Anda berusaha membuat Anda memperhatikannya?",
+          example: "Contoh: Melihat Anda untuk mendapat pujian, atau berkata 'Lihat' / 'Tengok aku'.",
+          riskAnswer: "no",
         },
         {
-          id: "q18",
-          domain: "komunikasi",
-          domainLabel: "Komunikasi & Bahasa",
-          type: "scale",
-          prompt:
-            "18. Anak kesulitan menyampaikan pilihan, penolakan, atau permintaan jeda kepada Anda dengan cara komunikasi yang biasa digunakannya.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 18,
+          text: "Apakah anak Anda mengerti saat Anda menyuruhnya melakukan sesuatu?",
+          example: "Contoh: Tanpa Anda menunjuk, anak paham perintah 'taruh buku di kursi' atau 'ambilkan selimut'.",
+          riskAnswer: "no",
         },
         {
-          id: "q19",
-          domain: "komunikasi",
-          domainLabel: "Komunikasi & Bahasa",
-          type: "scale",
-          prompt:
-            "19. Dalam kegiatan bersama, anak kesulitan bergantian berkomunikasi (memberi isyarat, bersuara, atau berbicara lalu memberi Anda kesempatan merespons).",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 19,
+          text: "Jika terjadi sesuatu yang baru, apakah anak Anda menatap wajah Anda untuk melihat bagaimana perasaan atau reaksi Anda?",
+          example: "Contoh: Jika mendengar suara aneh/lucu atau melihat mainan baru, ia menoleh menatap wajah Anda.",
+          riskAnswer: "no",
         },
         {
-          id: "q20",
-          domain: "perilaku",
-          domainLabel: "Perilaku & Fleksibilitas",
-          type: "scale",
-          prompt:
-            "20. Saat bermain bersama, anak sulit menerima variasi kecil yang Anda tambahkan pada permainan yang biasanya ia pilih.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
-        },
-        {
-          id: "q21",
-          domain: "perilaku",
-          domainLabel: "Perilaku & Fleksibilitas",
-          type: "scale",
-          prompt:
-            "21. Saat kecewa atau frustrasi, anak kesulitan kembali tenang dengan dukungan yang biasanya membantu.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
-        },
-        {
-          id: "q22",
-          domain: "perilaku",
-          domainLabel: "Perilaku & Fleksibilitas",
-          type: "scale",
-          prompt:
-            "22. Ketika Anda memberi tahu bahwa aktivitas akan berakhir, anak tetap sangat kesulitan beralih ke kegiatan berikutnya meskipun sudah diberi waktu atau pengingat.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
-        },
-        {
-          id: "q23",
-          domain: "sensorik",
-          domainLabel: "Pemrosesan Sensorik",
-          type: "scale",
-          prompt:
-            "23. Rutinitas bersama seperti mandi, berpakaian, menyikat gigi, atau potong rambut sering terhenti karena anak sangat terganggu oleh sensasi tertentu.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
-        },
-        {
-          id: "q24",
-          domain: "sensorik",
-          domainLabel: "Pemrosesan Sensorik",
-          type: "scale",
-          prompt:
-            "24. Di tempat ramai atau bising, anak sulit mengikuti aktivitas bersama karena tampak kewalahan oleh suara, cahaya, atau keramaian.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
-        },
-        {
-          id: "q25",
-          domain: "sensorik",
-          domainLabel: "Pemrosesan Sensorik",
-          type: "scale",
-          prompt:
-            "25. Setelah terganggu oleh suara, sentuhan, atau tekstur, anak membutuhkan waktu lama untuk kembali nyaman meskipun Anda menawarkan dukungan.",
-          minLabel: "1 · Tidak terlihat",
-          maxLabel: "5 · Sangat terlihat",
+          id: 20,
+          text: "Apakah anak Anda menyukai aktivitas yang melibatkan gerakan fisik?",
+          example: "Contoh: Suka diayun-ayun atau digoyang-goyangkan di atas lutut Anda.",
+          riskAnswer: "no",
         },
       ];
 
-      const DOMAIN_META = {
-        sosial: {
-          name: "Interaksi Sosial",
-          diagnosisHint: "hambatan timbal balik sosial dan kontak mata",
+      // Definisi Percabangan (Follow-Up M-CHAT-R/F) untuk 20 item
+      // Tipe mesin cabang:
+      // - "checklist_any": daftar item -> jika YA pada minimal `minYes` item -> skor 0, selain itu 1 (atau lanjut ke `nextStep`)
+      // - "dual_compare": kelompok 0-contoh vs 1-contoh -> bandingkan; jika kedua kelompok ada YA, tanya mana yang paling sering
+      // - "steps": alur pertanyaan berurutan bercabang (ya/tidak menuju langkah berikut atau skor 0/1)
+      const BRANCH_LOGIC = {
+        1: {
+          type: "dual_compare",
+          prompt: "Saat Anda menunjuk sesuatu di seberang ruangan, perilaku mana saja yang dilakukan anak Anda?",
+          zeroLabel: "Perilaku responsif:",
+          zeroItems: [
+            "Melihat ke arah benda yang ditunjuk",
+            "Ikut menunjuk ke benda tersebut",
+            "Melihat dan mengomentari benda tersebut",
+            "Melihat jika Anda menunjuk sambil berkata 'Lihat!'",
+          ],
+          oneLabel: "Perilaku kurang responsif:",
+          oneItems: [
+            "Mengabaikan Anda",
+            "Melihat ke sekeliling ruangan secara acak",
+            "Hanya melihat ke jari Anda (bukan benda yang ditunjuk)",
+          ],
+          tieQuestion: "Karena keduanya pernah muncul, mana yang PALING SERING dilakukan anak Anda?",
         },
-        komunikasi: {
-          name: "Komunikasi & Bahasa",
-          diagnosisHint: "keterlambatan bicara atau komunikasi fungsional",
+        2: {
+          type: "steps",
+          start: "q1",
+          nodes: {
+            q1: {
+              question: "Apakah anak Anda sering mengabaikan suara di sekitarnya?",
+              yes: { next: "hearing_check", setRisk: true },
+              no: { next: "q2", setRisk: false },
+            },
+            q2: {
+              question: "Apakah anak Anda sering mengabaikan orang-orang di sekitarnya?",
+              yes: { next: "hearing_check", setRisk: true },
+              no: { next: "hearing_check", setRisk: false },
+            },
+            hearing_check: {
+              question: "Apakah pendengaran anak Anda sudah pernah diperiksa secara medis?",
+              options: [
+                { label: "Ya, hasil pendengaran normal", useRisk: true },
+                { label: "Ya, hasil di bawah normal / belum pasti", useRisk: true },
+                { label: "Belum pernah diperiksa", useRisk: true },
+              ],
+            },
+          },
         },
-        perilaku: {
-          name: "Perilaku & Fleksibilitas",
-          diagnosisHint: "pola perilaku repetitif dan kekakuan rutinitas",
+        3: {
+          type: "checklist_any",
+          prompt: "Apakah anak Anda biasanya melakukan salah satu aktivitas bermain pura-pura berikut?",
+          items: [
+            "Pura-pura minum dari cangkir mainan",
+            "Pura-pura makan dari sendok atau garpu mainan",
+            "Pura-pura berbicara di telepon",
+            "Pura-pura menyuapi boneka dengan makanan nyata atau khayalan",
+            "Mendorong mobil-mobilan seolah berjalan di jalan raya",
+            "Berpura-pura menjadi robot, pesawat, penari, atau karakter favorit",
+            "Menaruh panci mainan di atas kompor mainan atau mengaduk makanan khayalan",
+            "Menaruh boneka/figur ke dalam mobil sebagai pengemudi atau penumpang",
+            "Pura-pura menyapu lantai atau membersihkan rumah",
+          ],
+          minYes: 1,
         },
-        sensorik: {
-          name: "Pemrosesan Sensorik",
-          diagnosisHint: "sensitivitas integrasi sensorik (hipo/hipersensitif)",
+        4: {
+          type: "checklist_any",
+          prompt: "Apakah anak Anda senang memanjat salah satu dari tempat berikut?",
+          items: [
+            "Tangga",
+            "Kursi",
+            "Perabotan rumah (sofa, meja rendah, tempat tidur)",
+            "Peralatan bermain di taman (perosotan, panjatan)",
+          ],
+          minYes: 1,
+        },
+        5: {
+          type: "steps",
+          start: "group_one",
+          nodes: {
+            group_one: {
+              type: "checklist_node",
+              question: "Apakah anak Anda melakukan salah satu gerakan tangan berikut di dekat mata atau wajahnya?",
+              items: [
+                "Menggoyangkan jari-jarinya di dekat mata",
+                "Menahan tangan sangat dekat di depan mata",
+                "Menahan tangan di samping mata",
+                "Mengepakkan tangan di dekat wajah",
+              ],
+              minYes: 1,
+              onPass: { next: "freq" },
+              onFail: { score: 0 },
+            },
+            freq: {
+              question: "Apakah gerakan jari/tangan di dekat mata tersebut terjadi lebih dari dua kali dalam seminggu?",
+              yes: { score: 1 },
+              no: { score: 0 },
+            },
+          },
+        },
+        6: {
+          type: "steps",
+          start: "reach",
+          nodes: {
+            reach: {
+              type: "checklist_node",
+              question: "Jika ada benda yang diinginkan anak di luar jangkauan (misalnya camilan atau mainan), bagaimana cara ia mendapatkannya?",
+              items: [
+                "Menggapai benda tersebut dengan seluruh tangannya",
+                "Menuntun tangan Anda menuju benda tersebut",
+                "Mencoba mengambil benda itu sendiri",
+                "Memintanya menggunakan kata-kata atau suara",
+              ],
+              minYes: 1,
+              onPass: { next: "show_me" },
+              onFail: { score: 1 },
+            },
+            show_me: {
+              question: "Jika Anda berkata 'Tunjukkan pada Ibu/Ayah', apakah anak Anda akan menunjuk benda tersebut?",
+              yes: { score: 0 },
+              no: { score: 1 },
+            },
+          },
+        },
+        7: {
+          type: "steps",
+          start: "interest_list",
+          nodes: {
+            interest_list: {
+              type: "checklist_node",
+              question: "Apakah anak Anda terkadang ingin Anda melihat sesuatu yang menarik, seperti:",
+              items: [
+                "Pesawat di langit",
+                "Truk atau kendaraan besar di jalan",
+                "Serangga di tanah",
+                "Hewan di halaman",
+              ],
+              minYes: 1,
+              onPass: { next: "one_finger" },
+              onFail: { score: 1 },
+            },
+            one_finger: {
+              question: "Bagaimana cara anak menarik perhatian Anda ke benda itu—apakah ia menunjuknya dengan satu jari?",
+              yes: { next: "share_intent" },
+              no: { score: 1 },
+            },
+            share_intent: {
+              question: "Apakah ia menunjuk untuk menunjukkan ketertarikannya (atau keduanya: berbagi minat & minta tolong), bukan semata-mata meminta bantuan?",
+              yes: { score: 0 },
+              no: { score: 1 },
+            },
+          },
+        },
+        8: {
+          type: "steps",
+          start: "non_sibling",
+          nodes: {
+            non_sibling: {
+              question: "Apakah anak Anda tertarik pada anak-anak lain yang BUKAN saudara kandungnya?",
+              yes: { score: 0 },
+              no: { next: "playground" },
+            },
+            playground: {
+              question: "Saat berada di taman bermain atau supermarket, apakah anak Anda biasanya merespons anak-anak lain?",
+              yes: { next: "how_respond" },
+              no: { score: 1 },
+            },
+            how_respond: {
+              type: "checklist_node",
+              question: "Bagaimana cara anak Anda merespons anak lain?",
+              items: [
+                "Bermain bersama anak lain",
+                "Berbicara atau mengoceh kepada anak lain",
+                "Memperhatikan anak lain",
+                "Tersenyum kepada anak lain",
+                "Malu-malu pada awalnya tetapi kemudian tersenyum",
+                "Tampak antusias/senang melihat anak lain",
+              ],
+              minYes: 1,
+              onPass: { next: "half_time" },
+              onFail: { score: 1 },
+            },
+            half_time: {
+              question: "Apakah anak Anda merespons anak-anak lain lebih dari separuh waktu saat bertemu mereka?",
+              yes: { score: 0 },
+              no: { score: 1 },
+            },
+          },
+        },
+        9: {
+          type: "steps",
+          start: "bring_list",
+          nodes: {
+            bring_list: {
+              type: "checklist_node",
+              question: "Apakah anak Anda terkadang membawakan atau memperlihatkan benda-benda berikut kepada Anda?",
+              items: [
+                "Gambar atau mainan sekadar untuk diperlihatkan",
+                "Hasil coretan atau gambar yang dibuatnya",
+                "Bunga yang dipetiknya",
+                "Serangga yang ditemukannya di rumput",
+                "Susunan balok yang dirangkainya",
+              ],
+              minYes: 1,
+              onPass: { next: "just_show" },
+              onFail: { score: 1 },
+            },
+            just_show: {
+              question: "Apakah hal tersebut terkadang dilakukan murni hanya untuk menunjukkan kepada Anda, bukan untuk meminta bantuan?",
+              yes: { score: 0 },
+              no: { score: 1 },
+            },
+          },
+        },
+        10: {
+          type: "dual_compare",
+          prompt: "Saat anak tidak sedang asyik dengan sesuatu yang sangat seru, apa yang dilakukannya ketika Anda memanggil namanya?",
+          zeroLabel: "Respons sosial:",
+          zeroItems: [
+            "Menengok ke atas / ke arah Anda",
+            "Berbicara atau mengoceh membalas panggilan",
+            "Menghentikan aktivitas yang sedang dilakukan",
+          ],
+          oneLabel: "Kurang merespons:",
+          oneItems: [
+            "Tidak memberikan respons sama sekali",
+            "Tampak mendengar tetapi mengabaikan",
+            "Merespons hanya jika orang tua berada tepat di depan wajahnya",
+            "Merespons hanya jika tubuhnya disentuh",
+          ],
+          tieQuestion: "Karena keduanya pernah muncul, mana yang PALING SERING dilakukan anak saat namanya dipanggil?",
+        },
+        11: {
+          type: "dual_compare",
+          prompt: "Apa saja yang biasanya membuat anak Anda tersenyum?",
+          zeroLabel: "Senyum sosial:",
+          zeroItems: [
+            "Tersenyum membalas saat Anda tersenyum kepadanya",
+            "Tersenyum saat Anda masuk ke ruangan",
+            "Tersenyum saat Anda pulang atau kembali menghampirinya",
+          ],
+          oneLabel: "Senyum non-sosial:",
+          oneItems: [
+            "Selalu tersenyum terus-menerus tanpa konteks interaksi",
+            "Hanya tersenyum pada mainan atau aktivitas favoritnya",
+            "Tersenyum secara acak tanpa hal tertentu",
+          ],
+          tieQuestion: "Karena keduanya pernah muncul, jenis senyum mana yang PALING SERING terlihat?",
+        },
+        12: {
+          type: "steps",
+          start: "noise_list",
+          nodes: {
+            noise_list: {
+              type: "checklist_node",
+              question: "Apakah anak Anda memiliki reaksi negatif terhadap suara-suara berikut? (Pilih semua yang sesuai)",
+              items: [
+                "Mesin cuci",
+                "Tangisan bayi",
+                "Penyedot debu (vacuum cleaner)",
+                "Pengering rambut (hairdryer)",
+                "Suara lalu lintas kendaraan",
+                "Teriakan atau jeritan bayi",
+                "Musik keras",
+                "Bel pintu atau telepon berdering",
+                "Tempat ramai seperti supermarket atau restoran",
+              ],
+              minYes: 2,
+              onPass: { next: "noise_reaction" },
+              onFail: { score: 0 },
+            },
+            noise_reaction: {
+              type: "dual_compare_node",
+              question: "Bagaimana cara anak Anda bereaksi terhadap suara-suara tersebut?",
+              zeroLabel: "Reaksi tenang:",
+              zeroItems: [
+                "Menutup telinganya dengan tenang",
+                "Memberi tahu bahwa ia tidak menyukai suara tersebut",
+              ],
+              oneLabel: "Reaksi kesal/tertekan:",
+              oneItems: [
+                "Berteriak",
+                "Menangis",
+                "Menutup telinga sambil marah atau kesal",
+              ],
+              tieQuestion: "Karena kedua reaksi pernah muncul, mana yang PALING SERING dilakukan anak?",
+            },
+          },
+        },
+        13: {
+          type: "steps",
+          start: "walk_alone",
+          nodes: {
+            walk_alone: {
+              question: "Apakah anak Anda sudah dapat berjalan sendiri tanpa berpegangan pada apa pun?",
+              yes: { score: 0 },
+              no: { score: 1 },
+            },
+          },
+        },
+        14: {
+          type: "steps",
+          start: "eye_situations",
+          nodes: {
+            eye_situations: {
+              type: "checklist_node",
+              question: "Dalam situasi apa saja anak Anda menatap mata Anda?",
+              items: [
+                "Saat ia membutuhkan sesuatu",
+                "Saat Anda bermain bersamanya",
+                "Saat makan atau menyusu",
+                "Saat mengganti popok atau pakaian",
+                "Saat Anda membacakan cerita untuknya",
+                "Saat Anda berbicara dengannya",
+              ],
+              minYes: 2,
+              exactOneNext: "eye_daily",
+              onPass: { score: 0 },
+              onFail: { score: 1 },
+            },
+            eye_daily: {
+              question: "Apakah anak Anda menatap mata Anda setiap hari?",
+              yes: { next: "eye_five" },
+              no: { score: 1 },
+            },
+            eye_five: {
+              question: "Pada hari ketika Anda bersama anak seharian penuh, apakah ia menatap mata Anda setidaknya 5 kali?",
+              yes: { score: 0 },
+              no: { score: 1 },
+            },
+          },
+        },
+        15: {
+          type: "checklist_any",
+          prompt: "Apakah anak Anda mencoba meniru jika Anda melakukan gerakan atau suara berikut?",
+          items: [
+            "Menjulurkan lidah",
+            "Membuat suara lucu",
+            "Melambaikan tangan dadah",
+            "Bertepuk tangan",
+            "Menaruh jari di bibir memberi isyarat 'Ssst'",
+            "Mencium jauh (kiss bye)",
+          ],
+          minYes: 2,
+        },
+        16: {
+          type: "dual_compare",
+          prompt: "Apa yang dilakukan anak Anda ketika Anda menoleh untuk melihat sesuatu?",
+          zeroLabel: "Mengikuti arah perhatian:",
+          zeroItems: [
+            "Melihat ke arah benda yang sedang Anda lihat",
+            "Menunjuk ke arah benda yang sedang Anda lihat",
+            "Menoleh untuk melihat apa yang sedang Anda perhatikan",
+          ],
+          oneLabel: "Tidak mengikuti arah perhatian:",
+          oneItems: [
+            "Mengabaikan Anda",
+            "Hanya menatap wajah Anda tanpa ikut menoleh",
+          ],
+          tieQuestion: "Karena keduanya pernah muncul, mana yang PALING SERING dilakukan anak?",
+        },
+        17: {
+          type: "checklist_any",
+          prompt: "Bagaimana cara anak Anda berusaha membuat Anda memperhatikannya?",
+          items: [
+            "Berkata 'Lihat!' atau 'Perhatikan aku!'",
+            "Mengoceh atau bersuara agar Anda melihat apa yang sedang dilakukannya",
+            "Menatap Anda untuk mendapatkan pujian atau komentar",
+            "Terus menoleh untuk memastikan Anda sedang melihatnya",
+          ],
+          minYes: 1,
+        },
+        18: {
+          type: "steps",
+          start: "with_clue",
+          nodes: {
+            with_clue: {
+              question: "Saat situasi memberi petunjuk (misalnya Anda sudah berpakaian rapi hendak pergi dan menyuruhnya mengambil sepatu), apakah anak mengerti?",
+              yes: { next: "no_clue" },
+              no: { next: "dinnertime" },
+            },
+            dinnertime: {
+              question: "Saat jam makan malam dan makanan sudah tersedia di meja, jika Anda menyuruh anak duduk, apakah ia datang dan duduk di meja?",
+              yes: { next: "no_clue" },
+              no: { score: 1 },
+            },
+            no_clue: {
+              type: "checklist_node",
+              question: "Saat situasi TIDAK memberi petunjuk atau isyarat menunjuk sama sekali, apakah anak dapat mengikuti salah satu perintah berikut?",
+              items: [
+                "Jika Anda berkata 'Tunjukkan sepatumu' (saat tidak sedang bersiap pergi), anak menunjukkan sepatunya",
+                "Jika Anda berkata 'Ambilkan selimut' tanpa menunjuk, anak membawakan selimut",
+                "Jika Anda berkata 'Taruh buku di kursi' tanpa menunjuk, anak menaruh buku di kursi",
+              ],
+              minYes: 1,
+              onPass: { score: 0 },
+              onFail: { score: 1 },
+            },
+          },
+        },
+        19: {
+          type: "steps",
+          start: "scary_noise",
+          nodes: {
+            scary_noise: {
+              question: "Jika anak Anda mendengar suara yang aneh atau menakutkan, apakah ia menatap Anda SEBELUM bereaksi?",
+              yes: { score: 0 },
+              no: { next: "new_person" },
+            },
+            new_person: {
+              question: "Apakah anak Anda melihat ke arah Anda saat ada orang baru mendekat?",
+              yes: { score: 0 },
+              no: { next: "unfamiliar" },
+            },
+            unfamiliar: {
+              question: "Apakah anak Anda melihat ke arah Anda saat menghadapi sesuatu yang asing atau sedikit menakutkan?",
+              yes: { score: 0 },
+              no: { score: 1 },
+            },
+          },
+        },
+        20: {
+          type: "checklist_any",
+          prompt: "Saat Anda mengayun atau menggoyang-goyangkan anak di atas lutut Anda, bagaimana reaksinya?",
+          items: [
+            "Tertawa atau tersenyum",
+            "Berbicara atau mengoceh senang",
+            "Meminta lagi dengan merentangkan tangannya",
+          ],
+          minYes: 1,
         },
       };
 
-      const quizWrapper = document.querySelector("#quiz-wrapper");
-      const form = document.querySelector("#development-form");
-      const questionStage = document.querySelector("#question-stage");
-      const result = document.querySelector("#result");
-      const previousButton = document.querySelector("#previous-question");
-      const nextButton = document.querySelector("#next-question");
-      const submitButton = document.querySelector("#submit-questionnaire");
-      const questionCount = document.querySelector("#question-count");
-      const questionCategory = document.querySelector("#question-category");
-      const questionProgress = document.querySelector("#question-progress");
-      const questionProgressBar = document.querySelector(
-        "#question-progress-bar",
-      );
+      // State Aplikasi
+      const state = {
+        currentS1Index: 0,
+        s1Answers: new Array(STAGE1_QUESTIONS.length).fill(null), // "yes" | "no"
+        flaggedIds: [],
+        currentBranchIdx: 0,
+        branchScores: {}, // { [questionId]: 0 | 1 }
+      };
 
-      let currentQuestion = 0;
+      // Elemen DOM
+      const screenIntro = document.querySelector("#screen-intro");
+      const screenStage1 = document.querySelector("#screen-stage1");
+      const screenBranchIntro = document.querySelector("#screen-branch-intro");
+      const screenStage2 = document.querySelector("#screen-stage2");
+      const screenResult = document.querySelector("#screen-result");
 
-      function renderAnswerControl(q) {
-        if (q.type === "scale") {
-          const buttons = [1, 2, 3, 4, 5]
+      const s1Counter = document.querySelector("#s1-counter");
+      const s1Progress = document.querySelector("#s1-progress");
+      const s1Card = document.querySelector("#s1-card");
+      const s1Question = document.querySelector("#s1-question");
+      const s1Example = document.querySelector("#s1-example");
+      const btnS1Yes = document.querySelector("#btn-s1-yes");
+      const btnS1No = document.querySelector("#btn-s1-no");
+      const btnS1Prev = document.querySelector("#btn-s1-prev");
+
+      const s2TopicBadge = document.querySelector("#s2-topic-badge");
+      const s2Counter = document.querySelector("#s2-counter");
+      const s2Progress = document.querySelector("#s2-progress");
+      const s2Body = document.querySelector("#s2-body");
+
+      function showScreen(target) {
+        [screenIntro, screenStage1, screenBranchIntro, screenStage2, screenResult].forEach((el) => {
+          el.classList.add("hidden");
+        });
+        target.classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Render Pertanyaan Tahap 1
+      function renderStage1() {
+        const q = STAGE1_QUESTIONS[state.currentS1Index];
+        const total = STAGE1_QUESTIONS.length;
+        const num = state.currentS1Index + 1;
+
+        s1Counter.textContent = `${num} / ${total}`;
+        s1Progress.style.width = `${(num / total) * 100}%`;
+        s1Question.textContent = `${num}. ${q.text}`;
+        s1Example.textContent = q.example;
+        btnS1Prev.disabled = state.currentS1Index === 0;
+
+        const saved = state.s1Answers[state.currentS1Index];
+        [
+          [btnS1Yes, "yes"],
+          [btnS1No, "no"],
+        ].forEach(([btn, val]) => {
+          const active = saved === val;
+          btn.className = active
+            ? "s1-choice flex min-h-13 items-center justify-center gap-2 rounded-2xl border-2 border-[#355b45] bg-[#355b45] px-4 text-sm font-bold text-white shadow-[0_8px_20px_#355b452b] transition active:scale-[0.98]"
+            : "s1-choice flex min-h-13 items-center justify-center gap-2 rounded-2xl border-2 border-[#dce3d4] bg-white px-4 text-sm font-bold text-[#20231f] transition hover:border-[#355b45] hover:bg-[#f4f8ee] active:scale-[0.98]";
+        });
+
+        s1Card.classList.remove("card-enter");
+        void s1Card.offsetWidth;
+        s1Card.classList.add("card-enter");
+      }
+
+      function answerStage1(answer) {
+        state.s1Answers[state.currentS1Index] = answer;
+        if (state.currentS1Index < STAGE1_QUESTIONS.length - 1) {
+          state.currentS1Index += 1;
+          renderStage1();
+        } else {
+          evaluateStage1();
+        }
+      }
+
+      function evaluateStage1() {
+        const flagged = [];
+        STAGE1_QUESTIONS.forEach((q, idx) => {
+          if (state.s1Answers[idx] === q.riskAnswer) {
+            flagged.push(q.id);
+          }
+        });
+        state.flaggedIds = flagged;
+        state.branchScores = {};
+
+        const s1Score = flagged.length;
+
+        // Algoritma M-CHAT-R:
+        // 0-2: Kemungkinan Rendah (Selesai)
+        // 3-7: Kemungkinan Sedang -> Jalankan Tahap 2 (Pertanyaan Bercabang)
+        // 8-20: Kemungkinan Tinggi -> Langsung hasil akhir (rujuk evaluasi)
+        if (s1Score >= 3 && s1Score <= 7) {
+          state.currentBranchIdx = 0;
+          document.querySelector("#branch-intro-desc").textContent =
+            `Skor awal Tahap 1 adalah ${s1Score} dari 20. Untuk memastikan gambaran yang lebih akurat, mari jawab ${flagged.length} rangkaian pertanyaan lanjutan bercabang berikut.`;
+          showScreen(screenBranchIntro);
+        } else {
+          flagged.forEach((id) => {
+            state.branchScores[id] = 1;
+          });
+          renderFinalResult(s1Score, s1Score, false);
+        }
+      }
+
+      // Mesin Render Tahap 2 (Pertanyaan Bercabang)
+      function startBranchItem() {
+        if (state.currentBranchIdx >= state.flaggedIds.length) {
+          const s1Score = state.flaggedIds.length;
+          const s2Score = Object.values(state.branchScores).reduce((a, b) => a + b, 0);
+          renderFinalResult(s1Score, s2Score, true);
+          return;
+        }
+
+        const qId = state.flaggedIds[state.currentBranchIdx];
+        const qObj = STAGE1_QUESTIONS.find((item) => item.id === qId);
+        const logic = BRANCH_LOGIC[qId];
+
+        const totalBranches = state.flaggedIds.length;
+        const currentNum = state.currentBranchIdx + 1;
+        s2TopicBadge.textContent = `Pendalaman Poin No. ${qId}`;
+        s2Counter.textContent = `Cabang ${currentNum} dari ${totalBranches}`;
+        s2Progress.style.width = `${(currentNum / totalBranches) * 100}%`;
+
+        if (logic.type === "checklist_any") {
+          renderChecklistBranch(qObj, logic.prompt, logic.items, logic.minYes, (passed) => {
+            completeBranchItem(qId, passed ? 0 : 1);
+          });
+        } else if (logic.type === "dual_compare") {
+          renderDualCompareBranch(qObj, logic, (score) => {
+            completeBranchItem(qId, score);
+          });
+        } else if (logic.type === "steps") {
+          runStepNode(qObj, logic, logic.start, false);
+        }
+      }
+
+      function completeBranchItem(qId, score) {
+        state.branchScores[qId] = score;
+        state.currentBranchIdx += 1;
+        startBranchItem();
+      }
+
+      function createContextHeader(qObj) {
+        const wrap = document.createElement("div");
+        wrap.className = "mb-4 rounded-xl border border-[#e6ece0] bg-[#f8fbf4] p-3 text-xs text-[#555d52]";
+        wrap.innerHTML = `<span class="font-bold text-[#355b45]">Konteks No. ${qObj.id}:</span> ${qObj.text}`;
+        return wrap;
+      }
+
+      function renderChecklistBranch(qObj, prompt, items, minYes, onDone, exactOneCallback = null) {
+        s2Body.replaceChildren();
+        s2Body.appendChild(createContextHeader(qObj));
+
+        const h = document.createElement("h3");
+        h.className = "m-0 font-serif text-lg font-normal leading-snug text-[#1f241e] sm:text-xl";
+        h.textContent = prompt;
+        s2Body.appendChild(h);
+
+        const hint = document.createElement("p");
+        hint.className = "mt-1.5 text-xs text-[#656b62]";
+        hint.textContent = "Centang semua perilaku yang biasa dilakukan anak (boleh lebih dari satu, atau tidak satu pun):";
+        s2Body.appendChild(hint);
+
+        const list = document.createElement("div");
+        list.className = "mt-3.5 space-y-2";
+        const checkboxes = items.map((label) => {
+          const row = document.createElement("label");
+          row.className =
+            "flex cursor-pointer items-start gap-3 rounded-xl border border-[#dce3d4] bg-white p-3 text-xs leading-relaxed text-[#2b312a] transition hover:border-[#92ae70] sm:text-[13px]";
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.className = "mt-0.5 size-4 shrink-0 accent-[#355b45]";
+          const span = document.createElement("span");
+          span.textContent = label;
+          row.append(cb, span);
+          list.appendChild(row);
+          return cb;
+        });
+        s2Body.appendChild(list);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#355b45] px-6 text-xs font-bold text-white shadow-[0_8px_20px_#355b452b] transition hover:bg-[#294936] sm:w-auto";
+        btn.textContent = "Lanjutkan →";
+        btn.addEventListener("click", () => {
+          const yesCount = checkboxes.filter((c) => c.checked).length;
+          if (exactOneCallback && yesCount === 1) {
+            exactOneCallback();
+            return;
+          }
+          onDone(yesCount >= minYes);
+        });
+        s2Body.appendChild(btn);
+      }
+
+      function renderDualCompareBranch(qObj, config, onScore) {
+        s2Body.replaceChildren();
+        s2Body.appendChild(createContextHeader(qObj));
+
+        const h = document.createElement("h3");
+        h.className = "m-0 font-serif text-lg font-normal leading-snug text-[#1f241e] sm:text-xl";
+        h.textContent = config.prompt || config.question;
+        s2Body.appendChild(h);
+
+        const hint = document.createElement("p");
+        hint.className = "mt-1.5 text-xs text-[#656b62]";
+        hint.textContent = "Pilih semua perilaku yang sesuai dengan kebiasaan anak:";
+        s2Body.appendChild(hint);
+
+        const makeGroup = (title, items, isRiskGroup) => {
+          const box = document.createElement("div");
+          box.className = isRiskGroup
+            ? "mt-3.5 rounded-2xl border border-[#ebd9be] bg-[#fdf9f2] p-3.5"
+            : "mt-3.5 rounded-2xl border border-[#d6e4c8] bg-[#f6faf1] p-3.5";
+          const lbl = document.createElement("div");
+          lbl.className = isRiskGroup
+            ? "mb-2 text-[11px] font-bold uppercase tracking-wider text-[#7c5328]"
+            : "mb-2 text-[11px] font-bold uppercase tracking-wider text-[#355b45]";
+          lbl.textContent = title;
+          box.appendChild(lbl);
+
+          const cbs = items.map((text) => {
+            const row = document.createElement("label");
+            row.className =
+              "mb-1.5 flex cursor-pointer items-start gap-2.5 rounded-lg bg-white/90 p-2.5 text-xs leading-relaxed text-[#2b312a] last:mb-0";
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.className = "mt-0.5 size-4 shrink-0 accent-[#355b45]";
+            const span = document.createElement("span");
+            span.textContent = text;
+            row.append(cb, span);
+            box.appendChild(row);
+            return cb;
+          });
+          s2Body.appendChild(box);
+          return cbs;
+        };
+
+        const zeroCbs = makeGroup(config.zeroLabel, config.zeroItems, false);
+        const oneCbs = makeGroup(config.oneLabel, config.oneItems, true);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className =
+          "mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#355b45] px-6 text-xs font-bold text-white shadow-[0_8px_20px_#355b452b] transition hover:bg-[#294936] sm:w-auto";
+        btn.textContent = "Lanjutkan →";
+        btn.addEventListener("click", () => {
+          const hasZero = zeroCbs.some((c) => c.checked);
+          const hasOne = oneCbs.some((c) => c.checked);
+
+          if (hasZero && !hasOne) {
+            onScore(0);
+          } else if (!hasZero && hasOne) {
+            onScore(1);
+          } else if (!hasZero && !hasOne) {
+            onScore(1);
+          } else {
+            // Keduanya dicentang -> Cabang penentu "Mana yang paling sering?"
+            renderTieBreaker(qObj, config, onScore);
+          }
+        });
+        s2Body.appendChild(btn);
+      }
+
+      function renderTieBreaker(qObj, config, onScore) {
+        s2Body.replaceChildren();
+        s2Body.appendChild(createContextHeader(qObj));
+
+        const h = document.createElement("h3");
+        h.className = "m-0 font-serif text-lg font-normal leading-snug text-[#1f241e] sm:text-xl";
+        h.textContent = config.tieQuestion;
+        s2Body.appendChild(h);
+
+        const wrap = document.createElement("div");
+        wrap.className = "mt-4 grid gap-3";
+
+        const btnZero = document.createElement("button");
+        btnZero.type = "button";
+        btnZero.className =
+          "rounded-2xl border-2 border-[#cde0b8] bg-[#f4f9ee] p-4 text-left text-xs font-semibold text-[#284735] transition hover:border-[#355b45]";
+        btnZero.innerHTML = `<span class="block text-[11px] uppercase tracking-wider text-[#355b45]">Paling sering kelompok pertama</span>${config.zeroItems.slice(0, 2).join(" / ")}`;
+        btnZero.addEventListener("click", () => onScore(0));
+
+        const btnOne = document.createElement("button");
+        btnOne.type = "button";
+        btnOne.className =
+          "rounded-2xl border-2 border-[#ebd9be] bg-[#fdf8f0] p-4 text-left text-xs font-semibold text-[#6b4620] transition hover:border-[#8c5d2b]";
+        btnOne.innerHTML = `<span class="block text-[11px] uppercase tracking-wider text-[#7c5328]">Paling sering kelompok kedua</span>${config.oneItems.slice(0, 2).join(" / ")}`;
+        btnOne.addEventListener("click", () => onScore(1));
+
+        wrap.append(btnZero, btnOne);
+        s2Body.appendChild(wrap);
+      }
+
+      function runStepNode(qObj, logic, nodeKey, inheritedRisk) {
+        const node = logic.nodes[nodeKey];
+        const qId = qObj.id;
+
+        if (node.type === "checklist_node") {
+          renderChecklistBranch(
+            qObj,
+            node.question,
+            node.items,
+            node.minYes,
+            (passed) => {
+              const branch = passed ? node.onPass : node.onFail;
+              if (branch.score !== undefined) completeBranchItem(qId, branch.score);
+              else runStepNode(qObj, logic, branch.next, inheritedRisk);
+            },
+            node.exactOneNext
+              ? () => runStepNode(qObj, logic, node.exactOneNext, inheritedRisk)
+              : null,
+          );
+          return;
+        }
+
+        if (node.type === "dual_compare_node") {
+          renderDualCompareBranch(qObj, node, (score) => {
+            completeBranchItem(qId, score);
+          });
+          return;
+        }
+
+        // Pertanyaan Ya / Tidak standar atau opsi khusus
+        s2Body.replaceChildren();
+        s2Body.appendChild(createContextHeader(qObj));
+
+        const h = document.createElement("h3");
+        h.className = "m-0 font-serif text-lg font-normal leading-snug text-[#1f241e] sm:text-xl";
+        h.textContent = node.question;
+        s2Body.appendChild(h);
+
+        if (node.options) {
+          const optWrap = document.createElement("div");
+          optWrap.className = "mt-4 grid gap-2.5";
+          node.options.forEach((opt) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className =
+              "min-h-11 rounded-xl border border-[#dce3d4] bg-white px-4 py-3 text-left text-xs font-semibold text-[#20231f] transition hover:border-[#355b45] hover:bg-[#f4f8ee]";
+            b.textContent = opt.label;
+            b.addEventListener("click", () => {
+              completeBranchItem(qId, inheritedRisk ? 1 : 0);
+            });
+            optWrap.appendChild(b);
+          });
+          s2Body.appendChild(optWrap);
+          return;
+        }
+
+        const btnGrid = document.createElement("div");
+        btnGrid.className = "mt-5 grid grid-cols-2 gap-3";
+
+        const handleChoice = (branchObj) => {
+          const nextRisk = branchObj.setRisk !== undefined ? branchObj.setRisk : inheritedRisk;
+          if (branchObj.score !== undefined) {
+            completeBranchItem(qId, branchObj.score);
+          } else if (branchObj.next) {
+            runStepNode(qObj, logic, branchObj.next, nextRisk);
+          }
+        };
+
+        const bYes = document.createElement("button");
+        bYes.type = "button";
+        bYes.className =
+          "min-h-12 rounded-2xl border-2 border-[#dce3d4] bg-white text-sm font-bold text-[#20231f] transition hover:border-[#355b45] hover:bg-[#f4f8ee]";
+        bYes.textContent = "Ya";
+        bYes.addEventListener("click", () => handleChoice(node.yes));
+
+        const bNo = document.createElement("button");
+        bNo.type = "button";
+        bNo.className =
+          "min-h-12 rounded-2xl border-2 border-[#dce3d4] bg-white text-sm font-bold text-[#20231f] transition hover:border-[#355b45] hover:bg-[#f4f8ee]";
+        bNo.textContent = "Tidak";
+        bNo.addEventListener("click", () => handleChoice(node.no));
+
+        btnGrid.append(bYes, bNo);
+        s2Body.appendChild(btnGrid);
+      }
+
+      // Render Hasil Akhir
+      function renderFinalResult(s1Score, finalScore, usedFollowUp) {
+        const badge = document.querySelector("#result-badge");
+        const title = document.querySelector("#result-title");
+        const summary = document.querySelector("#result-summary");
+        const detailsBox = document.querySelector("#result-details-box");
+
+        const isPositive = (!usedFollowUp && s1Score >= 8) || (usedFollowUp && finalScore >= 2);
+
+        if (!isPositive) {
+          badge.className =
+            "mb-3 inline-flex items-center gap-2 rounded-full border border-[#cde0b8] bg-[#eaf3de] px-3.5 py-1 text-xs font-bold text-[#2f543e]";
+          badge.textContent = `Kemungkinan Rendah • Skor Akhir: ${finalScore}`;
+          title.textContent = "Perkembangan komunikasi & interaksi tampak sesuai.";
+          summary.textContent = usedFollowUp
+            ? `Pada Tahap 1 skor awal adalah ${s1Score}, dan setelah pendalaman Tahap 2 skor akhir menjadi ${finalScore} (di bawah ambang batas 2). Tidak diperlukan tindakan lanjutan segera, namun tetap pantau tumbuh kembang anak secara berkala.`
+            : `Skor skrining awal Anda adalah ${s1Score} dari 20 (kategori kemungkinan rendah). Jika anak saat ini berusia di bawah 24 bulan, disarankan mengulang skrining setelah ulang tahun keduanya.`;
+        } else {
+          badge.className =
+            "mb-3 inline-flex items-center gap-2 rounded-full border border-[#e5cfa9] bg-[#fbf5eb] px-3.5 py-1 text-xs font-bold text-[#7c5328]";
+          badge.textContent = `Perlu Evaluasi Lanjut • Skor Akhir: ${finalScore}`;
+          title.textContent = "Disarankan berdiskusi dengan tenaga profesional.";
+          summary.textContent = usedFollowUp
+            ? `Setelah pendalaman pada Tahap 2, skor akhir adalah ${finalScore} (≥ 2). Hal ini menunjukkan perlunya evaluasi perkembangan lebih lanjut oleh dokter spesialis anak atau psikolog anak untuk mendapatkan dukungan dini yang tepat.`
+            : `Skor skrining Tahap 1 adalah ${s1Score} dari 20 (≥ 8). Anda disarankan untuk langsung berkonsultasi dengan dokter anak atau psikolog guna mendapatkan evaluasi menyeluruh dan program stimulasi dini.`;
+        }
+
+        const elevatedItems = Object.entries(state.branchScores)
+          .filter(([, sc]) => sc === 1)
+          .map(([id]) => STAGE1_QUESTIONS.find((q) => q.id === Number(id)));
+
+        if (elevatedItems.length > 0) {
+          const itemsHtml = elevatedItems
             .map(
-              (num) => `
-              <label class="cursor-pointer">
-                <input
-                  class="peer sr-only"
-                  name="${q.id}"
-                  type="radio"
-                  value="${num}"
-                  ${num === 1 ? "required" : ""}
-                />
-                <span class="grid min-h-[46px] place-items-center rounded-xl border border-[#dedfd6] text-xs font-medium text-[#656b62] transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5] peer-checked:font-bold peer-checked:text-[#355b45]">
-                  ${num}
-                </span>
-              </label>`,
+              (q) =>
+                `<li class="text-xs leading-relaxed text-[#3c433a]"><strong>No. ${q.id}:</strong> ${q.text}</li>`,
             )
             .join("");
-
-          return `
-            <div class="mt-4 flex justify-between text-[11px] text-[#777d72]">
-              <span>${q.minLabel}</span>
-              <span>${q.maxLabel}</span>
-            </div>
-            <div class="mt-2 grid grid-cols-5 gap-1.5 sm:gap-2">${buttons}</div>
+          detailsBox.innerHTML = `
+            <strong class="mb-2 block text-xs text-[#355b45]">Catatan poin pengamatan yang dapat Anda bawa saat konsultasi:</strong>
+            <ul class="m-0 list-disc space-y-1.5 pl-4">${itemsHtml}</ul>
           `;
-        }
-
-        if (q.type === "boolean") {
-          return `
-            <div class="mt-4 grid gap-2.5 sm:grid-cols-2">
-              <label class="cursor-pointer">
-                <input
-                  class="peer sr-only"
-                  name="${q.id}"
-                  type="radio"
-                  value="${q.yesValue}"
-                  required
-                />
-                <span class="flex min-h-[54px] flex-col justify-center rounded-xl border border-[#dedfd6] px-4 py-3 text-left transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5]">
-                  <span class="text-xs font-bold text-[#20231f]">Ya</span>
-                  <span class="mt-0.5 text-[11px] text-[#656b62]">${q.yesHint}</span>
-                </span>
-              </label>
-              <label class="cursor-pointer">
-                <input
-                  class="peer sr-only"
-                  name="${q.id}"
-                  type="radio"
-                  value="${q.noValue}"
-                />
-                <span class="flex min-h-[54px] flex-col justify-center rounded-xl border border-[#dedfd6] px-4 py-3 text-left transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5]">
-                  <span class="text-xs font-bold text-[#20231f]">Tidak</span>
-                  <span class="mt-0.5 text-[11px] text-[#656b62]">${q.noHint}</span>
-                </span>
-              </label>
-            </div>
-          `;
-        }
-
-        // Tipe: Pemilihan antar 2 opsi aksi
-        return `
-          <div class="mt-4 grid gap-2.5">
-            ${q.options
-              .map(
-                (opt, idx) => `
-              <label class="cursor-pointer">
-                <input
-                  class="peer sr-only"
-                  name="${q.id}"
-                  type="radio"
-                  value="${opt.value}"
-                  ${idx === 0 ? "required" : ""}
-                />
-                <span class="flex items-start gap-3 rounded-xl border border-[#dedfd6] p-3.5 text-left transition hover:border-[#83977c] peer-checked:border-[#355b45] peer-checked:bg-[#e9eee5]">
-                  <span class="mt-0.5 shrink-0 rounded-md bg-[#f2f4ed] px-2 py-0.5 text-[10px] font-bold text-[#355b45]">
-                    ${opt.tag}
-                  </span>
-                  <span class="text-xs leading-relaxed text-[#343a32]">${opt.text}</span>
-                </span>
-              </label>`,
-              )
-              .join("")}
-          </div>
-        `;
-      }
-
-      // Render semua fieldset soal ke dalam stage
-      questionStage.innerHTML = QUESTIONS.map(
-        (q) => `
-        <fieldset
-          data-question
-          tabindex="-1"
-          class="min-w-0 rounded-[16px] border border-[#dedfd6] bg-[#fffefa] p-5 shadow-[0_12px_32px_#293e2a0a] sm:p-6"
-        >
-          <legend class="float-left w-full text-sm font-semibold leading-relaxed text-[#20231f]">
-            ${q.prompt}
-          </legend>
-          <div class="clear-both"></div>
-          ${renderAnswerControl(q)}
-        </fieldset>`,
-      ).join("");
-
-      const questions = [...questionStage.querySelectorAll("fieldset")];
-
-      const answered = () =>
-        Boolean(
-          questions[currentQuestion].querySelector(
-            'input[type="radio"]:checked',
-          ),
-        );
-
-      function renderQuestion() {
-        questions.forEach((q, i) => {
-          const cur = i === currentQuestion;
-          q.dataset.state = cur
-            ? "active"
-            : i < currentQuestion
-              ? "before"
-              : "after";
-          q.inert = !cur;
-          q.setAttribute("aria-hidden", String(!cur));
-        });
-
-        const hasAnswer = answered();
-        const last = currentQuestion === questions.length - 1;
-        previousButton.disabled = currentQuestion === 0;
-        nextButton.disabled = !hasAnswer;
-        nextButton.classList.toggle("hidden", last);
-        nextButton.classList.toggle("inline-flex", !last);
-        submitButton.classList.toggle("hidden", !last);
-        submitButton.classList.toggle("inline-flex", last);
-        submitButton.disabled = !hasAnswer;
-
-        questionCount.textContent = `Pertanyaan ${currentQuestion + 1} dari ${questions.length}`;
-        questionCategory.textContent = QUESTIONS[currentQuestion].domainLabel;
-        questionProgress.setAttribute(
-          "aria-valuemax",
-          String(questions.length),
-        );
-        questionProgress.setAttribute(
-          "aria-valuenow",
-          String(currentQuestion + 1),
-        );
-        questionProgressBar.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
-      }
-
-      function goToQuestion(i) {
-        if (i < 0 || i >= questions.length) return;
-        currentQuestion = i;
-        renderQuestion();
-        questions[currentQuestion].focus({ preventScroll: true });
-      }
-
-      form.addEventListener("change", (e) => {
-        if (e.target.matches('input[type="radio"]')) renderQuestion();
-      });
-      previousButton.addEventListener("click", () =>
-        goToQuestion(currentQuestion - 1),
-      );
-      nextButton.addEventListener("click", () => {
-        if (answered()) goToQuestion(currentQuestion + 1);
-      });
-
-      renderQuestion();
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!form.reportValidity()) return;
-
-        const formData = new FormData(form);
-        const domainScores = {
-          sosial: 0,
-          komunikasi: 0,
-          perilaku: 0,
-          sensorik: 0,
-        };
-        let total = 0;
-
-        QUESTIONS.forEach((q) => {
-          const val = Number(formData.get(q.id) || 0);
-          total += val;
-          domainScores[q.domain] += val;
-        });
-
-        const maxTotal = QUESTIONS.length * 5;
-        const averageScore = total / QUESTIONS.length;
-        const domainQuestionCounts = Object.fromEntries(
-          Object.keys(domainScores).map((domain) => [
-            domain,
-            QUESTIONS.filter((q) => q.domain === domain).length,
-          ]),
-        );
-        const sortedDomains = Object.entries(domainScores)
-          .map(([domain, score]) => [
-            domain,
-            score / domainQuestionCounts[domain],
-          ])
-          .sort((a, b) => b[1] - a[1])
-          .filter(([, average]) => average >= 3);
-
-        const topDomainNotes = sortedDomains.length
-          ? sortedDomains
-              .map(([key]) => DOMAIN_META[key].diagnosisHint)
-              .join(", ")
-          : "variasi perkembangan umum";
-
-        let levelBadge, title, diagnosisText, actions;
-
-        if (averageScore <= 23 / 12) {
-          levelBadge = "Indikasi Rendah";
-          title = "Perkembangan anak tampak sesuai tahapan umumnya.";
-          diagnosisText =
-            "Berdasarkan jawaban Anda, belum terlihat pola kuat yang mengarah pada Gangguan Spektrum Autisme (ASD) maupun hambatan perkembangan signifikan. Perbedaan kecil dalam kebiasaan bermain atau merespons masih berada dalam batas wajar tumbuh kembang.";
-          actions = [
-            "Lanjutkan stimulasi interaksi dua arah di rumah melalui bermain bersama, membacakan buku, dan percakapan rutin.",
-            "Pantau pencapaian tumbuh kembang (milestone) sesuai usia anak secara berkala.",
-            "Jika di kemudian hari muncul perubahan perilaku atau kekhawatiran baru, catat dan diskusikan saat kontrol rutin ke posyandu atau dokter anak.",
-          ];
-        } else if (averageScore <= 41 / 12) {
-          levelBadge = "Indikasi Sedang · Perlu Observasi";
-          title = "Ditemukan beberapa tanda awal yang perlu diperhatikan.";
-          diagnosisText = `Pola jawaban menunjukkan kecenderungan pada aspek <strong>${topDomainNotes}</strong>. Kondisi ini dapat berkaitan dengan keterlambatan bicara (speech delay), tantangan pemrosesan sensorik, atau ciri awal spektrum autisme ringan yang memerlukan observasi lebih terarah.`;
-          actions = [
-            "Buat catatan harian sederhana selama 2 minggu berisi situasi pemicu perilaku, cara anak berkomunikasi, dan hal yang membuatnya nyaman.",
-            "Kurangi paparan layar (gadget/TV) satu arah dan perbanyak aktivitas tatap muka yang memancing kontak mata serta giliran bicara.",
-            "Jadwalkan konsultasi dengan <strong>Dokter Spesialis Anak</strong> atau <strong>Psikolog Anak</strong> untuk pemeriksaan perkembangan lebih mendalam.",
-          ];
         } else {
-          levelBadge = "Indikasi Tinggi · Disarankan Evaluasi Klinis";
-          title =
-            "Terdapat pola kuat yang mengarah pada kebutuhan dukungan khusus.";
-          diagnosisText = `Akumulasi skor menunjukkan tanda yang konsisten pada area <strong>${topDomainNotes}</strong>. Secara skrining awal, profil ini sering berkaitan dengan <strong>Gangguan Spektrum Autisme (ASD)</strong>, hambatan komunikasi sosial, atau gangguan integrasi sensorik. Evaluasi klinis diperlukan untuk memastikan diagnosis yang akurat.`;
-          actions = [
-            "Segera buat janji temu dengan <strong>Dokter Spesialis Anak Konsultan Tumbuh Kembang (Sp.A(K))</strong> atau <strong>Psikolog Klinis Anak</strong> dengan membawa ringkasan hasil skrining ini.",
-            "Tanyakan rencana intervensi dini yang sesuai dengan profil anak (seperti Terapi Wicara, Terapi Okupasi, atau Terapi Perilaku).",
-            "Bangun rutinitas harian yang terstruktur dan tenang di rumah, serta gunakan bantuan visual sederhana agar anak merasa lebih aman dan dipahami.",
-          ];
+          detailsBox.innerHTML = `
+            <strong class="mb-1 block text-xs text-[#355b45]">Tetap dampingi dengan hangat</strong>
+            <p class="m-0 text-xs leading-relaxed text-[#4f594d]">Terus ajak anak berinteraksi, bermain bersama, dan bercerita setiap hari. Jika sewaktu-waktu muncul kekhawatiran baru, jangan ragu berkonsultasi dengan tenaga ahli.</p>
+          `;
         }
 
-        const domainBreakdownHTML = Object.entries(domainScores)
-          .map(([key, score]) => {
-            const maxScore = domainQuestionCounts[key] * 5;
-            const pct = Math.round((score / maxScore) * 100);
-            return `
-              <div>
-                <div class="flex justify-between text-[11px] font-medium text-[#4f594d]">
-                  <span>${DOMAIN_META[key].name}</span>
-                  <span>${score} / ${maxScore}</span>
-                </div>
-                <div class="mt-1 h-1.5 overflow-hidden rounded-full bg-[#e6e9df]">
-                  <div class="h-full rounded-full bg-[#355b45]" style="width: ${pct}%"></div>
-                </div>
-              </div>`;
-          })
-          .join("");
+        showScreen(screenResult);
+      }
 
-        result.innerHTML = `
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <span class="inline-flex items-center rounded-full bg-[#e9eee5] px-3 py-1 text-[11px] font-bold text-[#355b45]">
-              ${levelBadge}
-            </span>
-            <span class="text-xs font-semibold text-[#656b62]">
-              Total Skor: <strong class="text-[#20231f]">${total} / ${maxTotal}</strong>
-            </span>
-          </div>
+      // Event Listeners
+      document.querySelector("#btn-start").addEventListener("click", () => {
+        state.currentS1Index = 0;
+        state.s1Answers.fill(null);
+        renderStage1();
+        showScreen(screenStage1);
+      });
 
-          <h2 class="mb-2 mt-3 font-serif text-2xl font-normal leading-snug text-[#20231f]">
-            ${title}
-          </h2>
+      btnS1Yes.addEventListener("click", () => answerStage1("yes"));
+      btnS1No.addEventListener("click", () => answerStage1("no"));
+      btnS1Prev.addEventListener("click", () => {
+        if (state.currentS1Index > 0) {
+          state.currentS1Index -= 1;
+          renderStage1();
+        }
+      });
 
-          <div class="mt-4 rounded-xl border border-[#e5e8df] bg-[#f4f6ef] p-4">
-            <strong class="block text-xs font-bold uppercase tracking-wider text-[#355b45]">
-              Kemungkinan Indikasi Awal
-            </strong>
-            <p class="mb-0 mt-1.5 text-xs leading-relaxed text-[#343a32]">
-              ${diagnosisText}
-            </p>
-          </div>
+      document.querySelector("#btn-start-branch").addEventListener("click", () => {
+        showScreen(screenStage2);
+        startBranchItem();
+      });
 
-          <div class="mt-4">
-            <strong class="block text-xs font-bold uppercase tracking-wider text-[#355b45]">
-              Rincian Per Aspek Pengamatan
-            </strong>
-            <div class="mt-2.5 grid gap-3 sm:grid-cols-2">
-              ${domainBreakdownHTML}
-            </div>
-          </div>
-
-          <div class="mt-5">
-            <strong class="block text-xs font-bold uppercase tracking-wider text-[#355b45]">
-              Tindakan Lanjutan untuk Orang Tua
-            </strong>
-            <ul class="mb-0 mt-2 list-none space-y-2 p-0 text-xs leading-relaxed text-[#4f594d]">
-              ${actions
-                .map(
-                  (item) => `
-                <li class="flex items-start gap-2.5">
-                  <span class="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#70985d]"></span>
-                  <span>${item}</span>
-                </li>`,
-                )
-                .join("")}
-            </ul>
-          </div>
-
-          <div class="mt-6 flex flex-wrap items-center gap-3 border-t border-[#e8e9e2] pt-4">
-            <a
-              href="AI.html"
-              class="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#355b45] px-4 text-xs font-bold text-white no-underline transition-colors hover:bg-[#294936]"
-            >
-              Diskusikan hasil dengan Asisten AI <span aria-hidden="true">→</span>
-            </a>
-            <button
-              type="button"
-              id="retake-test"
-              class="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-full border border-[#dedfd6] bg-white px-4 text-xs font-semibold text-[#656b62] transition hover:border-[#83977c] hover:text-[#20231f]"
-            >
-              Ulangi tes
-            </button>
-          </div>
-        `;
-
-        quizWrapper.hidden = true;
-        result.hidden = false;
-        result.focus();
-
-        document.querySelector("#retake-test").addEventListener("click", () => {
-          form.reset();
-          currentQuestion = 0;
-          result.hidden = true;
-          quizWrapper.hidden = false;
-          renderQuestion();
-        });
+      document.querySelector("#btn-restart").addEventListener("click", () => {
+        state.currentS1Index = 0;
+        state.s1Answers.fill(null);
+        state.flaggedIds = [];
+        state.currentBranchIdx = 0;
+        state.branchScores = {};
+        showScreen(screenIntro);
       });
     </script>
   </body>
